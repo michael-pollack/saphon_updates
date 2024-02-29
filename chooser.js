@@ -110,7 +110,7 @@ $(document).ready( function() {
       }
     });
     initialize();
-    $('#languages span.key').html( '' + matches)
+    $('#matches span.key').html( '' + matches)
   }
 
   $('#chooser span').click( function( e) { 

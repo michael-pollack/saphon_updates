@@ -50,7 +50,7 @@
 &nbsp;&nbsp;&nbsp;<span f=-1><b>RESET</b></span></div>
 </div><br/>
 
-<div class=matches>
+<div class=matches id=matches>
 <span>Matches:</span> <span class=key>999</span>
 </div>
 <!-- Tab links -->
