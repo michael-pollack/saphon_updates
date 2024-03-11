@@ -1,6 +1,7 @@
 <?php include("../saphon.php")?>
 <div id="box">
-<h4><a href=".">South American Phonological Inventory Database (SAPhon&nbsp;v<?=$version?>)</a></h4>
+<!-- <h4><a href=".">South American Phonological Inventory Database (SAPhon&nbsp;v<?=$version?>)</a></h4> -->
+<h4><a href=".">South American Phonological Inventory Database (SAPhon&nbsp;v?)</a></h4>
 &nbsp;
 <div id="lang">
 [<a href="../es">ESPAÑOL</a>]
