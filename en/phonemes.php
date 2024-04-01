@@ -5,6 +5,9 @@
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=quarterly&language=en&key=AIzaSyCBTjzFyFyz9h92Y9QQHzryzV565Edat5g"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script type="text/javascript" src="scripts/textarea-caret-position.js"></script>
+<script type="text/javascript" src="./scripts/mousetrap-1.5.3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
 <script type="text/javascript" src="../StyledMarker.js"></script>
 <script type="text/javascript" src="../chooser.js"></script>
 </head>
@@ -49,6 +52,62 @@
 <span f=-3>SHOW FEWER PHONEMES</span>
 &nbsp;&nbsp;&nbsp;<span f=-1><b>RESET</b></span></div>
 </div><br/>
+
+<div id="chooser2">
+    <span>Advanced Search:</span>
+    <form id = "processesFilterForm" action="#">
+        <ul>
+            <li><label for="processes">Processes: </label>
+                <select name="processes" id="processes">
+                    <option value="">Select a process</option>
+                    <option value="LDNH">LDNH</option>
+                    <option value="LO">LO</option>
+                </select>
+            </li>
+            <li>        <label for="direction">Direction: </label>
+                <select name="direction" id="direction">
+                    <option value="">Select a direction</option>
+                    <option value="left">Leftward</option>
+                    <option value="bidirectional">Bidirectional</option>
+                    <option value="right_Ṽ">Rightward</option>
+                </select></li>
+            <li>        Undergoers:
+                <ul>
+                    <li>          Segments: <div id="undergoers1"></div>
+                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
+                            <option value="positional_restriction">Select a positional restriction</option>
+                        </select></li>
+                    <li>          Morphemes: <label for="type">Units:</label> <select name="type" id="type">
+                            <option value="type">Select a unit/natural class</option>
+                        </select>
+                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
+                            <option value="positional_restriction">Select a positional restriction</option>
+                        </select></li>
+                </ul>
+
+            </li>
+            <li>        Triggers:
+                <ul>
+                    <li>          Segments: <div id="triggers1"></div>
+                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
+                            <option value="positional_restriction">Select a positional restriction</option>
+                        </select></li>
+                    <li>          Morphemes: <label for="type">Units:</label> <select name="type" id="type">
+                            <option value="type">Select a unit/natural class</option>
+                        </select>
+                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
+                            <option value="positional_restriction">Select a positional restriction</option>
+                        </select></li>
+                </ul>
+
+            </li>
+            <button id="addProcess">Add</button>
+            <div id="containerX"></div>
+        </ul>
+
+    </form>
+</div>
+<br>
 
 <div class=matches id=matches>
 <span>Matches:</span> <span class=key>999</span>
@@ -457,3 +516,4 @@
 </div>
 
 </body>
+<script type="text/javascript" src="scripts/app.js"></script>

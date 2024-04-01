@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Text Areas with Pop-ups</title>
+    <!-- Include Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+
+<div id="app-container"></div>
+
+<script>
+    // Example data for multiple text areas
+    var textAreasData = [
+        { id: 1, placeholder: "Text Area 1" },
+        { id: 2, placeholder: "Text Area 2" },
+        // Add more text areas as needed
+    ];
+
+    textAreasData.forEach((textAreaData) => {
+        // Create unique ID for each Vue instance
+        var containerId = `app-${textAreaData.id}`;
+
+        // Create data object for each Vue instance
+        var data = {
+            input: '', // initial input value
+            helperChars: [],
+            helperCharsCurrent: -1,
+            helperCharsOrigin: null,
+            helperCoordinates: {
+                top: 0,
+                left: 0,
+            },
+        };
+
+        // Define methods for each Vue instance
+        var methods = {
+            onKeyUp() {
+                console.log(`KeyUp Event for Text Area ${textAreaData.id}`);
+                // Add your custom logic here
+            },
+            onKeyPress() {
+                console.log(`KeyPress Event for Text Area ${textAreaData.id}`);
+                // Add your custom logic here
+            },
+            onKeyDown() {
+                console.log(`KeyDown Event for Text Area ${textAreaData.id}`);
+                // Add your custom logic here
+                this.showHelperPopup();
+            },
+            showHelperPopup() {
+                // Logic to populate and show the helper popup
+                // You can customize this based on your requirements
+                this.helperChars = ['a', 'b', 'c']; // Example helper characters
+                this.helperCharsCurrent = 0; // Example initial selection
+                this.helperCharsOrigin = this.input;
+                this.helperCoordinates = {
+                    top: 20, // Example top position
+                    left: 20, // Example left position
+                };
+            },
+            hideHelperPopup() {
+                // Logic to hide the helper popup
+                this.helperChars = [];
+                this.helperCharsCurrent = -1;
+                this.helperCharsOrigin = null;
+                this.helperCoordinates = {
+                    top: 0,
+                    left: 0,
+                };
+            },
+            replaceChar(c) {
+                // Logic to replace character in the text area
+                // You can customize this based on your requirements
+                this.input = this.helperCharsOrigin + c;
+                this.hideHelperPopup();
+            },
+        };
+
+        // Create a div container for each Vue instance
+        var container = document.createElement('div');
+        container.id = containerId;
+        document.getElementById('app-container').appendChild(container);
+
+        // Create a new Vue instance for each text area
+        new Vue({
+            el: `#${containerId}`,
+            data: data,
+            methods: methods,
+            template: `
+      <div>
+        <textarea
+          rows="1"
+          cols="5"
+          v-model="input"
+          @keyup="onKeyUp"
+          @keypress="onKeyPress"
+          @keydown="onKeyDown"
+          :placeholder="placeholder"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        ></textarea>
+        <div v-if="helperChars.length" transition="dissolve" class="helper-popup" v-bind:style="{ top: helperCoordinates.top + 'px', left: helperCoordinates.left + 'px' }">
+          <dl>
+            <dt>Press tab &#8677; to cycle through</dt>
+            <dd>
+              <template v-for="c in helperChars">
+                <button
+                  @click="replaceChar(c)"
+                  :class="helperChars[helperCharsCurrent] == c ? 'current' : ''">
+                  {{ c }}
+                </button>
+              </template>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    `,
+            computed: {
+                placeholder() {
+                    return textAreaData.placeholder;
+                },
+            },
+        });
+    });
+</script>
+
+</body>
+</html>
