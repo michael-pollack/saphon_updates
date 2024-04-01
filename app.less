@@ -1,1 +1,697 @@
+/*
+@font-face {
+    font-family: 'dejavusans';
+    src: url('../fonts/dejavusans_book/DejaVuSans-webfont.eot');
+    src: url('../fonts/dejavusans_book/DejaVuSans-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/dejavusans_book/DejaVuSans-webfont.woff') format('woff'),
+         url('../fonts/dejavusans_book/DejaVuSans-webfont.ttf') format('truetype'),
+         url('../fonts/dejavusans_book/DejaVuSans-webfont.svg#dejavu_sansbook') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'dejavusans';
+    src: url('../fonts/dejavusans_extralight/DejaVuSans-ExtraLight-webfont.eot');
+    src: url('../fonts/dejavusans_extralight/DejaVuSans-ExtraLight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/dejavusans_extralight/DejaVuSans-ExtraLight-webfont.woff') format('woff'),
+         url('../fonts/dejavusans_extralight/DejaVuSans-ExtraLight-webfont.ttf') format('truetype'),
+         url('../fonts/dejavusans_extralight/DejaVuSans-ExtraLight-webfont.svg#dejavu_sansextralight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+*/
+
+/*!	armazon.css v0.3.1 - Lightweight and Supersimple CSS3 Boilerplate Micro Framework built on LESS
+ 	(c) 2016 Jorge Moreno ( @alterebro ) - MIT License - https://github.com/alterebro/armazon.css
+*/
+// --------------------------------------------
+// Variables @less
+@armazon-mobile-breakpoint 		: 580;		// width to filter mobile devices
+@armazon-desktop-breakpoint 	: 960; 		// width to fire desktop layout filtering
+@armazon-margin 				: 3.6rem; 	// Global margin
+@armazon-color-background 		: #304352;	// Global Background Color
+@armazon-color-foreground 		: #d7d2cc; 	// Global Foreground & Text Color
+@armazon-color-primary 			: #cdc83c; 	// Links and Buttons Color
+@armazon-color-neutral 			: #a0a0a0; 	// Neutral Grey
+
+// --------------------------------------------
+// Media Queries
+@mobile 	: ~"all and (max-width: @{armazon-mobile-breakpoint}px)"; 	// Default
+@non-mobile : ~"all and (min-width: @{armazon-mobile-breakpoint}px)"; 	// Matchs both @tablet and @desktop
+@tablet 	: ~"all and (min-width: @{armazon-mobile-breakpoint}px) and (max-width: @{armazon-desktop-breakpoint}px)";
+@desktop 	: ~"all and (min-width: @{armazon-desktop-breakpoint}px)";
+
+// --------------------------------------------
+// Mixins @less
+.transition( @value : all 0.2s ease-in) {
+	-webkit-transition: @value;
+	transition: @value;
+}
+
+// --------------------------------------------
+// Global
+html, body {
+	margin: 0;
+	padding: 0;
+}
+html {
+	font-family: sans-serif;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	box-sizing: border-box;
+	font-size: 62.5%;
+}
+body {
+	font-size: 1.6em;
+	line-height: 1.5;
+	background: @armazon-color-background;
+	color: @armazon-color-foreground;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+// --------------------------------------------
+// HTML5 display definitions
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+	display: block;
+}
+[hidden], template {
+	display: none;
+}
+
+// --------------------------------------------
+// Links
+a {
+	background-color: transparent;
+	text-decoration: none;
+	color: @armazon-color-primary;
+	border-bottom: solid transparent 1px;
+}
+a:active, a:hover {
+	outline: 0;
+	color: #fff;
+	border-bottom: solid @armazon-color-primary 1px;
+}
+a, a * {
+	.transition();
+}
+// --------------------------------------------
+// Text-level semantics
+abbr[title], acronym[title] {
+	border-bottom: 1px dotted;
+	cursor: help;
+}
+b, strong {
+	font-weight: bold;
+}
+dfn {
+	font-style: italic;
+}
+mark {
+	background: #ff0;
+	color: #000;
+}
+small {
+	font-size: 80%;
+}
+sub, sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+blockquote {
+	quotes: "\201C""\201D""\2018""\2019";
+	&:before {
+		color: @armazon-color-neutral;
+		font-size: 4rem;
+		line-height: 0.1em;
+		padding: 0 .25rem;
+	}
+	&:before {
+		content: open-quote;
+		vertical-align: -1rem;
+	}
+	p { display: inline; }
+}
+
+// --------------------------------------------
+// Forms
+button,
+textarea {
+	color: inherit;
+	font: inherit;
+	margin: 0;
+}
+button {
+	overflow: visible;
+	text-transform: none;
+}
+input[type="checkbox"],
+input[type="radio"] {
+	padding: 0;
+	display: inline;
+}
+label {
+	display: block;
+}
+
+// --------------------------------------------
+// Lists
+dl {
+	dt dfn {
+		font-style: normal;
+	}
+	dd {
+		color: @armazon-color-neutral;
+	}
+}
+
+// --------------------------------------------
+// Pseudo-elements
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+// armazon.css eof
+// --------------------------------------------
+// --------------------------------------------
+// Author's custom styles :
+@ui-margin : 20px;
+@ui-header-height : 60px;
+@ui-footer-height : 50px;
+@ui-sidebar-width : 300px + (@ui-margin*2);
+
+html, body {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+body {
+	background-color: darken(@armazon-color-background, 5%);
+	background-image: radial-gradient(circle at 70% 100%, #97927c, transparent 100%);
+}
+body > * {
+//	font-family: 'dejavusans', 'Voces', sans-serif;
+	font-family: 'Voces', sans-serif;
+	font-size: 1.4rem;
+	font-weight: normal;
+}
+h1, h2, h3, dl, dt, dd, ul, li, p {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+body {
+	padding: 0 @ui-sidebar-width 0 0;
+}
+
+#main {
+	width: 100%;
+	height: 100%;
+	position: relative;
+
+	header {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: @ui-header-height;
+		line-height: @ui-header-height;
+		width: 100%;
+		padding: 0 @ui-margin + 5px;
+
+		h1 {
+			white-space: nowrap;
+	        overflow: hidden;
+	        text-overflow: ellipsis;
+			font-size: 1.4rem;
+			font-weight: normal;
+			padding: 0 @ui-header-height 0 0;
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
+
+			strong {
+				font-weight: bold;
+				color: #fff;
+			}
+			i {
+				color: @armazon-color-primary;
+			}
+		}
+
+		p.hamburguer-icon {
+			position: absolute;
+			top: 0;
+			right: @ui-margin;
+
+			a {
+				display: block;
+				height: @ui-header-height;
+				width: @ui-header-height - 20px;
+				overflow: hidden;
+				border: none;
+				text-align: center;
+				text-shadow: 0 -1px 0 fade(#000, 15%);
+
+				span { display: none; }
+				&:before {
+					content: '\f0c9';
+					font-family: 'FontAwesome';
+					font-size: 1.6rem;
+				}
+			}
+		}
+	}
+
+	section {
+		//padding: @ui-header-height @ui-margin @ui-footer-height;
+		//overflow: hidden;
+		//
+		//textarea {
+		//	-webkit-appearance: none;
+		//	-moz-appearance: none;
+		//	appearance: none;
+		//	background: #fff;
+		//	color: @armazon-color-background;
+		//	border: none;
+		//	border-radius: none;
+		//	display: block;
+		//	vertical-align: top;
+		//	width: 100%;
+		//	height: 100%;
+		//	min-width: 320px;
+		//	padding: @ui-margin;
+		//	overflow: auto;
+		//	resize: none;
+		//	font-size: 1.8rem;
+		//	box-shadow:
+		//		0 2px 40px 5px fade(#000, 20%),
+		//		0 1px 0 1px fade(#000, 10%)
+		//	;
+		//}
+		//textarea:focus {
+		//	border: none;
+		//	outline: 0;
+		//}
+	}
+
+	footer {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: @ui-footer-height;
+		width: 100%;
+		padding: 0 @ui-margin + 5px;
+
+		p {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
+			font-size: 1.2rem;
+			line-height: @ui-footer-height;
+			padding: 0 ( (@ui-footer-height - 20px) * 4 ) 0 0; // 4 is N social icons
+			a { font-weight: bold; }
+		}
+
+		ul {
+			position: absolute;
+			top: 0;
+			right: @ui-margin;
+
+			li {
+				display: block;
+				float: left;
+				height: @ui-footer-height - 20px;
+				width: @ui-footer-height - 20px;
+				margin: 10px 0;
+				padding: 0;
+
+				a {
+					display: block;
+					height: @ui-footer-height - 20px;
+					line-height: @ui-footer-height - 20px;
+					width: @ui-footer-height - 20px;
+					text-align: center;
+					border: none;
+					color: @armazon-color-primary;
+					text-shadow: 0 -1px 0 fade(#000, 15%);
+					font-size: 1.6rem;
+
+					&:hover { color: #fff; }
+					span { display: none; }
+				}
+			}
+		}
+	}
+}
+
+#sidebar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: @ui-sidebar-width;
+	height: 100%;
+	overflow: auto;
+	background: fade(#000, 10%);
+	box-shadow:
+		-1px 0 0 fade(#fff, 5%),
+		inset 1px 0 0 fade(#000, 10%),
+		inset 3px 0 0 fade(#000, 5%)
+	;
+	padding: 0 @ui-margin @ui-margin @ui-margin;
+
+	h3 {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-size: 1.4rem;
+		font-weight: normal;
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
+		height: @ui-header-height;
+		line-height: @ui-header-height;
+		padding: 0 40px 0 5px;
+		border-bottom: solid fade(#fff, 10%) 1px;
+		position: relative;
+		color: #fff;
+		cursor: default;
+
+		&:after {
+			content: '\f085';
+			font-family: 'FontAwesome';
+			font-size: 1.4rem;
+			display: block;
+			position: absolute;
+			top: (@ui-header-height - 40px) / 2;
+			right: 0;
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			color: @armazon-color-primary;
+		}
+	}
+}
+
+body.no-sidebar {
+	padding: 0;
+	#sidebar {
+		width: 0;
+		padding: 0;
+	}
+	@media @mobile {
+		#main {
+			opacity: inherit;
+		}
+	}
+}
+@media @mobile {
+	#main {
+		opacity: .3;
+	}
+}
+
+#sidebar {
+	dl {
+		width: @ui-sidebar-width - (@ui-margin * 2);
+
+		dt {
+			cursor: pointer;
+			border-bottom: solid fade(#fff, 10%) 1px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			text-shadow: 0 1px 0 fade(#000, 50%);
+			position: relative;
+			padding: 0 40px 0 5px;
+			height: 40px;
+			line-height: 40px;
+			.transition();
+
+			&:after {
+				content: '\f054'; // chevron-right (default)
+				font-family: 'FontAwesome';
+				font-size: 1.2rem;
+				display: block;
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 40px;
+				height: 40px;
+				line-height: 40px;
+				text-align: center;
+			}
+
+			&:hover {
+				color: #fff;
+				border-bottom: solid fade(#fff, 50%) 1px;
+			}
+		}
+
+		dd {
+			max-height: 0px;
+			overflow: hidden;
+			padding: 0 10px;
+			background: fade(#000, 10%);
+			box-shadow:
+				inset 0 2px 0 rgba(0, 0, 0, .1),
+				inset 0 -1px 0 rgba(0, 0, 0, .05)
+			;
+			border-bottom-right-radius: 3px;
+			border-bottom-left-radius: 3px;
+			.transition();
+		}
+
+		&.aside-dl-open {
+			dt:after {
+				content: '\f078'; // chevron-down
+			}
+			dd {
+				max-height: 1000px;
+				padding: 10px;
+			}
+		}
+		&.aside-dl-close {
+			dt:after {
+				content: '\f054'; // chevron-right
+			}
+			dd {}
+		}
+	}
+}
+
+
+#helper {
+	display: block;
+	width: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	-ms-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	transform: translateX(-50%);
+	padding: 9px 0 0 0;
+	opacity: 0;
+
+	&:before, &:after {
+		content: '';
+		display: block;
+		position: absolute;
+		left: 50%;
+		border-top: none;
+	}
+	&:before {
+		width: 18px;
+		height: 9px;
+		top: 1px;
+		border-left: solid transparent 9px;
+		border-right: solid transparent 9px;
+		border-bottom: solid #888 9px;
+		margin-left: -9px;
+	}
+	&:after {
+		width: 16px;
+		height: 8px;
+		top: 2px;
+		border-left: solid transparent 8px;
+		border-right: solid transparent 8px;
+		border-bottom: solid #fff 8px;
+		margin-left: -8px;
+	}
+
+	dl {
+		border-radius: 2px;
+		padding: 10px;
+		width: 100%;
+		background: #fff;
+		border: solid #bbb 1px;
+		box-shadow:
+			0 2px 0 0 rgba(0, 0, 0, .05),
+			0 2px 4px 1px rgba(0, 0, 0, .1)
+		;
+		position: relative;
+		left: 0;
+
+		dt, dd {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		dt {
+			font-size: 70%;
+			color: @armazon-color-background;
+			display: block;
+			padding: 0 0 5px 0;
+		}
+		dd {
+			display: block;
+			overflow: auto;
+
+			button {
+				display: inline-block;
+				height: 32px;
+				width: 32px;
+				margin: 1px;
+				border-radius: 2px;
+
+				background: fade(@armazon-color-background, 50%);
+				color: #fff;
+
+				&.current, &:hover {
+					background: @armazon-color-primary;
+					color: #000;
+				}
+			}
+		}
+	}
+}
+
+.dissolve-transition {
+	transition: all .25s ease;
+	opacity: 1 !important;
+}
+.dissolve-enter, .dissolve-leave {
+	opacity: 0 !important;
+}
+
+ul.option-list {
+	padding: 5px 10px;
+
+	li {
+		font-size: 1.2rem;
+		label {
+			input[type="radio"] {
+				display: inline-block;
+				margin: 0 10px 0 0;
+			}
+
+			.transition();
+			cursor: pointer;
+			display: block;
+			padding: 4px 0;
+			color: @armazon-color-primary;
+			text-shadow: 0 -1px 0 fade(#000, 50%);
+			&:hover { color: #fff; }
+		}
+	}
+}
+
+button,
+html input[type="button"],
+input[type="button"] {
+	-webkit-appearance: button;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	border: none;
+	white-space: nowrap;
+	vertical-align: top;
+	.transition();
+}
+
+#characters-mapped {
+	li {}
+	button {
+		display: block;
+		float: left;
+		width: 2.6rem;
+		height: 2.6rem;
+		font-size: 1.2rem;
+		margin: 1px;
+		&:hover {
+			-ms-transform: scale(1.5);
+			-webkit-transform: scale(1.5);
+			transform: scale(1.5);
+		}
+	}
+	button.char-trigger {
+		background: fade(#000, 10%);
+		color: @armazon-color-foreground;
+		text-shadow: 0 -1px 0 fade(#000, 75%);
+		font-weight: bold;
+		box-shadow: inset -1px 0 0 darken(@armazon-color-primary, 15%);
+		&:hover {
+			background: #000;
+			color: #fff;
+			box-shadow: none;
+		}
+	}
+	button.char-item {
+		background: @armazon-color-primary;
+		color: @armazon-color-background;
+		text-shadow: 0 1px 0 fade(#fff, 25%);
+		border-radius: 1px;
+		&:hover {
+			background: #fff;
+		}
+	}
+}
+
+#sidebar, body {
+	.transition();
+}
+.preload #sidebar, .preload #sidebar *, body.preload, .preload a, .preload a * {
+	-webkit-transition: none !important;
+    transition: none !important;
+}
+
+
+.support-dd {
+	padding: 15px;
+	font-size: 90%;
+	line-height: 1.6;
+	color: lighten(@armazon-color-neutral, 15%);
+	text-shadow: 0 -1px 0 fade(#000, 50%);
+
+	strong {
+		color: #fff;
+	}
+
+	a.paypal-donation {
+		display: block;
+		margin: 20px 0 0 0;
+
+		text-align: center;
+		background: @armazon-color-primary;
+		color: @armazon-color-background;
+		padding: 10px 5px;
+		border-radius: 3px;
+		border: none;
+		box-shadow: 0 1px 0 rgba(0, 0, 0, .25);
+		text-shadow: 0 1px 0 fade(#fff, 40%);
+
+		&:hover {
+			background: #fff;
+			color: #000;
+		}
+	}
 }

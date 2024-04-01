@@ -1,5 +1,6 @@
 import os
 import json
+from collections import defaultdict
 
 phoneme_f_mapping = {
     "p\u02b0": "f71",
@@ -370,6 +371,48 @@ phoneme_f_mapping = {
     "\u0252\u02d0": "f366",
     "\u0252\u0303\u02d0": "f367"
 }
+divIdsToGetOptionsFor = defaultdict(list)
+
+
+def processDetailsExtraction(file):
+    mainString = 'processdetails'
+    procDetails = file.get(mainString, 'Unknown')
+    thisLanguageFeatures = dict()
+
+    if procDetails != 'Unknown':
+        for processDictionary in procDetails:
+            divIdsToGetOptionsFor["processtype"].append(processDictionary["processtype"])
+            thisLanguageFeatures["processtype-"+processDictionary["processtype"]] = 1
+            for subsection in ["undergoers", "triggers"]:
+                for subsubsection in ["segments", "morphemes"]:
+                    firstDictValue = processDictionary[subsection][subsubsection]
+                    if type(firstDictValue) is dict:
+                        firstDictValue = [firstDictValue]
+                    for dictionary in firstDictValue:
+                        for subsubsubsection in ["units", "positional_restrictions"]:
+                            formattedStr = f"{mainString}_{subsection}_{subsubsection}_{subsubsubsection}"
+                            extractedValue = dictionary[subsubsubsection]
+
+                            # -------------------------------
+                            def helper(formattedStr, extractedValue):
+                                # if value is not informative, don't add to list of language features
+                                if extractedValue is None or extractedValue == '' or extractedValue == 'Unknown' \
+                                        or extractedValue == "Uncertain" or extractedValue == "NA":
+                                    return
+                                if not (
+                                        subsubsection == "segments" and subsubsubsection == "units"):  # we use IPA keyboard here
+                                    divIdsToGetOptionsFor[formattedStr].append(f"{extractedValue}")
+                                # language feature that HTML form searches on
+                                thisLanguageFeatures[formattedStr + f"-{extractedValue}"] = 1
+
+                            # -------------------------------
+                            if type(extractedValue) is list:
+                                for elem in extractedValue:
+                                    helper(formattedStr, elem)
+                            else:
+                                helper(formattedStr, extractedValue)
+    return thisLanguageFeatures
+
 
 def scan_folder(folder_path):
     json_array = []
@@ -378,7 +421,7 @@ def scan_folder(folder_path):
             file_path = os.path.join(folder_path, file_name)
             with open(file_path, encoding="utf8") as file:
                 data = json.load(file)
-                lang_link = "inv/" + file_name[ : file_name.index(".")] + ".html"
+                lang_link = "inv/" + file_name[: file_name.index(".")] + ".html"
                 f_codes = codeExtraction(data)
                 info = {"title": data.get('name', 'Unknown'),
                         "iso_code": data.get('iso_codes', 'Unknown'),
@@ -387,10 +430,12 @@ def scan_folder(folder_path):
                         "link": lang_link,
                         "coordinates": data.get('coordinates', 'Unknown'),
                         "faults": 0,
-                        "codes": f_codes
+                        "codes": f_codes,
+                        "processdetails": processDetailsExtraction(data)
                         }
                 json_array.append(info)
     return json_array
+
 
 def codeExtraction(file):
     phonemes = file.get('phonemes', 'Unknown')
@@ -398,18 +443,24 @@ def codeExtraction(file):
     if phonemes != 'Unknown':
         for phon in phonemes:
             f_code = phon['phoneme']
-            if f_code in phoneme_f_mapping: 
+            if f_code in phoneme_f_mapping:
                 f_list[phoneme_f_mapping[f_code]] = 1
-            else: 
-                print (file.get('name', 'Unknown') + ": " + phon['phoneme'])
+            else:
+                print(file.get('name', 'Unknown') + ": " + phon['phoneme'])
     return f_list
 
+def getUniqueProcessFeatures(divIdsToGetOptionsFor):
+    return {key:sorted(list(set(value))) for key, value in divIdsToGetOptionsFor.items()}
 
 def main():
     folder_path = 'json'
     result = scan_folder(folder_path)
     with open('langs.json', 'w') as output_file:
         json.dump(result, output_file, indent=4)
+    selectionOptions = getUniqueProcessFeatures(divIdsToGetOptionsFor)
+    with open("selectionOptions.json", "w") as o_file:
+        json.dump(selectionOptions, o_file, indent=4)
+
 
 if __name__ == '__main__':
     main()

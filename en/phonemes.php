@@ -57,51 +57,62 @@
     <span>Advanced Search:</span>
     <form id = "processesFilterForm" action="#">
         <ul>
-            <li><label for="processes">Processes: </label>
-                <select name="processes" id="processes">
+            <li><label for="processtype">Processes: </label>
+                <select name="processtype" id="processtype">
                     <option value="">Select a process</option>
                     <option value="LDNH">LDNH</option>
                     <option value="LO">LO</option>
                 </select>
             </li>
-            <li>        <label for="direction">Direction: </label>
-                <select name="direction" id="direction">
+            <li>        <label for="directionality">Direction: </label>
+                <select name="directionality" id="directionality">
                     <option value="">Select a direction</option>
-                    <option value="left">Leftward</option>
+                    <option value="leftward">Leftward</option>
                     <option value="bidirectional">Bidirectional</option>
-                    <option value="right_Ṽ">Rightward</option>
+                    <option value="rightward">Rightward</option>
+                    <option value="circumdirectional">Circumdirectional</option>
                 </select></li>
             <li>        Undergoers:
                 <ul>
-                    <li>          Segments: <div id="undergoers1"></div>
-                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
-                            <option value="positional_restriction">Select a positional restriction</option>
-                        </select></li>
-                    <li>          Morphemes: <label for="type">Units:</label> <select name="type" id="type">
-                            <option value="type">Select a unit/natural class</option>
+                    <li>          Segments: <div id="undergoers"></div>
+                        <label for="processdetails_undergoers_segments_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_undergoers_segments_positional_restrictions" id="processdetails_undergoers_segments_positional_restrictions">
+                            <option value="">Select a positional restriction</option>
                         </select>
-                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
-                            <option value="positional_restriction">Select a positional restriction</option>
-                        </select></li>
+                    </li>
+                    <li>          Morphemes: <label for="processdetails_undergoers_morphemes_units">Units:</label>
+                        <select name="processdetails_undergoers_morphemes_units" id="processdetails_undergoers_morphemes_units">
+                            <option value="">Select a unit/natural class</option>
+                        </select>
+                        <label for="processdetails_undergoers_morphemes_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_undergoers_morphemes_positional_restrictions" id="processdetails_undergoers_morphemes_positional_restrictions">
+                            <option value="">Select a positional restriction</option>
+                        </select>
+                    </li>
                 </ul>
 
             </li>
             <li>        Triggers:
                 <ul>
-                    <li>          Segments: <div id="triggers1"></div>
-                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
-                            <option value="positional_restriction">Select a positional restriction</option>
-                        </select></li>
-                    <li>          Morphemes: <label for="type">Units:</label> <select name="type" id="type">
-                            <option value="type">Select a unit/natural class</option>
+                    <li>          Segments: <div id="triggers"></div>
+                        <label for="processdetails_triggers_segments_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_triggers_segments_positional_restrictions" id="processdetails_triggers_segments_positional_restrictions">
+                            <option value="processdetails_triggers_segments_positional_restrictions">Select a positional restriction</option>
                         </select>
-                        <label for="positional_restriction"> Positional Restriction:</label><select name="positional_restriction" id="positional_restriction">
-                            <option value="positional_restriction">Select a positional restriction</option>
-                        </select></li>
+                    </li>
+                    <li>          Morphemes: <label for="processdetails_triggers_morphemes_units">Units:</label>
+                        <select name="processdetails_triggers_morphemes_units" id="processdetails_triggers_morphemes_units">
+                            <option value="">Select a unit/natural class</option>
+                        </select>
+                        <label for="processdetails_triggers_morphemes_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_triggers_morphemes_positional_restrictions" id="processdetails_triggers_morphemes_positional_restrictions">
+                            <option value="">Select a positional restriction</option>
+                        </select>
+                    </li>
                 </ul>
 
             </li>
-            <button id="addProcess">Add</button>
+            <button type="submit" id="addProcess">Search</button>
             <div id="containerX"></div>
         </ul>
 

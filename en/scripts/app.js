@@ -52,6 +52,35 @@ function readInIpaJSON(ipaCharToKeyStrokeMapping){
 	return keyStrokeToSymbols;
 }
 
+function configureSelectedOptions(){
+	downloadUrl("../selectionOptions.json", function(selectOpts){
+		for (var key in selectOpts) {
+			var optionsArray = selectOpts[key];
+			console.log("Here is the key:" + key);
+			var selectElement = document.getElementById(key);
+			optionsArray.forEach(function(optionValue) {
+				var option = document.createElement("option");
+				option.value = optionValue;
+				option.textContent = optionValue;
+				selectElement.appendChild(option);
+			});
+		}
+	});
+}
+configureSelectedOptions();
+
+document.getElementById("processesFilterForm").addEventListener("submit", function(event) {
+	event.preventDefault(); // Prevent default form submission
+
+	// Get form data
+	var formData = new FormData(event.target);
+
+	// Construct the URL based on form data
+	var url = "http://localhost:8000/en/phonemes.php?";
+	for (var pair of formData.entries()) {
+		console.log(pair);
+	}
+});
 
 // ------------------------------------------------
 // ------------------------------------------------
@@ -160,18 +189,18 @@ var current_lang = app_state.default_lang;
 // ------------------------------------------------
 // Example data for multiple text areas
 var textAreasData = [
-	{ id: "undergoers1", placeholder: "Text Area 1" },
-	{ id: "triggers1", placeholder: "Text Area 2" }
+	{ divId: "undergoers", placeholder: "Text Area 1", id: "processdetails_undergoers_segments_units" },
+	{ divId: "triggers", placeholder: "Text Area 2", id:"processdetails_triggers_segments_units"}
 	// Add more text areas as needed
 ];
 textAreasData.forEach((textAreaData) => {
 	var started = 0;
 	// Create unique ID for each Vue instance
-	var containerId = `app-${textAreaData.id}`;
+	var containerId = `app-${textAreaData.divId}`;
 	// Create a div container for each Vue instance
 	var container = document.createElement('div');
 	container.id = containerId;
-	document.getElementById(`${textAreaData.id}`).appendChild(container);
+	document.getElementById(`${textAreaData.divId}`).appendChild(container);
 
 	var data = {
 		maps : maps,
@@ -225,7 +254,8 @@ textAreasData.forEach((textAreaData) => {
         <textarea
           rows="1"
           cols="5"
-          id="textarea-${textAreaData.id}"
+          name="${textAreaData.id}"
+          id="${textAreaData.id}"
           v-model="input"
           @keyup="onKeyUp"
           @keypress="onKeyPress"
@@ -237,7 +267,7 @@ textAreasData.forEach((textAreaData) => {
           spellcheck="false"
           ref="textareaRef"
         ></textarea><br>
-\t\t<div class="selector" v-if="helper_chars.length" transition="dissolve" id="helper-${textAreaData.id}" v-bind:style="{ top: helper_coordinates.top + 'px', left: helper_coordinates.left + 'px' }">
+\t\t<div class="selector" v-if="helper_chars.length" transition="dissolve" id="helper-${textAreaData.divId}" v-bind:style="{ top: helper_coordinates.top + 'px', left: helper_coordinates.left + 'px' }">
 \t\t\t<dl>
 \t\t\t\t<dt v-html="lang._helper_desc">Press tab &#8677; to cycle through</dt>
 \t\t\t\t<dd>
@@ -355,9 +385,9 @@ textAreasData.forEach((textAreaData) => {
 				console.log(this.helper_chars);
 				// Calc helper modal displacement
 				if (this.helper_chars.length > 0) {
-					var the_helper = document.querySelector(`#helper-${textAreaData.id}`);
+					var the_helper = document.querySelector(`#helper-${textAreaData.divId}`);
 					console.log(the_helper);
-					var the_inner_helper = document.querySelector(`#helper-${textAreaData.id} dl`);
+					var the_inner_helper = document.querySelector(`#helper-${textAreaData.divId} dl`);
 					console.log(the_inner_helper);
 					var hhw = Math.round(parseInt( get_style(the_helper, 'width') ) / 2);
 					var hl = this.helper_coordinates.left;
