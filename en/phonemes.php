@@ -54,14 +54,21 @@
 </div><br/>
 
 <div id="chooser2">
+    <!-- When you want to add more fields to this search:
+    1. Find the corresponding structure of the search values here: https://github.com/levmichael/saphon/tree/spreadsheet
+    For example, positional restrictions underneath undergoers is processdetails > undergoers > segments > positional restrictions.
+    Therefore, id & name of the select field is "processdetails_undergoers_segments_positional_restrictions"
+    2. Create HTML code below for it.
+    3a. If you want to use the IPA keyboard: i) add the div id of the containing div and ii) target id of the text area (from step 1) to `var textAreasData` of app.js
+    3b. If you want to search on language features: generate it from JSON in `def processDetailsExtraction(file)` of jsonCreation.py
+    To verify, go to selectionOptions.json and make sure theres a 1-to-1 mapping between keys in that JSON file and ID's of elements in this HTML file-->
+    <!-- Search should work now! -->
     <span>Advanced Search:</span>
     <form id = "processesFilterForm" action="#">
         <ul>
             <li><label for="processtype">Processes: </label>
                 <select name="processtype" id="processtype">
                     <option value="">Select a process</option>
-                    <option value="LDNH">LDNH</option>
-                    <option value="LO">LO</option>
                 </select>
             </li>
             <li>        <label for="directionality">Direction: </label>
@@ -97,7 +104,7 @@
                     <li>          Segments: <div id="triggers"></div>
                         <label for="processdetails_triggers_segments_positional_restrictions"> Positional Restriction:</label>
                         <select name="processdetails_triggers_segments_positional_restrictions" id="processdetails_triggers_segments_positional_restrictions">
-                            <option value="processdetails_triggers_segments_positional_restrictions">Select a positional restriction</option>
+                            <option value="">Select a positional restriction</option>
                         </select>
                     </li>
                     <li>          Morphemes: <label for="processdetails_triggers_morphemes_units">Units:</label>
@@ -113,6 +120,7 @@
 
             </li>
             <button type="submit" id="addProcess">Search</button>
+            <button id="clearSearch" onclick="this.form.reset();resetSearch();">Reset</button>
             <div id="containerX"></div>
         </ul>
 

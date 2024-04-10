@@ -1,6 +1,82 @@
 // ------------------------------------------------
 // ------------------------------------------------
 // Utils
+
+function handle_click(formData) {
+	downloadUrl("../langs.json", function(langs) {
+		if(formData != null) {
+			for (var pair of formData.entries()) {
+				var field = pair[0];
+				var value = pair[1];
+				if(value.length !== 0) {
+					//anything that's 0 in faults, is shown up
+					//"fprocessdetails_undergoers_segments_units-m": 1,
+					var searchForCode = "f" + field+"-" + value;
+					console.log(searchForCode);
+					for (let i = 0; i < langs.length; i++) {
+						if (!(searchForCode in langs[i].processdetails)) {
+							langs[i].faults += 1;
+						}
+					}
+				}
+			}
+		}
+
+		var matches = 0;
+		langset.clear()
+		tableBody.innerHTML = '';
+		const rowMax = 20;
+		var maxHit = false;
+		var rowIndex = 0;
+		var cellIndex = 0;
+		console.log(langs);
+		langs.forEach(function (item) {
+			if (item.faults == 0) {
+				matches += 1;
+				if (!maxHit && rowIndex < rowMax) {
+					var row = tableBody.insertRow();
+					rowIndex += 1;
+				} else if (rowIndex == rowMax) {
+					var row = tableBody.rows[0]
+					rowIndex = 1;
+					cellIndex += 1;
+					maxHit = true;
+				} else {
+					var row = tableBody.rows[rowIndex]
+					rowIndex += 1;
+				}
+
+				console.log(cellIndex)
+				var cell1 = row.insertCell(cellIndex);
+
+				// Check if the link is not equal to 0 before creating the hyperlink
+
+				// Create a hyperlink with the name and link
+				var link = document.createElement("a");
+				link.href = item.link;
+				link.textContent = item.title;
+				langset.add(item.title);
+
+				// Append the hyperlink to the cell
+				cell1.appendChild(link);
+
+				// Display the link in the second cell
+			}
+		});
+
+		$('#languages tr').each( function() {
+			if( this.faults == 0) {
+				$(this).css('display', 'block')
+				langset.add(this.innerText)
+			} else {
+				$(this).css('display', 'none')
+			}
+		});
+		initialize();
+		$('#matches span.key').html( '' + matches)
+	});
+}
+
 function get_key(e) {
 	var keynum;
 		keynum = (window.event)
@@ -71,16 +147,15 @@ configureSelectedOptions();
 
 document.getElementById("processesFilterForm").addEventListener("submit", function(event) {
 	event.preventDefault(); // Prevent default form submission
-
 	// Get form data
 	var formData = new FormData(event.target);
-
-	// Construct the URL based on form data
-	var url = "http://localhost:8000/en/phonemes.php?";
-	for (var pair of formData.entries()) {
-		console.log(pair);
-	}
+	//<span f=162>
+	handle_click(formData);
 });
+
+function resetSearch(){
+	handle_click(null);
+}
 
 // ------------------------------------------------
 // ------------------------------------------------

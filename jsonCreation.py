@@ -382,7 +382,7 @@ def processDetailsExtraction(file):
     if procDetails != 'Unknown':
         for processDictionary in procDetails:
             divIdsToGetOptionsFor["processtype"].append(processDictionary["processtype"])
-            thisLanguageFeatures["processtype-"+processDictionary["processtype"]] = 1
+            thisLanguageFeatures["f" + "processtype-"+processDictionary["processtype"]] = 1
             for subsection in ["undergoers", "triggers"]:
                 for subsubsection in ["segments", "morphemes"]:
                     firstDictValue = processDictionary[subsection][subsubsection]
@@ -403,7 +403,7 @@ def processDetailsExtraction(file):
                                         subsubsection == "segments" and subsubsubsection == "units"):  # we use IPA keyboard here
                                     divIdsToGetOptionsFor[formattedStr].append(f"{extractedValue}")
                                 # language feature that HTML form searches on
-                                thisLanguageFeatures[formattedStr + f"-{extractedValue}"] = 1
+                                thisLanguageFeatures["f" + formattedStr + f"-{extractedValue}"] = 1
 
                             # -------------------------------
                             if type(extractedValue) is list:

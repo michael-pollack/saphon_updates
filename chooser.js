@@ -1,5 +1,172 @@
 const langset = new Set();
 
+function handle_click( span) {
+  downloadUrl("../langs.json", function(langs) {
+    if( span != null) {
+      var o = $(span);
+      var oi = o.attr( 'f');
+      if( oi == '-1') {  // reset
+
+        for (let i = 0; i < langs.length; i++) {
+          langs[i].faults = 0;
+        }
+
+        $('#languages tr').each( function() {
+          this.faults = 0;
+        });
+        $('#chooser span').each( function() {
+          $(this).removeClass("yes no");
+        });
+      } else if( oi == '-2') {  // toggle rare phonemes
+        $('#chooser span[f="-2"]').hide();
+        $('#chooser span[f="-3"]').show();
+        $('#chooser span.rare').show();
+      } else if( oi == '-3') {  // toggle rare phonemes
+        $('#chooser span[f="-3"]').hide();
+        $('#chooser span[f="-2"]').show();
+        $('#chooser span.rare').hide();
+        $('#chooser span.rare').each( function() {
+          var o = $(this)
+          var oi = o.attr( 'f');
+          if( o.hasClass( 'yes')) {
+            o.removeClass( 'yes')
+
+            for (let i = 0; i < langs.length; i++) {
+              let code = 'f' + oi;
+              if (code in langs[i].codes) {
+                langs[i].faults -= 1;
+              }
+            }
+
+            $('#languages tr').each( function() {
+              if( $(this).attr( 'f'+oi) == undefined) {
+                this.faults -= 1;
+              }
+            });
+          } else if( o.hasClass( 'no')) {
+            o.removeClass( 'no')
+
+            for (let i = 0; i < langs.length; i++) {
+              let code = 'f' + oi;
+              if (!(code in langs[i].codes)) {
+                langs[i].faults -= 1;
+              }
+            }
+
+            $('#languages tr').each( function() {
+              if( $(this).attr( 'f'+oi) != undefined) {
+                this.faults -= 1;
+              }
+            });
+          }
+        });
+      } else if( o.hasClass( 'no')) {
+        o.removeClass( 'no');
+
+        for (let i = 0; i < langs.length; i++) {
+          let code = 'f' + oi;
+          if (code in langs[i].codes) {
+            langs[i].faults -= 1;
+          }
+        }
+
+        $('#languages tr').each( function() {
+          if( $(this).attr( 'f'+oi) != undefined) {
+            this.faults -= 1;
+          }
+        });
+      } else if( o.hasClass( 'yes')) {
+        o.removeClass( 'yes');
+        o.addClass( 'no');
+
+        for (let i = 0; i < langs.length; i++) {
+          let code = 'f' + oi
+          if (!(code in langs[i].codes)) {
+            langs[i].faults -= 1;
+          } else {
+            langs[i].faults += 1;
+          }
+        }
+
+        $('#languages tr').each( function() {
+          if( $(this).attr( 'f'+oi) == undefined) {
+            this.faults -= 1;
+          } else {
+            this.faults += 1;
+          }
+        });
+      } else {
+        o.addClass( 'yes');
+
+        for (let i = 0; i < langs.length; i++) {
+          let code = 'f' + oi
+          if (!(code in langs[i].codes)) {
+            langs[i].faults += 1;
+          }
+        }
+
+        $('#languages tr').each( function() {
+          if( $(this).attr( 'f'+oi) == undefined) {
+            this.faults += 1;
+          }
+        });
+      }
+    }
+
+    var matches = 0;
+    langset.clear()
+    tableBody.innerHTML = '';
+    const rowMax = 20;
+    var maxHit = false;
+    var rowIndex = 0;
+    var cellIndex = 0;
+
+    langs.forEach(function (item) {
+      if (item.faults == 0) {
+        matches += 1;
+        if (!maxHit && rowIndex < rowMax) {
+          var row = tableBody.insertRow();
+          rowIndex += 1;
+        } else if (rowIndex == rowMax) {
+          var row = tableBody.rows[0]
+          rowIndex = 1;
+          cellIndex += 1;
+          maxHit = true;
+        } else {
+          var row = tableBody.rows[rowIndex]
+          rowIndex += 1;
+        }
+
+        console.log(cellIndex)
+        var cell1 = row.insertCell(cellIndex);
+
+        // Check if the link is not equal to 0 before creating the hyperlink
+
+        // Create a hyperlink with the name and link
+        var link = document.createElement("a");
+        link.href = item.link;
+        link.textContent = item.title;
+        langset.add(item.title);
+
+        // Append the hyperlink to the cell
+        cell1.appendChild(link);
+
+        // Display the link in the second cell
+      }
+    });
+
+    $('#languages tr').each( function() {
+      if( this.faults == 0) {
+        $(this).css('display', 'block')
+        langset.add(this.innerText)
+      } else {
+        $(this).css('display', 'none')
+      }
+    });
+    initialize();
+    $('#matches span.key').html( '' + matches)
+  });
+}
 $(document).ready( function() {
   
   $('#languages tr').each( function() {
@@ -16,180 +183,13 @@ $(document).ready( function() {
       scrollTop: $('#chooser').offset().top
     }, 500);
   });
- 
-  function handle_click( span) {
-    downloadUrl("../langs.json", function(langs) {
-      if( span != null) {
-        var o = $(span);
-        var oi = o.attr( 'f');
-        if( oi == '-1') {  // reset
-
-          for (let i = 0; i < langs.length; i++) {
-            langs[i].faults = 0;
-          }
-
-          $('#languages tr').each( function() {
-            this.faults = 0;
-          });
-          $('#chooser span').each( function() {
-            $(this).removeClass("yes no");
-          });
-        } else if( oi == '-2') {  // toggle rare phonemes
-          $('#chooser span[f="-2"]').hide();
-          $('#chooser span[f="-3"]').show();
-          $('#chooser span.rare').show();
-        } else if( oi == '-3') {  // toggle rare phonemes
-          $('#chooser span[f="-3"]').hide();
-          $('#chooser span[f="-2"]').show();
-          $('#chooser span.rare').hide();
-          $('#chooser span.rare').each( function() {
-            var o = $(this)
-            var oi = o.attr( 'f');
-            if( o.hasClass( 'yes')) {
-              o.removeClass( 'yes')
-
-              for (let i = 0; i < langs.length; i++) {
-                let code = 'f' + oi;
-                if (code in langs[i].codes) {
-                  langs[i].faults -= 1;
-                }
-              }
-
-              $('#languages tr').each( function() {
-                if( $(this).attr( 'f'+oi) == undefined) {
-                  this.faults -= 1;
-                }
-              });
-            } else if( o.hasClass( 'no')) {
-              o.removeClass( 'no')
-
-              for (let i = 0; i < langs.length; i++) {
-                let code = 'f' + oi;
-                if (!(code in langs[i].codes)) {
-                  langs[i].faults -= 1;
-                }
-              }
-      
-              $('#languages tr').each( function() {
-                if( $(this).attr( 'f'+oi) != undefined) {
-                  this.faults -= 1;
-                }
-              });
-            }
-          });
-        } else if( o.hasClass( 'no')) {
-          o.removeClass( 'no');
-
-          for (let i = 0; i < langs.length; i++) {
-            let code = 'f' + oi;
-            if (code in langs[i].codes) {
-              langs[i].faults -= 1;
-            }
-          }
-
-          $('#languages tr').each( function() {
-            if( $(this).attr( 'f'+oi) != undefined) {
-              this.faults -= 1;
-            }
-          });
-        } else if( o.hasClass( 'yes')) {
-          o.removeClass( 'yes');
-          o.addClass( 'no');
-
-          for (let i = 0; i < langs.length; i++) {
-            let code = 'f' + oi
-            if (!(code in langs[i].codes)) {
-              langs[i].faults -= 1;
-            } else {
-              langs[i].faults += 1;
-            }
-          }
-
-          $('#languages tr').each( function() {
-            if( $(this).attr( 'f'+oi) == undefined) {
-              this.faults -= 1;
-            } else {
-              this.faults += 1;
-            }
-          });
-        } else {
-          o.addClass( 'yes');
-
-          for (let i = 0; i < langs.length; i++) {
-            let code = 'f' + oi
-            if (!(code in langs[i].codes)) {
-              langs[i].faults += 1;
-            }
-          }
-
-          $('#languages tr').each( function() {
-            if( $(this).attr( 'f'+oi) == undefined) {
-              this.faults += 1;
-            }
-          });
-        }
-      }
-
-      var matches = 0;
-      langset.clear()
-      tableBody.innerHTML = '';
-      const rowMax = 20;
-      var maxHit = false;
-      var rowIndex = 0;
-      var cellIndex = 0;
-
-      langs.forEach(function (item) {
-        if (item.faults == 0) {
-          matches += 1;
-          if (!maxHit && rowIndex < rowMax) {
-            var row = tableBody.insertRow();
-            rowIndex += 1;
-          } else if (rowIndex == rowMax) {
-            var row = tableBody.rows[0]
-            rowIndex = 1;
-            cellIndex += 1;
-            maxHit = true;
-          } else {
-            var row = tableBody.rows[rowIndex]
-            rowIndex += 1;
-          }
-          
-          console.log(cellIndex)
-          var cell1 = row.insertCell(cellIndex);
-
-          // Check if the link is not equal to 0 before creating the hyperlink
-        
-          // Create a hyperlink with the name and link
-          var link = document.createElement("a");
-          link.href = item.link;
-          link.textContent = item.title;
-          langset.add(item.title);
-
-          // Append the hyperlink to the cell
-          cell1.appendChild(link);
-
-          // Display the link in the second cell
-        } 
-      });
-
-      $('#languages tr').each( function() {
-        if( this.faults == 0) {
-          $(this).css('display', 'block')
-          langset.add(this.innerText)
-        } else {
-          $(this).css('display', 'none')
-        }
-      });
-      initialize();
-      $('#matches span.key').html( '' + matches)
-    });
-  }
 
   $('#chooser span').click( function( e) { 
     handle_click( this); 
     // e.stopPropagation();
   });
   handle_click( null);
+
   
 });
 
