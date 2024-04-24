@@ -1,16 +1,27 @@
 const langset = new Set();
 
-function handle_click( span) {
-  downloadUrl("../langs.json", function(langs) {
+$(document).ready( function() {
+  
+  $('#languages tr').each( function() {
+    this.faults = 0;
+  });
+
+  $('#chooser span').attr( 'unselectable', 'on');
+
+  $('#chooser span[f="-3"]').hide();
+  $('#chooser span.rare').hide();
+
+  $('#scroller').click( function() {
+    $('html, body').animate({
+      scrollTop: $('#chooser').offset().top
+    }, 500);
+  });
+
+  function handle_click( span) {
     if( span != null) {
       var o = $(span);
       var oi = o.attr( 'f');
       if( oi == '-1') {  // reset
-
-        for (let i = 0; i < langs.length; i++) {
-          langs[i].faults = 0;
-        }
-
         $('#languages tr').each( function() {
           this.faults = 0;
         });
@@ -30,14 +41,6 @@ function handle_click( span) {
           var oi = o.attr( 'f');
           if( o.hasClass( 'yes')) {
             o.removeClass( 'yes')
-
-            for (let i = 0; i < langs.length; i++) {
-              let code = 'f' + oi;
-              if (code in langs[i].codes) {
-                langs[i].faults -= 1;
-              }
-            }
-
             $('#languages tr').each( function() {
               if( $(this).attr( 'f'+oi) == undefined) {
                 this.faults -= 1;
@@ -45,14 +48,6 @@ function handle_click( span) {
             });
           } else if( o.hasClass( 'no')) {
             o.removeClass( 'no')
-
-            for (let i = 0; i < langs.length; i++) {
-              let code = 'f' + oi;
-              if (!(code in langs[i].codes)) {
-                langs[i].faults -= 1;
-              }
-            }
-
             $('#languages tr').each( function() {
               if( $(this).attr( 'f'+oi) != undefined) {
                 this.faults -= 1;
@@ -63,13 +58,6 @@ function handle_click( span) {
       } else if( o.hasClass( 'no')) {
         o.removeClass( 'no');
 
-        for (let i = 0; i < langs.length; i++) {
-          let code = 'f' + oi;
-          if (code in langs[i].codes) {
-            langs[i].faults -= 1;
-          }
-        }
-
         $('#languages tr').each( function() {
           if( $(this).attr( 'f'+oi) != undefined) {
             this.faults -= 1;
@@ -78,15 +66,6 @@ function handle_click( span) {
       } else if( o.hasClass( 'yes')) {
         o.removeClass( 'yes');
         o.addClass( 'no');
-
-        for (let i = 0; i < langs.length; i++) {
-          let code = 'f' + oi
-          if (!(code in langs[i].codes)) {
-            langs[i].faults -= 1;
-          } else {
-            langs[i].faults += 1;
-          }
-        }
 
         $('#languages tr').each( function() {
           if( $(this).attr( 'f'+oi) == undefined) {
@@ -97,14 +76,6 @@ function handle_click( span) {
         });
       } else {
         o.addClass( 'yes');
-
-        for (let i = 0; i < langs.length; i++) {
-          let code = 'f' + oi
-          if (!(code in langs[i].codes)) {
-            langs[i].faults += 1;
-          }
-        }
-
         $('#languages tr').each( function() {
           if( $(this).attr( 'f'+oi) == undefined) {
             this.faults += 1;
@@ -113,83 +84,40 @@ function handle_click( span) {
       }
     }
 
+    /*
+    $('div#selections').html(
+      $('#chooser span.yes').map( function() {
+	return $(this).attr( 'f');
+      }).get().join(",") + ';' +
+      $('#chooser span.no').map( function() {
+	return $(this).attr( 'f');
+      }).get().join(",") + ';' +
+      $('#languages div').map( function() {
+	return '' + this.faults;
+      }).get().join(",")
+    );
+    */
+
     var matches = 0;
     langset.clear()
-    tableBody.innerHTML = '';
-    const rowMax = 20;
-    var maxHit = false;
-    var rowIndex = 0;
-    var cellIndex = 0;
-
-    langs.forEach(function (item) {
-      if (item.faults == 0) {
-        matches += 1;
-        if (!maxHit && rowIndex < rowMax) {
-          var row = tableBody.insertRow();
-          rowIndex += 1;
-        } else if (rowIndex == rowMax) {
-          var row = tableBody.rows[0]
-          rowIndex = 1;
-          cellIndex += 1;
-          maxHit = true;
-        } else {
-          var row = tableBody.rows[rowIndex]
-          rowIndex += 1;
-        }
-
-        console.log(cellIndex)
-        var cell1 = row.insertCell(cellIndex);
-
-        // Check if the link is not equal to 0 before creating the hyperlink
-
-        // Create a hyperlink with the name and link
-        var link = document.createElement("a");
-        link.href = item.link;
-        link.textContent = item.title;
-        langset.add(item.title);
-
-        // Append the hyperlink to the cell
-        cell1.appendChild(link);
-
-        // Display the link in the second cell
-      }
-    });
-
     $('#languages tr').each( function() {
       if( this.faults == 0) {
         $(this).css('display', 'block')
         langset.add(this.innerText)
+        matches += 1;
       } else {
         $(this).css('display', 'none')
       }
     });
     initialize();
     $('#matches span.key').html( '' + matches)
-  });
-}
-$(document).ready( function() {
-  
-  $('#languages tr').each( function() {
-    this.faults = 0;
-  });
-
-  $('#chooser span').attr( 'unselectable', 'on');
-
-  $('#chooser span[f="-3"]').hide();
-  $('#chooser span.rare').hide();
-
-  $('#scroller').click( function() {
-    $('html, body').animate({
-      scrollTop: $('#chooser').offset().top
-    }, 500);
-  });
+  }
 
   $('#chooser span').click( function( e) { 
     handle_click( this); 
     // e.stopPropagation();
   });
   handle_click( null);
-
   
 });
 
@@ -236,8 +164,7 @@ var icons = {
   'Yanomam' : getIcon( '#80c', 'Y'),
   'Zaparoan' : getIcon( '#fc4', 'Z'),
   'Chon' : getIcon( '#fef', 'Ch'),
-  'Other' : getIcon( '#ccd', ''),
-  'TODO' : getIcon( '#ccd', '')
+  'Other' : getIcon( '#ccd', '')
 };
  
 function get_pos(el) {
@@ -269,47 +196,37 @@ function initialize() {
   var tooltip = document.getElementById("tooltip");
 
   // get URL parameter c
-  // var parm_c = decodeURIComponent((new RegExp('[?|&]c=' + '([^&;]+?)(&|#|;|$)')
-  //   .exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+  var parm_c = decodeURIComponent((new RegExp('[?|&]c=' + '([^&;]+?)(&|#|;|$)')
+    .exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 
-  downloadUrl("../langs.json", function(langs) {
-    langs.forEach(function (lang){ 
-      var title = lang.title; 
-      if (langset.has(title)) {
-        var family = lang.family;
-        var link = lang.link;
-
-        //needs to be iterative
-        //var iso_code = lang.iso_code; 
-
-        var iso_codes = "";
-        for(var i = 0; i < lang.iso_code.length; i++) {
-          if (i > 0) {
-            iso_codes = iso_codes + ", "
-          }
-          iso_codes = iso_codes + lang.iso_code[i]
-        }
-
-        //Needs to be iterative
-        for(var j = 0; j < lang.coordinates.length; j++) {
-          var coord = lang.coordinates[j];
+  downloadUrl("../lang.xml", function(data) {
+    var xml = parseXml(data); 
+    var langs = xml.documentElement.getElementsByTagName("marker"); 
+    for (var i = 0; i < langs.length; i++) (function( lang){ 
+        var title = lang.getAttribute("title"); 
+        if (langset.has(title)) {
+          var iso_code = lang.getAttribute("iso_code"); 
+          var family = lang.getAttribute("family");
+          var link = lang.getAttribute("link");
+          var type = lang.getAttribute("labeltype"); 
           var point = new google.maps.LatLng( 
-              parseFloat(coord.latitude), 
-              parseFloat(coord.longitude)); 
+              parseFloat(lang.getAttribute("lat")), 
+              parseFloat(lang.getAttribute("lng"))); 
+          var bubble = title + " (" + iso_code + ") <br/> Family: " + family;
           var marker = 
               new StyledMarker({
               map: map, 
               position: point,
                   styleIcon: (family in icons ? icons[family] : icons.Other)
               })
-              //may not need this
-              // if( parm_c != null && parm_c == iso_code) {
-              //     map.panTo( point);
-              //     map.setZoom( 9);
-              // }
+              if( parm_c != null && parm_c == iso_code) {
+                  map.panTo( point);
+                  map.setZoom( 9);
+              }
+
           google.maps.event.addListener(marker, 'mouseover', function() {
                   langinfo.innerHTML = "<span class=key>Language:</span> <b>" + title 
-                  + "</b> <span class=key>Code:</span> <b>" + iso_codes 
+                  + "</b> <span class=key>Code:</span> <b>" + iso_code 
                   + "</b> <span class=key>Family:</span> <b>" + family + "</b>"; 
               var projection = overlay.getProjection(); 
               var pixel = projection.fromLatLngToContainerPixel( 
@@ -333,33 +250,38 @@ function initialize() {
                   window.location.href = link;
                   }
           });   
-        }
-      }
-  });
-  })
-}
-
-function downloadUrl(url, callback) {
-  var request = window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest;
-
-  request.onreadystatechange = function () {
-      if (request.readyState == 4) {
-          request.onreadystatechange = doNothing;
-          if (request.status === 200) {
-              var responseData = JSON.parse(request.responseText);
-              callback(responseData, request.status);
-          } else {
-              // Handle error cases if needed
-              callback(null, request.status);
           }
-      }
-  };
+    })( langs[i]);
+  });        
 
-  request.open('GET', url, true);
-  request.send(null);
+  function downloadUrl(url, callback) { 
+    var request = window.ActiveXObject ? 
+  new ActiveXObject('Microsoft.XMLHTTP') : 
+  new XMLHttpRequest; 
+
+    request.onreadystatechange = function() { 
+  if (request.readyState == 4) { 
+    request.onreadystatechange = doNothing; 
+    callback(request.responseText, request.status); 
+  }
+    }; 
+
+    request.open('GET', url, true); 
+    request.send(null); 
+  } 
+
+  function parseXml(str) { 
+    if (window.ActiveXObject) { 
+  var doc = new ActiveXObject('Microsoft.XMLDOM'); 
+  doc.loadXML(str); 
+  return doc; 
+    } else if (window.DOMParser) { 
+  return (new DOMParser).parseFromString(str, 'text/xml'); 
+    } 
+  } 
+    
+  function doNothing() {} 
 }
- 
-function doNothing() {}
 
 function openCity(evt, cityName) {
   // Declare all variables
