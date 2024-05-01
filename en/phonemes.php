@@ -9,7 +9,7 @@
 <script type="text/javascript" src="../chooser.js"></script>
 </head>
 
-<body onload="initialize()">
+<!-- <body onload="initialize()"> -->
 
 <?php include("title.php"); ?>
 <?php include("nav-languages.php"); ?>

@@ -133,38 +133,32 @@ $(window).bind('focusout mouseleave', function(evtobj) {
   metadown = false;
 });
 
-function getIcon( color, text) {
-  return new StyledIcon( StyledIconTypes.MARKER, {
-      color: color,
-      text: text})
-}
-
 var icons = {
-  'Tupi' : getIcon( '#2f0', 'T'),
-  'Tupí' : getIcon( '#2f0', 'T'),
-  'Arawak' : getIcon( '#f00', 'A'),
-  'Carib' : getIcon( '#f80', 'C'),
-  'Macro-Ge' : getIcon( '#ff0', 'M'),
-  'Quechua' : getIcon( '#cf4', 'Q'),
-  'Panoan' : getIcon( '#08f', 'P'),
-  'Tucanoan' : getIcon( '#00f', 'Tu'),
-  'Arawan' : getIcon( '#f08', 'An'),
-  'Chibchan' : getIcon( '#faa', 'Cb'),
-  'Guaicuru' : getIcon( '#a42', 'G'),
-  'Mataco' : getIcon( '#26c', 'Mt'),
-  'Jivaroan' : getIcon( '#2aa', 'J'),
-  'Witotoan' : getIcon( '#999', 'W'),
-  'Barbacoan' : getIcon( '#c48', 'B'),
-  'Chapakuran' : getIcon( '#088', 'Cp'),
-  'Choco' : getIcon( '#a80', 'Cc'),
-  'Guahiban' : getIcon( '#4cf', 'Gh'),
-  'Nadahup' : getIcon( '#4fc', 'N'),
-  'Nambiquaran' : getIcon( '#4a2', 'Nm'),
-  'Tacanan' : getIcon( '#c4f', 'Tn'),
-  'Yanomam' : getIcon( '#80c', 'Y'),
-  'Zaparoan' : getIcon( '#fc4', 'Z'),
-  'Chon' : getIcon( '#fef', 'Ch'),
-  'Other' : getIcon( '#ccd', '')
+  'Tupi' : '#2f0',
+  'Tupí' : '#2f0',
+  'Arawak' : '#f00',
+  'Carib' : '#f80', 
+  'Macro-Ge' : '#ff0',
+  'Quechua' : '#cf4',
+  'Panoan' : '#08f',
+  'Tucanoan' : '#00f',
+  'Arawan' : '#f08',
+  'Chibchan' : '#faa',
+  'Guaicuru' : '#a42',
+  'Mataco' : '#26c',
+  'Jivaroan' : '#2aa',
+  'Witotoan' : '#999',
+  'Barbacoan' : '#c48',
+  'Chapakuran' : '#088',
+  'Choco' : '#a80',
+  'Guahiban' : '#4cf',
+  'Nadahup' : '#4fc',
+  'Nambiquaran' : '#4a2',
+  'Tacanan' : '#c4f',
+  'Yanomam' : '#80c',
+  'Zaparoan' : '#fc4',
+  'Chon' : '#fef',
+  'Other' : '#ccd',
 };
  
 function get_pos(el) {
@@ -174,7 +168,9 @@ function get_pos(el) {
   return {x: lx,y: ly};
 }
 
-function initialize() { 
+async function initialize() { 
+  const { Map } = await google.maps.importLibrary("maps");
+  const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
   var myLatlng = new google.maps.LatLng(-4.669119, -60.829511);
   var myOptions = {
     zoom: 5,
@@ -184,11 +180,12 @@ function initialize() {
     panControl: false,
     scaleControl: true,
     streetViewControl: false,
-    mapTypeId: google.maps.MapTypeId.TERRAIN
+    mapTypeId: 'terrain',
+    mapId: 'DEMO_MAP_ID'
   }
   var map_div = document.getElementById("pmap")
   var map_pos = get_pos( map_div)
-  var map = new google.maps.Map( map_div, myOptions);
+  const map = new Map(map_div, myOptions);
   var overlay = new google.maps.OverlayView();
   overlay.draw = function() {};
   overlay.setMap( map);
@@ -213,43 +210,40 @@ function initialize() {
               parseFloat(lang.getAttribute("lat")), 
               parseFloat(lang.getAttribute("lng"))); 
           var bubble = title + " (" + iso_code + ") <br/> Family: " + family;
-          var marker = 
-              new StyledMarker({
-              map: map, 
-              position: point,
-                  styleIcon: (family in icons ? icons[family] : icons.Other)
-              })
-              if( parm_c != null && parm_c == iso_code) {
-                  map.panTo( point);
-                  map.setZoom( 9);
-              }
+          const pin = new PinElement({
+            background: icons[family],
+            borderColor: '#000000',
+            glyph: ""
+          })
+          const marker = new AdvancedMarkerElement({
+            map: map,
+            position: point,
+            content: pin.element,
+          });
 
-          google.maps.event.addListener(marker, 'mouseover', function() {
-                  langinfo.innerHTML = "<span class=key>Language:</span> <b>" + title 
-                  + "</b> <span class=key>Code:</span> <b>" + iso_code 
-                  + "</b> <span class=key>Family:</span> <b>" + family + "</b>"; 
+          marker.content.addEventListener('mouseenter', function() {
+              langinfo.innerHTML = "<span class=key>Language:</span> <b>" + title + "</b> <span class=key>Code:</span> <b>" + iso_code + "</b> <span class=key>Family:</span> <b>" + family + "</b>"; 
               var projection = overlay.getProjection(); 
-              var pixel = projection.fromLatLngToContainerPixel( 
-                  marker.getPosition());
+              var pixel = projection.fromLatLngToContainerPixel(point);
               tooltip.style.top = (map_pos.y + pixel.y - 60) + "px";
               tooltip.style.left = (map_pos.x + pixel.x - 11) + "px";
               tooltip.style.padding = "1px 2px"
                   tooltip.innerHTML = title;
           });
 
-          google.maps.event.addListener(marker, 'mouseout', function() {
+          marker.content.addEventListener('mouseleave', function() {
                   langinfo.innerHTML = ""
                   tooltip.innerHTML = ""
               tooltip.style.padding = "0"
           });
 
-          google.maps.event.addListener(marker, 'click', function( event) {
-                  if( metadown) {
-                  window.open(link);
-                  } else {
-                  window.location.href = link;
-                  }
-          });   
+          // google.maps.event.addListener(marker, 'click', function(event) {
+          //         if( metadown) {
+          //         window.open(link);
+          //         } else {
+          //         window.location.href = link;
+          //         }
+          // });   
           }
     })( langs[i]);
   });        
