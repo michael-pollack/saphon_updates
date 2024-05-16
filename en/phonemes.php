@@ -5,7 +5,6 @@
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=quarterly&language=en&key=AIzaSyCBTjzFyFyz9h92Y9QQHzryzV565Edat5g"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-<script type="text/javascript" src="../StyledMarker.js"></script>
 <script type="text/javascript" src="../chooser.js"></script>
 </head>
 
