@@ -8,63 +8,53 @@ $(window).bind('focusout mouseleave', function(evtobj) {
 metadown = false;
 });
 
-//Somedot Route
 var icons = {
-  'Tupi' : ['#FF0000', '#808080'],     // Red & Gray
-  'Tupí' : ['#FF0000', '#808080'],     // Red & Gray
-  'Arawak' : ['#00FF00', '#808080'],   // Green & Gray
-  'Carib' : ['#0000FF', '#808080'],    // Blue & Gray
-  'Macro-Ge' : ['#FFFF00', '#808080'], // Yellow & Gray
-  'Quechua' : ['#00FFFF', '#808080'],  // Cyan & Gray
-  'Panoan' : ['#FF00FF', '#808080'],   // Magenta & Gray
-  'Tucanoan' : ['#FFA500', '#808080'], // Orange & Gray
-  'Arawan' : ['#800080', '#808080'],   // Purple & Gray
-  'Chibchan' : ['#FFD700', '#808080'], // Gold & Gray
-  'Guaicuru' : ['#00CED1', '#00CED1'], // DarkTurquoise & DarkTurquoise 
-  'Mataco' : ['#008080', '#008080'],   // Teal & Teal
-  'Jivaroan' : ['#2E8B57', '#2E8B57'], // Sea Green & Sea Green
-  'Witotoan' : ['#FF6347', '#FF6347'], // Tomato & Tomato
-  'Barbacoan' : ['#800000', '#800000'], // Maroon & Maroon
-  'Chapakuran' : ['#8A2BE2', '#8A2BE2'], // BlueViolet & BlueViolet
-  'Choco' : ['#4B0082', '#4B0082'],    // Indigo & Indigo
-  'Guahiban' : ['#FF4500', '#FF4500'], // OrangeRed & OrangeRed
-  'Nadahup' : ['#20B2AA', '#20B2AA'],  // LightSeaGreen & LightSeaGreen
-  'Nambiquaran' : ['#4682B4', '#4682B4'], // SteelBlue & SteelBlue
-  'Tacanan' : ['#3CB371', '#808080'],  // MediumSeaGreen & MediumSeaGreen
-  'Yanomam' : ['#87CEEB', '#87CEEB'],  // SkyBlue & SkyBlue
-  'Zaparoan' : ['#8B008B', '#8B008B'], // DarkMagenta & DarkMagenta
-  'Chon' : ['#8B008B', '#808080'],     // Gray & Gray
-  'Other' : ['#D3D3D3', '#D3D3D3']     // Gray & White
+  'Alacalufan' : ['#00FF00', '#000000'], // Green & Black
+  'Arawak' : ['#0000FF', '#FFFFFF'],     // Blue & White
+  'Arawan' : ['#FFFF00', '#000000'],     // Yellow & Black
+  'Araucanian' : ['#FF00FF', '#000000'], // Magenta & Black
+  'Aymaran' : ['#00FFFF', '#000000'],    // Cyan & Black
+  'Barbacoan' : ['#800000', '#FFFFFF'],  // Maroon & White
+  'Boran' : ['#008000', '#FFFFFF'],      // Green & White
+  'Cahuapanan' : ['#000080', '#FFFFFF'], // Navy & White
+  'Carib' : ['#808000', '#000000'],      // Olive & Black
+  'Chapakuran' : ['#800080', '#FFFFFF'], // Purple & White
+  'Charruan' : ['#008080', '#FFFFFF'],   // Teal & White
+  'Chibchan' : ['#FFA500', '#000000'],   // Orange & Black
+  'Choco' : ['#A52A2A', '#FFFFFF'],      // Brown & White
+  'Chon' : ['#D2691E', '#FFFFFF'],       // Chocolate & White
+  'Guaicuru' : ['#FF4500', '#000000'],   // OrangeRed & Black
+  'Guahiban' : ['#2E8B57', '#000000'],   // SeaGreen & Black
+  'Harakmbet' : ['#ADFF2F', '#000000'],  // GreenYellow & Black
+  'Hibito-Cholon' : ['#7FFF00', '#000000'], // Chartreuse & Black
+  'Isolate' : ['#FFFFFF', '#000000'],    // White & Black
+  'Jivaroan' : ['#4B0082', '#FFFFFF'],   // Indigo & White
+  'Kakua-Nukak' : ['#6A5ACD', '#FFFFFF'], // SlateBlue & White
+  'Katukinan' : ['#FF6347', '#000000'],  // Tomato & Black
+  'Macro-Ge' : ['#FFD700', '#000000'],   // Gold & Black
+  'Mataco' : ['#8A2BE2', '#FFFFFF'],     // BlueViolet & White
+  'Mixed' : ['#1E90FF', '#000000'],      // DodgerBlue & Black
+  'Mosetenan' : ['#FF1493', '#000000'],  // DeepPink & Black
+  'Mura' : ['#00FF7F', '#000000'],       // SpringGreen & Black
+  'Nadahup' : ['#20B2AA', '#000000'],    // LightSeaGreen & Black
+  'Nambiquaran' : ['#FF8C00', '#000000'], // DarkOrange & Black
+  'Other' : ['#D3D3D3', '#000000'],      // LightGray & Black
+  'Panoan' : ['#FF69B4', '#000000'],     // HotPink & Black
+  'Peba-Yaguan' : ['#98FB98', '#000000'], // PaleGreen & Black
+  'Quechua' : ['#DB7093', '#000000'],    // PaleVioletRed & Black
+  'Salivan' : ['#AFEEEE', '#000000'],    // PaleTurquoise & Black
+  'Tacanan' : ['#4682B4', '#000000'],    // SteelBlue & Black
+  'Tucanoan' : ['#40E0D0', '#000000'],   // Turquoise & Black
+  'Tupi' : ['#FF0000', '#000000'],       // Red & Black
+  'Tupí' : ['#FF0000', '#000000'],       // Coral & Black
+  'Uru-Chipaya' : ['#8B4513', '#FFFFFF'], // SaddleBrown & White
+  'Witotoan' : ['#9ACD32', '#000000'],   // YellowGreen & Black
+  'Yanomam' : ['#87CEEB', '#000000'],    // SkyBlue & Black
+  'Zaparoan' : ['#8B008B', '#FFFFFF'],   // DarkMagenta & White
+  'Zamucoan' : ['#556B2F', '#FFFFFF']    // DarkOliveGreen & White
 };
 
-//Maxdif Nodot route
-// const icons = {
-// 'Tupi' : ['#FF0000', '#FF0000'],     // Red & Red
-// 'Tupí' : ['#FF0000', '#FF0000'],     // Red & Red
-// 'Arawak' : ['#0000FF', '#0000FF'],   // Blue & Blue
-// 'Carib' : ['#FFFF00', '#FFFF00'],    // Yellow & Yellow
-// 'Macro-Ge' : ['#00FFFF', '#00FFFF'], // Cyan & Cyan
-// 'Quechua' : ['#FF00FF', '#FF00FF'],  // Magenta & Magenta
-// 'Panoan' : ['#FFA500', '#FFA500'],   // Orange & Orange
-// 'Tucanoan' : ['#800080', '#800080'], // Purple & Purple
-// 'Arawan' : ['#FFD700', '#FFD700'],   // Gold & Gold
-// 'Chibchan' : ['#FF4500', '#FF4500'], // OrangeRed & OrangeRed
-// 'Guaicuru' : ['#008080', '#008080'], // Teal & Teal
-// 'Mataco' : ['#2E8B57', '#2E8B57'],   // Sea Green & Sea Green
-// 'Jivaroan' : ['#FF6347', '#FF6347'], // Tomato & Tomato
-// 'Witotoan' : ['#800000', '#800000'], // Maroon & Maroon
-// 'Barbacoan' : ['#8A2BE2', '#8A2BE2'], // BlueViolet & BlueViolet
-// 'Chapakuran' : ['#4B0082', '#4B0082'], // Indigo & Indigo
-// 'Choco' : ['#00CED1', '#00CED1'],    // DarkTurquoise & DarkTurquoise
-// 'Guahiban' : ['#20B2AA', '#20B2AA'],  // LightSeaGreen & LightSeaGreen
-// 'Nadahup' : ['#4682B4', '#4682B4'],   // SteelBlue & SteelBlue
-// 'Nambiquaran' : ['#3CB371', '#3CB371'], // MediumSeaGreen & MediumSeaGreen
-// 'Tacanan' : ['#87CEEB', '#87CEEB'],   // SkyBlue & SkyBlue
-// 'Yanomam' : ['#8B008B', '#8B008B'],  // DarkMagenta & DarkMagenta
-// 'Zaparoan' : ['#00FF00', '#00FF00'], // Gray & Gray
-// 'Chon' : ['#D3D3D3', '#D3D3D3'],     // LightGray & LightGray
-// 'Other' : ['#808080', '#FFFFFF']     // Gray & White
-// };
+
 
 
 function get_pos(el) {
@@ -93,11 +83,9 @@ async function initialize() {
   var map_div = document.getElementById("map")
   var map_pos = get_pos( map_div)
   const map = new Map(map_div, myOptions);
-  var overlay = new google.maps.OverlayView();
-  overlay.draw = function() {};
-  overlay.setMap( map);
   var langinfo = document.getElementById("langinfo");
   var tooltip = document.getElementById("tooltip");
+  otherfamilies = {}
 
   downloadUrl("../lang.xml", function(data) {
     var xml = parseXml(data); 
@@ -112,39 +100,42 @@ async function initialize() {
             parseFloat(lang.getAttribute("lat")), 
             parseFloat(lang.getAttribute("lng"))); 
         var bubble = title + " (" + iso_code + ") <br/> Family: " + family;
+        const newPin = document.createElement("div");
         if (!(family in icons)){
           family = 'Other'
+          newPin.textContent = iso_code.substring(0, 3);
+        } else {
+          newPin.textContent = family[0];
         }
-        const pin = new PinElement({
-          background: icons[family][0],
-          glyphColor: icons[family][1],
-          borderColor: '#000000',
-          scale: 0.75
-        })
+        newPin.textContent = family[0];
+        newPin.className = "price-tag";
+        newPin.style.setProperty("--color", icons[family][0]);
+        newPin.style.setProperty("--font_color", icons[family][1]);
+        newPin.addEventListener('mouseover', () => {
+          langinfo.innerHTML = "<span class=key>Language:</span> <b>" + title + "</b> <span class=key>Code:</span> <b>" + iso_code + "</b> <span class=key>Family:</span> <b>" + family + "</b>"; 
+          tooltip.innerHTML = title;
+          newPin.style.setProperty("--size", "30px");
+          newPin.style.setProperty("--font_size", "28px");
+        });
+        newPin.addEventListener('mouseleave', function() {
+          langinfo.innerHTML = ""
+          tooltip.innerHTML = ""
+          tooltip.style.padding = "0"
+          newPin.style.setProperty("--size", "15px");
+          newPin.style.setProperty("--font_size", "14px");
+        });
         const marker = new AdvancedMarkerElement({
           map: map,
           position: point,
-          content: pin.element,
+          content: newPin,
+        });
+        marker.addListener('click', () => {
+          console.log("Oh yeah baby! Yes!!")
         });
 
-        marker.content.addEventListener('mouseenter', function() {
-            langinfo.innerHTML = "<span class=key>Language:</span> <b>" + title + "</b> <span class=key>Code:</span> <b>" + iso_code + "</b> <span class=key>Family:</span> <b>" + family + "</b>"; 
-            var projection = overlay.getProjection(); 
-            var pixel = projection.fromLatLngToContainerPixel(point);
-            tooltip.style.top = (map_pos.y + pixel.y - 60) + "px";
-            tooltip.style.left = (map_pos.x + pixel.x - 11) + "px";
-            tooltip.style.padding = "1px 2px"
-                tooltip.innerHTML = title;
-        });
-
-        marker.content.addEventListener('mouseleave', function() {
-                langinfo.innerHTML = ""
-                tooltip.innerHTML = ""
-            tooltip.style.padding = "0"
-        });
   })( langs[i]);
   }); 
-  
+  console.log(otherfamilies)
   // new MarkerClusterer({map, markers});
 
   function downloadUrl(url, callback) { 
