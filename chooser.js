@@ -240,7 +240,7 @@ async function initialize() {
         newPin.style.setProperty("--color", icons[family][0]);
         newPin.style.setProperty("--font_color", icons[family][1]);
         newPin.addEventListener('mouseover', () => {
-          langinfo.innerHTML = "<span class=key>Language:</span> <b>" + title + "</b> <span class=key>Code:</span> <b>" + iso_code + "</b> <span class=key>Family:</span> <b>" + family + "</b>"; 
+          langinfo.innerHTML = `<span class=key>${pglang["language"]}:</span> <b>` + title + `</b> <span class=key>${pglang["code"]}:</span> <b>` + iso_code + `</b> <span class=key>${pglang["family"]}:</span> <b>` + family + "</b>";
           tooltip.innerHTML = title;
           newPin.style.setProperty("--size", "30px");
           newPin.style.setProperty("--font_size", "28px");

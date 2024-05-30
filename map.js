@@ -64,7 +64,7 @@ for (var lx=0, ly=0;
 return {x: lx,y: ly};
 }
 
-async function initialize() { 
+async function initialize(pglang) {
   const { Map } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
   var myLatlng = new google.maps.LatLng(-4.669119, -60.829511);
@@ -99,7 +99,7 @@ async function initialize() {
         var point = new google.maps.LatLng( 
             parseFloat(lang.getAttribute("lat")), 
             parseFloat(lang.getAttribute("lng"))); 
-        var bubble = title + " (" + iso_code + ") <br/> Family: " + family;
+        var bubble = title + " (" + iso_code + `) <br/> ${pglang["family"]}: ` + family;
         const newPin = document.createElement("div");
         if (!(family in icons)){
           family = 'Other'
@@ -130,10 +130,13 @@ async function initialize() {
           content: newPin,
         });
         marker.addListener('click', () => {
-          console.log("Oh yeah baby! Yes!!")
+          if(metadown) {
+              window.open(link);
+          } else {
+              window.location.href = link;
+          }
         });
-
-  })( langs[i]);
+    })( langs[i]);
   }); 
   console.log(otherfamilies)
   // new MarkerClusterer({map, markers});

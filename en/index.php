@@ -3,9 +3,18 @@
   <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=quarterly&language=en&key=AIzaSyCBTjzFyFyz9h92Y9QQHzryzV565Edat5g"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-  <script type="text/javascript" src="/map.js"></script>
+   <script type="text/javascript" src="../map.js"></script>
+
+   <script type="text/javascript">
+     const translation = {
+       "code": "Code",
+       "family": "Family",
+       "language": "Language",
+     };
+   </script>
+
 </head>
-<body onload="initialize()">
+<body onload="initialize(translation)">
 <?php include("title.php"); ?>
 <?php include("nav-languages.php"); ?>
 		
