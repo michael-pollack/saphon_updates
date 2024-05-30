@@ -2,13 +2,13 @@ import json
 import os
 
 ipa_consonants = {
-    "p": ("bilabial", "stop", "voiceless"),
-    "b": ("bilabial", "stop", "voiced"),
-    "t": ("alveolar", "stop", "voiceless"),
-    "d": ("alveolar", "stop", "voiced"),
-    "k": ("velar", "stop", "voiceless"),
-    "g": ("velar", "stop", "voiced"),
-    "ʔ": ("glottal", "stop", "voiceless"),
+    "p": ("bilabial", "plosive", "voiceless"),
+    "b": ("bilabial", "plosive", "voiced"),
+    "t": ("alveolar", "plosive", "voiceless"),
+    "d": ("alveolar", "plosive", "voiced"),
+    "k": ("velar", "plosive", "voiceless"),
+    "g": ("velar", "plosive", "voiced"),
+    "ʔ": ("glottal", "plosive", "voiceless"),
     "m": ("bilabial", "nasal", "voiced"),
     "n": ("alveolar", "nasal", "voiced"),
     "ŋ": ("velar", "nasal", "voiced"),
@@ -91,6 +91,7 @@ ipa_vowels = {
     "ɒ": ("open", "back")
 }
 
+lost_phonemes = {"a"}
 
 def generate_html(template):
     name = template.get("name", "")
@@ -105,10 +106,9 @@ def generate_html(template):
     else: 
         latitude, longitude = "N/A", "N/A"
     family = template.get("family", "")
-    consonants = template.get("consonants", [])
-    vowels = template.get("vowels", [])
     phonemes = template.get("phonemes", [])
-
+    doctype = template.get("doctype", "")
+    synthesis_notes = template.get("synthesis", "")
     html_content = f"""
     <html>
     <head>
@@ -126,6 +126,7 @@ def generate_html(template):
     html_content += generate_ipa_html_table([phon["phoneme"] for phon in phonemes])
     html_content += f"""
     <div class=field><div class=key>Suprasegmental</div><div class=value>{template.get("suprasegmental", "None")}</div></div>
+    <div class=field><div class=key>Synthesis Notes</div><div class=value>{synthesis_notes}</div></div>
     <div class=field><div class=key>Bibliography</div><div class=value><p>{template.get("bibliography", "")}</p></div></div>
     </div>
     </body>
@@ -153,6 +154,9 @@ def generate_ipa_html_table(phonemes):
         html += f"<tr><th>{manner}</th>"
         for place in places:
             cell_content = [phoneme for phoneme in phonemes if phoneme in ipa_consonants and ipa_consonants[phoneme][:2] == (place, manner)]
+            for phoneme in phonemes:
+                if phoneme not in ipa_consonants:
+                    lost_phonemes.add(phoneme)
             html += f"<td>{' '.join(cell_content)}</td>"
         html += "</tr>"
     html += "</table>"
@@ -181,14 +185,14 @@ def process_templates_from_folder(input_folder, output_folder):
             template_path = os.path.join(input_folder, filename)
             with open(template_path, 'r', encoding='utf-8') as file:
                 template = json.load(file)
+                doctype = template.get("doctype", "")
                 html_content = generate_html(template)
-                if "Mby" in html_content:
-                    print(html_content)
                 output_file = f"{template['name'].replace(' ', '_').replace(',', '').replace(':', '')}.html"
                 output_path = os.path.join(output_folder, output_file)
                 with open(output_path, 'w', encoding='utf-8') as html_file:
                     html_file.write(html_content)
                 print(f"Generated HTML file: {output_path}")
+    print(lost_phonemes)
 
 # Specify the folder containing template files and the output folder for HTML files
 input_folder = "json"

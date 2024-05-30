@@ -191,7 +191,7 @@ for (var lx=0, ly=0;
 return {x: lx,y: ly};
 }
 
-async function initialize() { 
+async function initialize(pglang) { 
   const { Map } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
   var myLatlng = new google.maps.LatLng(-4.669119, -60.829511);
@@ -258,7 +258,11 @@ async function initialize() {
           content: newPin,
         });
         marker.addListener('click', () => {
-          console.log("Oh yeah baby! Yes!!")
+          if(metadown) {
+              window.open(link);
+          } else {
+              window.location.href = link;
+          }
         });
       }
 
