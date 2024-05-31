@@ -93,7 +93,7 @@ ipa_vowels = {
 
 lost_phonemes = {"a"}
 
-def generate_html(template):
+def generate_html(template, doctype):
     name = template.get("name", "")
     if (type(template.get("iso_codes", [""])) == list and len(template.get("iso_codes", [""])) != 0):
         iso_code = template.get("iso_codes", [""])[0]
@@ -140,20 +140,20 @@ def process_scraper(phonemes):
     for phoneme in phonemes:
         mappings[phoneme["phoneme"]] = []
         for environment in phoneme["environments"]:
-            for j in range(len(environment["allophones"])):
-                allophone = environment["allophones"][j]
-                if allophone["allophone"] != phoneme["phoneme"]:
-                    processes = ""
-                    for k in range(len(allophone["processnames"])):
-                        if k != 0:
-                            processes += " ,"
-                        processes +=  allophone["processnames"][k]
-                        if k == len(allophone["processnames"]) - 1:
-                            processes += ": "
-                    process = f"""
-                    <span class="processname"> {processes} </span> <br> <span class="process">/{phoneme["phoneme"]}/ -> [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span>
-                    """
-                    mappings[phoneme["phoneme"]].append(process)
+            if type(environment) == dict:
+                for allophone in environment["allophones"]:
+                    if allophone["allophone"] != phoneme["phoneme"]:
+                        processes = ""
+                        for k in range(len(allophone["processnames"])):
+                            if k != 0:
+                                processes += " ,"
+                            processes +=  allophone["processnames"][k]
+                            if k == len(allophone["processnames"]) - 1:
+                                processes += ": "
+                        process = f"""
+                        <span class="processname"> {processes} </span> <br> <span class="process">/{phoneme["phoneme"]}/ -> [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span>
+                        """
+                        mappings[phoneme["phoneme"]].append(process)
 
     html_content = f"""
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
@@ -220,26 +220,39 @@ def generate_ipa_html_table(phonemes):
     html += "</body></html>"
     return html
 
-def process_templates_from_folder(input_folder, output_folder):
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+def process_templates_from_folder(input_folder, synth_output_folder, ref_output_folder):
+    if not os.path.exists(synth_output_folder):
+        os.makedirs(synth_output_folder)
+
+    if not os.path.exists(ref_output_folder):
+        os.makedirs(ref_output_folder)
 
     for filename in os.listdir(input_folder):
         if filename.endswith(".json"):
             template_path = os.path.join(input_folder, filename)
             with open(template_path, 'r', encoding='utf-8') as file:
-                template = json.load(file)
-                doctype = template.get("doctype", "")
-                html_content = generate_html(template)
-                output_file = f"{template['name'].replace(' ', '_').replace(',', '').replace(':', '')}.html"
-                output_path = os.path.join(output_folder, output_file)
-                with open(output_path, 'w', encoding='utf-8') as html_file:
-                    html_file.write(html_content)
-                print(f"Generated HTML file: {output_path}")
+                templates = json.load(file)
+                if type(templates) == list:
+                    for template in templates:
+                        doctype = template.get("doctype", "")
+                        output_file = f"{filename.replace('.json', '.html')}"
+                        html_content = generate_html(template, doctype)
+                        if doctype == "synthesis":
+                            output_path = os.path.join(synth_output_folder, output_file)
+                        elif doctype == "reference":
+                            output_path = os.path.join(ref_output_folder, output_file)
+                        else:
+                            raise ValueError("Invalid Doctype")
+                        with open(output_path, 'w', encoding='utf-8') as html_file:
+                            html_file.write(html_content)
+                        print(f"Generated HTML file: {output_path}")
+                else:
+                    print(filename + " skipped, files must be a list")
     print(lost_phonemes)
 
 # Specify the folder containing template files and the output folder for HTML files
-input_folder = "json"
-output_folder = "en/new_inv"
+input_folder = "new_json"
+synth_output_folder = "en/synth_inv"
+ref_output_folder = "en/ref_inv"
 # Run the script to process all template files in the specified folder and save the HTML files in the output folder
-process_templates_from_folder(input_folder, output_folder)
+process_templates_from_folder(input_folder, synth_output_folder, ref_output_folder)
