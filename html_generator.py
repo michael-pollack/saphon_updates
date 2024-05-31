@@ -107,7 +107,7 @@ def generate_html(template):
         latitude, longitude = "N/A", "N/A"
     family = template.get("family", "")
     phonemes = template.get("phonemes", [])
-    doctype = template.get("doctype", "")
+    processes = process_scraper(phonemes)
     synthesis_notes = template.get("synthesis", "")
     html_content = f"""
     <html>
@@ -125,14 +125,44 @@ def generate_html(template):
     """
     html_content += generate_ipa_html_table([phon["phoneme"] for phon in phonemes])
     html_content += f"""
-    <div class=field><div class=key>Suprasegmental</div><div class=value>{template.get("suprasegmental", "None")}</div></div>
-    <div class=field><div class=key>Synthesis Notes</div><div class=value>{synthesis_notes}</div></div>
-    <div class=field><div class=key>Bibliography</div><div class=value><p>{template.get("bibliography", "")}</p></div></div>
+    <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
+    <div class=field><h2>Processes</h2>{processes}</div>
+    <div class=field><h2>References</h2></div>
     </div>
     </body>
     </html>
     """
     
+    return html_content
+
+def process_scraper(phonemes):
+    mappings =  {}
+    for phoneme in phonemes:
+        mappings[phoneme["phoneme"]] = []
+        for environment in phoneme["environments"]:
+            for allophone in environment["allophones"]:
+                if allophone["allophone"] != phoneme["phoneme"]:
+                    process = "/" + phoneme["phoneme"] + "/ -> [" + allophone["allophone"] + "] / " + environment["preceding"] + "_" + environment["following"]
+                    mappings[phoneme["phoneme"]].append(process)
+
+    html_content = f"""
+    <div><table><tr><th>Phoneme</th><th>Processes</th></tr>
+    """
+    for mapping in mappings:
+        if mappings[mapping] != []:
+            html_content += f"""
+            <tr><th> /{mapping}/ </th><td>
+            """
+            for process in mappings[mapping]:
+                html_content += f"""
+                {process} <br>
+                """
+            html_content += f"""
+            </td></tr>
+            """
+    html_content += f"""
+    </table></div>
+    """
     return html_content
 
 def generate_ipa_html_table(phonemes):

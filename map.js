@@ -77,7 +77,10 @@ async function initialize(pglang) {
     scaleControl: true,
     streetViewControl: false,
     mapTypeId: 'terrain',
-    mapId: 'DEMO_MAP_ID'
+    mapId: 'DEMO_MAP_ID',
+    options: {
+      gestureHandling: 'greedy'
+    }
     //mapID: 'f4dcb8b48ec1a463'
   }
   var map_div = document.getElementById("map")
