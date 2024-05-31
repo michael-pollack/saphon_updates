@@ -140,23 +140,37 @@ def process_scraper(phonemes):
     for phoneme in phonemes:
         mappings[phoneme["phoneme"]] = []
         for environment in phoneme["environments"]:
-            for allophone in environment["allophones"]:
+            for j in range(len(environment["allophones"])):
+                allophone = environment["allophones"][j]
                 if allophone["allophone"] != phoneme["phoneme"]:
-                    process = "/" + phoneme["phoneme"] + "/ -> [" + allophone["allophone"] + "] / " + environment["preceding"] + "_" + environment["following"]
+                    processes = ""
+                    for k in range(len(allophone["processnames"])):
+                        if k != 0:
+                            processes += " ,"
+                        processes +=  allophone["processnames"][k]
+                        if k == len(allophone["processnames"]) - 1:
+                            processes += ": "
+                    process = f"""
+                    <span class="processname"> {processes} </span> <br> <span class="process">/{phoneme["phoneme"]}/ -> [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span>
+                    """
                     mappings[phoneme["phoneme"]].append(process)
 
     html_content = f"""
-    <div><table><tr><th>Phoneme</th><th>Processes</th></tr>
+    <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
     """
     for mapping in mappings:
         if mappings[mapping] != []:
             html_content += f"""
             <tr><th> /{mapping}/ </th><td>
             """
-            for process in mappings[mapping]:
+            for index, process in enumerate(mappings[mapping]):
                 html_content += f"""
                 {process} <br>
                 """
+                if index != len(mappings[mapping]) - 1:
+                    html_content += "<br>"
+            
+            html_content = html_content[:-4]
             html_content += f"""
             </td></tr>
             """
