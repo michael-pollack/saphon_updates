@@ -93,12 +93,11 @@ ipa_vowels = {
 
 lost_phonemes = {"a"}
 
-def generate_html(templates):
-    if type(templates) == list:
-        template = templates[0]
-    else:
-        template = templates
+def generate_html_body(template):
     name = template.get("name", "")
+    family = template.get("family", "")
+    phonemes = template.get("phonemes", [])
+    processes = process_scraper(phonemes)
     if (type(template.get("iso_codes", [""])) == list and len(template.get("iso_codes", [""])) != 0):
         iso_code = template.get("iso_codes", [""])[0]
     else:
@@ -109,17 +108,8 @@ def generate_html(templates):
         longitude = coordinates.get("longitude", 0.0)
     else: 
         latitude, longitude = "N/A", "N/A"
-    family = template.get("family", "")
-    phonemes = template.get("phonemes", [])
-    processes = process_scraper(phonemes)
     synthesis_notes = template.get("synthesis", "")
     html_content = f"""
-    <html>
-    <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
-    </head>
-    <body>
     <div class=entry>
     <h1>{name}</h1>
     <div class=field><div class=key>Language code</div><div class=value>{iso_code}</div></div>
@@ -132,11 +122,31 @@ def generate_html(templates):
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>Processes</h2>{processes}</div>
     <div class=field><h2>References</h2></div>
+    """
+    return html_content
+
+def generate_html(template):
+    html_content = f"""
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
+    </head>
+    <body>
+    """
+    if type(template) == list:
+        html_content += f"""
+        <h1>Reference Documents</h1>
+        """
+        for ref in template:
+            html_content = html_content + generate_html_body(ref)
+    else:
+        html_content += generate_html_body(template)
+    html_content += f"""
     </div>
     </body>
     </html>
     """
-    
     return html_content
 
 def process_scraper(phonemes):
@@ -252,8 +262,11 @@ def process_templates_from_folder(input_folder, synth_output_folder, ref_output_
                             html_file.write(html_content)
                         print(f"Generated Synthesis HTML file: {output_path}")
                     if ref_templates != []:
-                        html_content = generate_html(ref_templates)
-                        print(f"Generated Reference HTML file: {output_path}")
+                        ref_html_content = generate_html(ref_templates)
+                        ref_output_path = os.path.join(ref_output_folder, output_file)
+                        with open(ref_output_path, 'w', encoding='utf-8') as ref_html_file:
+                            ref_html_file.write(ref_html_content)
+                        print(f"Generated Reference HTML file: {ref_output_path}")
                 else:
                     print(filename + " skipped, files must be a list")
     print(lost_phonemes)
