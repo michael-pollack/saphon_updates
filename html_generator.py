@@ -93,7 +93,11 @@ ipa_vowels = {
 
 lost_phonemes = {"a"}
 
-def generate_html(template, doctype):
+def generate_html(templates):
+    if type(templates) == list:
+        template = templates[0]
+    else:
+        template = templates
     name = template.get("name", "")
     if (type(template.get("iso_codes", [""])) == list and len(template.get("iso_codes", [""])) != 0):
         iso_code = template.get("iso_codes", [""])[0]
@@ -232,20 +236,24 @@ def process_templates_from_folder(input_folder, synth_output_folder, ref_output_
             template_path = os.path.join(input_folder, filename)
             with open(template_path, 'r', encoding='utf-8') as file:
                 templates = json.load(file)
+                ref_templates = []
                 if type(templates) == list:
                     for template in templates:
                         doctype = template.get("doctype", "")
                         output_file = f"{filename.replace('.json', '.html')}"
-                        html_content = generate_html(template, doctype)
                         if doctype == "synthesis":
+                            html_content = generate_html(template)
                             output_path = os.path.join(synth_output_folder, output_file)
                         elif doctype == "reference":
-                            output_path = os.path.join(ref_output_folder, output_file)
+                            ref_templates.append(template)
                         else:
                             raise ValueError("Invalid Doctype")
                         with open(output_path, 'w', encoding='utf-8') as html_file:
                             html_file.write(html_content)
-                        print(f"Generated HTML file: {output_path}")
+                        print(f"Generated Synthesis HTML file: {output_path}")
+                    if ref_templates != []:
+                        html_content = generate_html(ref_templates)
+                        print(f"Generated Reference HTML file: {output_path}")
                 else:
                     print(filename + " skipped, files must be a list")
     print(lost_phonemes)
