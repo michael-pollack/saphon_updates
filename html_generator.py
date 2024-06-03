@@ -69,6 +69,29 @@ def generate_base_consonant_chart(ipa):
 
 base_consonant_chart = generate_base_consonant_chart(ipa)
 
+#Generates JavaScript that can be imbedded in the HTML file. 
+def generate_phoneme_script(phonemes):
+    phoneme_script = """
+    function writePhonemes() {
+        const phonemes = """
+    
+    phoneme_script += str(phonemes) + ";"
+
+    phoneme_script += """
+        for (var i = 0; i < phonemes.length; i += 1) {
+            console.log(phonemes[i])
+            this_phon = document.getElementById(phonemes[i])
+            if(this_phon != null) {
+                console.log(this_phon)
+                this_phon.classList.toggle("visible-phoneme")
+            }
+        }
+    }
+    """
+    return phoneme_script
+
+print(generate_phoneme_script(["a", "b", "c"]))
+
 def generate_html_body(template):
     name = template.get("name", "")
     family = template.get("family", "")
@@ -102,13 +125,18 @@ def generate_html_body(template):
     return html_content
 
 def generate_html(template):
+    if type(template) != list:
+        phonemes = [phoneme["phoneme"] for phoneme in template.get("phonemes", [])]
+    else:
+        phonemes = []
     html_content = f"""
     <html>
-    <head>
+    <head> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
+    <script type="text/javascript">{generate_phoneme_script(phonemes)}</script>
     </head>
-    <body>
+    <body onload="writePhonemes()">
     """
     if type(template) == list:
         html_content += f"""
@@ -251,7 +279,6 @@ def process_templates_from_folder(input_folder, synth_output_folder, ref_output_
                         print(f"Generated Reference HTML file: {ref_output_path}")
                 else:
                     print(filename + " skipped, files must be a list")
-    print(lost_phonemes)
 
 # Specify the folder containing template files and the output folder for HTML files
 input_folder = "new_json"
