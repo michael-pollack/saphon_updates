@@ -34,6 +34,22 @@ manners = {
     "extra": "e"
 }
 
+heights = {
+    "High": "7",
+    "Low-High": "6",
+    "High-Mid": "5",
+    "Mid": "4",
+    "Low-Mid": "3",
+    "High-Low": "2",
+    "Low": "1",
+}
+
+backness = {
+    "Front": "f",
+    "Center": "c",
+    "Back": "b"
+}
+
 def generate_base_consonant_chart(ipa):
     html = "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }</style></head><body>"
     # Generate consonant table
@@ -67,7 +83,39 @@ def generate_base_consonant_chart(ipa):
     print(iterations)
     return html
 
+def generate_base_vowel_chart(ipa):
+    html = "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }</style></head><body>"
+    # Generate consonant table
+    html += "<h2>Vowels</h2><table>"
+    html += "<tr><th></th>" + "".join(f"<th>{depth}</th>" for depth in backness) + "</tr>"
+    iterations = 0
+    for height in heights:
+        height_prefix = "v" + heights[height]
+        html += f"<tr><th>{height}</th>"
+        for depth in backness:
+            depth_prefix = height_prefix + backness[depth]
+            rounded_cat_id, unrounded_cat_id = depth_prefix + "r", depth_prefix + "u"
+            rounded_cats = [cat for cat in ipa if cat.get("category") == rounded_cat_id]
+            unrounded_cats = [cat for cat in ipa if cat.get("category") == unrounded_cat_id]
+            if rounded_cats != []:
+                rounded_cats = rounded_cats[0]["symbols"]
+            if unrounded_cats != []:
+                unrounded_cats = unrounded_cats[0]["symbols"]
+            cell_content = [symbol["symbol"] for symbol in rounded_cats] + [symbol["symbol"] for symbol in unrounded_cats]
+            html += f"<td>"
+            for phoneme in cell_content:
+                html += f"""
+                <span id="{phoneme}" class="hidden"> {phoneme} </span>
+                """
+            html += f"</td>"
+            iterations += 1
+        html += "</tr>"
+    html += "</table>"
+    print(iterations)
+    return html
+
 base_consonant_chart = generate_base_consonant_chart(ipa)
+base_vowel_chart = generate_base_vowel_chart(ipa)
 
 #Generates JavaScript that can be imbedded in the HTML file. 
 def generate_phoneme_script(phonemes):
@@ -89,8 +137,6 @@ def generate_phoneme_script(phonemes):
     }
     """
     return phoneme_script
-
-print(generate_phoneme_script(["a", "b", "c"]))
 
 def generate_html_body(template):
     name = template.get("name", "")
@@ -117,6 +163,7 @@ def generate_html_body(template):
     <div class=field><table class=inv>
     """
     html_content += base_consonant_chart
+    html_content += base_vowel_chart
     html_content += f"""
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>Processes</h2>{processes}</div>
