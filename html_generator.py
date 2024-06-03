@@ -1,97 +1,73 @@
 import json
 import os
 
-ipa_consonants = {
-    "p": ("bilabial", "plosive", "voiceless"),
-    "b": ("bilabial", "plosive", "voiced"),
-    "t": ("alveolar", "plosive", "voiceless"),
-    "d": ("alveolar", "plosive", "voiced"),
-    "k": ("velar", "plosive", "voiceless"),
-    "g": ("velar", "plosive", "voiced"),
-    "ʔ": ("glottal", "plosive", "voiceless"),
-    "m": ("bilabial", "nasal", "voiced"),
-    "n": ("alveolar", "nasal", "voiced"),
-    "ŋ": ("velar", "nasal", "voiced"),
-    "ɱ": ("labiodental", "nasal", "voiced"),
-    "ɳ": ("retroflex", "nasal", "voiced"),
-    "ɲ": ("palatal", "nasal", "voiced"),
-    "ɴ": ("uvular", "nasal", "voiced"),
-    "ʙ": ("bilabial", "trill", "voiced"),
-    "r": ("alveolar", "trill", "voiced"),
-    "ʀ": ("uvular", "trill", "voiced"),
-    "ɾ": ("alveolar", "tap", "voiced"),
-    "ɽ": ("retroflex", "tap", "voiced"),
-    "ɸ": ("bilabial", "fricative", "voiceless"),
-    "β": ("bilabial", "fricative", "voiced"),
-    "f": ("labiodental", "fricative", "voiceless"),
-    "v": ("labiodental", "fricative", "voiced"),
-    "θ": ("dental", "fricative", "voiceless"),
-    "ð": ("dental", "fricative", "voiced"),
-    "s": ("alveolar", "fricative", "voiceless"),
-    "z": ("alveolar", "fricative", "voiced"),
-    "ʃ": ("postalveolar", "fricative", "voiceless"),
-    "ʒ": ("postalveolar", "fricative", "voiced"),
-    "ʂ": ("retroflex", "fricative", "voiceless"),
-    "ʐ": ("retroflex", "fricative", "voiced"),
-    "ç": ("palatal", "fricative", "voiceless"),
-    "ʝ": ("palatal", "fricative", "voiced"),
-    "x": ("velar", "fricative", "voiceless"),
-    "ɣ": ("velar", "fricative", "voiced"),
-    "χ": ("uvular", "fricative", "voiceless"),
-    "ʁ": ("uvular", "fricative", "voiced"),
-    "ħ": ("pharyngeal", "fricative", "voiceless"),
-    "ʕ": ("pharyngeal", "fricative", "voiced"),
-    "h": ("glottal", "fricative", "voiceless"),
-    "ɦ": ("glottal", "fricative", "voiced"),
-    "ʋ": ("labiodental", "approximant", "voiced"),
-    "ɹ": ("alveolar", "approximant", "voiced"),
-    "ɻ": ("retroflex", "approximant", "voiced"),
-    "j": ("palatal", "approximant", "voiced"),
-    "ɰ": ("velar", "approximant", "voiced"),
-    "l": ("alveolar", "lateral approximant", "voiced"),
-    "ɭ": ("retroflex", "lateral approximant", "voiced"),
-    "ʎ": ("palatal", "lateral approximant", "voiced"),
-    "ʟ": ("velar", "lateral approximant", "voiced"),
-    "ɬ": ("alveolar", "lateral fricative", "voiceless"),
-    "ɮ": ("alveolar", "lateral fricative", "voiced"),
-    "ɺ": ("alveolar", "lateral flap", "voiced"),
-    "ɕ": ("alveolo-palatal", "fricative", "voiceless"),
-    "ʑ": ("alveolo-palatal", "fricative", "voiced"),
-    "ɧ": ("simultaneous postalveolar and velar", "fricative", "voiceless")
+with open("ipa.json", 'r', encoding='utf-8') as ipa_file:
+    ipa = json.load(ipa_file)
+
+places = {
+    "bilabial": "b",
+    "labiodental": "d",
+    "dental": "d",
+    "alveolar": "a",
+    "postalveolar": "o",
+    "retroflex": "r",
+    "palatal": "p",
+    "velar": "v",
+    "uvular": "u",
+    "pharyngeal": "f",
+    "glottal": "g",
+    "other": "q",
+    "special": "x"
+    }
+
+manners = {
+    "stop": "s",
+    "aspirated stop": "a",
+    "nasal": "n",
+    "nasal compound": "p",
+    "trill": "r",
+    "tap, flap": "t",
+    "fricative": "f",
+    "lateral": "l",
+    "approximant": "x",
+    "implosive": "i",
+    "extra": "e"
 }
 
-ipa_vowels = {
-    "i": ("high", "front"),
-    "y": ("high", "front"),
-    "ɨ": ("high", "central"),
-    "ʉ": ("high", "central"),
-    "ɯ": ("high", "back"),
-    "u": ("high", "back"),
-    "ɪ": ("near-high", "front"),
-    "ʏ": ("near-high", "front"),
-    "ʊ": ("near-high", "back"),
-    "e": ("close-mid", "front"),
-    "ø": ("close-mid", "front"),
-    "ɘ": ("close-mid", "central"),
-    "ɵ": ("close-mid", "central"),
-    "ɤ": ("close-mid", "back"),
-    "o": ("close-mid", "back"),
-    "ə": ("mid", "central"),
-    "ɛ": ("open-mid", "front"),
-    "œ": ("open-mid", "front"),
-    "ɜ": ("open-mid", "central"),
-    "ɞ": ("open-mid", "central"),
-    "ʌ": ("open-mid", "back"),
-    "ɔ": ("open-mid", "back"),
-    "æ": ("near-open", "front"),
-    "ɐ": ("near-open", "central"),
-    "a": ("open", "front"),
-    "ɶ": ("open", "front"),
-    "ɑ": ("open", "back"),
-    "ɒ": ("open", "back")
-}
+def generate_base_consonant_chart(ipa):
+    html = "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }</style></head><body>"
+    # Generate consonant table
+    html += "<h2>Consonants</h2><table>"
+    html += "<tr><th></th>" + "".join(f"<th>{place}</th>" for place in places) + "</tr>"
+    iterations = 0
+    for manner in manners:
+        manner_prefix = "c" + manners[manner]
+        html += f"<tr><th>{manner}</th>"
+        for place in places:
+            place_prefix = manner_prefix + places[place]
+            voiced_cat_id, unvoiced_cat_id = place_prefix + "v", place_prefix + "u"
+            print(voiced_cat_id)
+            print(unvoiced_cat_id)
+            voiced_cats = [cat for cat in ipa if cat.get("category") == voiced_cat_id]
+            unvoiced_cats = [cat for cat in ipa if cat.get("category") == unvoiced_cat_id]
+            if voiced_cats != []:
+                voiced_cats = voiced_cats[0]["symbols"]
+            if unvoiced_cats != []:
+                unvoiced_cats = unvoiced_cats[0]["symbols"]
+            cell_content = [symbol["symbol"] for symbol in voiced_cats] + [symbol["symbol"] for symbol in unvoiced_cats]
+            html += f"<td>"
+            for phoneme in cell_content:
+                html += f"""
+                <span id="{phoneme}" class="hidden"> {phoneme} </span>
+                """
+            html += f"</td>"
+            iterations += 1
+        html += "</tr>"
+    html += "</table>"
+    print(iterations)
+    return html
 
-lost_phonemes = {"a"}
+base_consonant_chart = generate_base_consonant_chart(ipa)
 
 def generate_html_body(template):
     name = template.get("name", "")
@@ -117,7 +93,7 @@ def generate_html_body(template):
     <div class=field><div class=key>Family</div><div class=value>{family}</div></div>
     <div class=field><table class=inv>
     """
-    html_content += generate_ipa_html_table([phon["phoneme"] for phon in phonemes])
+    html_content += base_consonant_chart
     html_content += f"""
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>Processes</h2>{processes}</div>
@@ -193,10 +169,16 @@ def process_scraper(phonemes):
     """
     return html_content
 
+def phoneme_placer(phonemes, document):
+    for phoneme in phonemes:
+        phon_element = document.getElementById(phoneme)
+
+
+
 def generate_ipa_html_table(phonemes):
     # Consonant categories
     places = ["bilabial", "labiodental", "dental", "alveolar", "postalveolar", "retroflex", "palatal", "velar", "uvular", "pharyngeal", "glottal"]
-    manners = ["plosive", "nasal", "trill", "tap", "fricative", "lateral fricative", "approximant", "lateral approximant"]
+    manners = ["stop", "nasal", "trill", "tap", "fricative", "lateral fricative", "approximant", "lateral approximant"]
 
     # Vowel categories
     heights = ["high", "near-high", "close-mid", "mid", "open-mid", "near-open", "open"]
