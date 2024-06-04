@@ -6,12 +6,20 @@
     <script type="text/javascript">
     function writePhonemes() {
         const phonemes = ['p', 't', 'k', 'kʷ', 'ʔ', 's', 'f', 'ⱱ', 'ʝ', 'ɾ', 'i', 'ɨ', 'ɛ', 'a', 'ɔ', 'u', 'ĩ', 'ɨ̃', 'ɛ̃', 'ã', 'ũ'];
+        const allophones = ['ï', 'ï', 'ɨ̈', 'ɨ̈', 'ɛ̈', 'ɛ̈', 'ä', 'ä', 'ɔ̈', 'ɔ̈', 'ü', 'ü'];
+        const phonSet = new Set()
         for (var i = 0; i < phonemes.length; i += 1) {
-            console.log(phonemes[i])
             this_phon = document.getElementById(phonemes[i])
             if(this_phon != null) {
-                console.log(this_phon)
                 this_phon.classList.toggle("visible-phoneme")
+                phonSet.add(this_phon)
+            }
+        }
+        for (var i = 0; i < allophones.length; i += 1) {
+            this_aphon = document.getElementById(allophones[i])
+            if(this_aphon != null && !phonSet.has(this_aphon)) {
+                console.log("hello")
+                this_aphon.classList.toggle("visible-allophone")
             }
         }
     }
@@ -25,7 +33,9 @@
     <div class=field><div class=key>Location</div><div class=value>N/A° N/A°</div></div>
     <div class=field><div class=key>Family</div><div class=value>TODO</div></div>
     <div class=field><table class=inv>
-    <html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }</style></head><body><h2>Consonants</h2><table><tr><th></th><th>bilabial</th><th>labiodental</th><th>dental</th><th>alveolar</th><th>postalveolar</th><th>retroflex</th><th>palatal</th><th>velar</th><th>uvular</th><th>pharyngeal</th><th>glottal</th><th>other</th><th>special</th></tr><tr><th>stop</th><td>
+    <html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }</style></head><body><h2>Consonants</h2><table><tr><th></th><th>bilabial</th><th>labiodental</th><th>dental</th><th>alveolar</th><th>postalveolar</th><th>retroflex</th><th>palatal</th><th>velar</th><th>uvular</th><th>pharyngeal</th><th>glottal</th><th>other</th><th>special</th></tr>
+        <tr id="stop"><th>stop</th>
+        <td>
                 <span id="ʰb" class="hidden"> ʰb </span>
                 
                 <span id="b" class="hidden"> b </span>
@@ -135,7 +145,9 @@
                 <span id="ʔʲ" class="hidden"> ʔʲ </span>
                 </td><td>
                 <span id="kp" class="hidden"> kp </span>
-                </td><td></td></tr><tr><th>aspirated stop</th><td>
+                </td><td></td></tr>
+        <tr id="aspirated stop"><th>aspirated stop</th>
+        <td>
                 <span id="pʰ" class="hidden"> pʰ </span>
                 
                 <span id="pʲʰ" class="hidden"> pʲʰ </span>
@@ -163,115 +175,9 @@
                 <span id="kʲʰ" class="hidden"> kʲʰ </span>
                 </td><td>
                 <span id="qʰ" class="hidden"> qʰ </span>
-                </td><td></td><td></td><td></td><td></td></tr><tr><th>nasal</th><td>
-                <span id="m" class="hidden"> m </span>
-                
-                <span id="mʼ" class="hidden"> mʼ </span>
-                
-                <span id="m̰" class="hidden"> m̰ </span>
-                
-                <span id="mʲ" class="hidden"> mʲ </span>
-                
-                <span id="mʷ" class="hidden"> mʷ </span>
-                
-                <span id="mː" class="hidden"> mː </span>
-                
-                <span id="ʰm" class="hidden"> ʰm </span>
-                
-                <span id="mʰ" class="hidden"> mʰ </span>
-                
-                <span id="m̥" class="hidden"> m̥ </span>
-                </td><td>
-                <span id="n̪" class="hidden"> n̪ </span>
-                </td><td>
-                <span id="n̪" class="hidden"> n̪ </span>
-                </td><td>
-                <span id="n" class="hidden"> n </span>
-                
-                <span id="nʲ" class="hidden"> nʲ </span>
-                
-                <span id="nː" class="hidden"> nː </span>
-                
-                <span id="n̰" class="hidden"> n̰ </span>
-                
-                <span id="ʰn" class="hidden"> ʰn </span>
-                
-                <span id="nʰ" class="hidden"> nʰ </span>
-                
-                <span id="n̥" class="hidden"> n̥ </span>
-                </td><td></td><td></td><td>
-                <span id="ɲ" class="hidden"> ɲ </span>
-                
-                <span id="ɲ̰" class="hidden"> ɲ̰ </span>
-                
-                <span id="ɲː" class="hidden"> ɲː </span>
-                
-                <span id="ɲ̥" class="hidden"> ɲ̥ </span>
-                
-                <span id="ɲʰ" class="hidden"> ɲʰ </span>
-                
-                <span id="ʰɲ" class="hidden"> ʰɲ </span>
-                </td><td>
-                <span id="ŋ" class="hidden"> ŋ </span>
-                
-                <span id="ŋʷ" class="hidden"> ŋʷ </span>
-                
-                <span id="ŋ̥" class="hidden"> ŋ̥ </span>
-                </td><td>
-                <span id="ɴ" class="hidden"> ɴ </span>
-                </td><td></td><td></td><td></td><td>
-                <span id="N" class="hidden"> N </span>
-                </td></tr><tr><th>nasal compound</th><td>
-                <span id="mb" class="hidden"> mb </span>
-                
-                <span id="mbʲ" class="hidden"> mbʲ </span>
-                
-                <span id="mp" class="hidden"> mp </span>
-                
-                <span id="mpʲ" class="hidden"> mpʲ </span>
-                
-                <span id="mɸʲ" class="hidden"> mɸʲ </span>
-                </td><td></td><td></td><td>
-                <span id="nd" class="hidden"> nd </span>
-                
-                <span id="ndʲ" class="hidden"> ndʲ </span>
-                
-                <span id="nt" class="hidden"> nt </span>
-                
-                <span id="ntʲ" class="hidden"> ntʲ </span>
-                
-                <span id="ns" class="hidden"> ns </span>
-                
-                <span id="nsʲ" class="hidden"> nsʲ </span>
-                </td><td></td><td></td><td></td><td>
-                <span id="ŋɡ" class="hidden"> ŋɡ </span>
-                
-                <span id="ŋɡʷ" class="hidden"> ŋɡʷ </span>
-                
-                <span id="ŋk" class="hidden"> ŋk </span>
-                </td><td></td><td></td><td></td><td></td><td></td></tr><tr><th>trill</th><td>
-                <span id="ʙ" class="hidden"> ʙ </span>
-                </td><td></td><td></td><td>
-                <span id="r" class="hidden"> r </span>
-                
-                <span id="r̥" class="hidden"> r̥ </span>
-                </td><td></td><td></td><td></td><td></td><td>
-                <span id="ʀ" class="hidden"> ʀ </span>
-                </td><td></td><td></td><td></td><td></td></tr><tr><th>tap, flap</th><td></td><td></td><td></td><td>
-                <span id="ɾ" class="hidden"> ɾ </span>
-                
-                <span id="ɾ̃" class="hidden"> ɾ̃ </span>
-                
-                <span id="ɾʲ" class="hidden"> ɾʲ </span>
-                
-                <span id="ʔɾ" class="hidden"> ʔɾ </span>
-                
-                <span id="ʰɾ" class="hidden"> ʰɾ </span>
-                </td><td></td><td>
-                <span id="ɽ" class="hidden"> ɽ </span>
-                
-                <span id="ɽʰ" class="hidden"> ɽʰ </span>
-                </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><th>fricative</th><td>
+                </td><td></td><td></td><td></td><td></td></tr>
+        <tr id="fricative"><th>fricative</th>
+        <td>
                 <span id="β" class="hidden"> β </span>
                 
                 <span id="βʲ" class="hidden"> βʲ </span>
@@ -355,7 +261,125 @@
                 <span id="hʷ" class="hidden"> hʷ </span>
                 </td><td>
                 <span id="ʍ" class="hidden"> ʍ </span>
-                </td><td></td></tr><tr><th>lateral</th><td></td><td>
+                </td><td></td></tr>
+        <tr id="nasal"><th>nasal</th>
+        <td>
+                <span id="m" class="hidden"> m </span>
+                
+                <span id="mʼ" class="hidden"> mʼ </span>
+                
+                <span id="m̰" class="hidden"> m̰ </span>
+                
+                <span id="mʲ" class="hidden"> mʲ </span>
+                
+                <span id="mʷ" class="hidden"> mʷ </span>
+                
+                <span id="mː" class="hidden"> mː </span>
+                
+                <span id="ʰm" class="hidden"> ʰm </span>
+                
+                <span id="mʰ" class="hidden"> mʰ </span>
+                
+                <span id="m̥" class="hidden"> m̥ </span>
+                </td><td>
+                <span id="n̪" class="hidden"> n̪ </span>
+                </td><td>
+                <span id="n̪" class="hidden"> n̪ </span>
+                </td><td>
+                <span id="n" class="hidden"> n </span>
+                
+                <span id="nʲ" class="hidden"> nʲ </span>
+                
+                <span id="nː" class="hidden"> nː </span>
+                
+                <span id="n̰" class="hidden"> n̰ </span>
+                
+                <span id="ʰn" class="hidden"> ʰn </span>
+                
+                <span id="nʰ" class="hidden"> nʰ </span>
+                
+                <span id="n̥" class="hidden"> n̥ </span>
+                </td><td></td><td></td><td>
+                <span id="ɲ" class="hidden"> ɲ </span>
+                
+                <span id="ɲ̰" class="hidden"> ɲ̰ </span>
+                
+                <span id="ɲː" class="hidden"> ɲː </span>
+                
+                <span id="ɲ̥" class="hidden"> ɲ̥ </span>
+                
+                <span id="ɲʰ" class="hidden"> ɲʰ </span>
+                
+                <span id="ʰɲ" class="hidden"> ʰɲ </span>
+                </td><td>
+                <span id="ŋ" class="hidden"> ŋ </span>
+                
+                <span id="ŋʷ" class="hidden"> ŋʷ </span>
+                
+                <span id="ŋ̥" class="hidden"> ŋ̥ </span>
+                </td><td>
+                <span id="ɴ" class="hidden"> ɴ </span>
+                </td><td></td><td></td><td></td><td>
+                <span id="N" class="hidden"> N </span>
+                </td></tr>
+        <tr id="nasal compound"><th>nasal compound</th>
+        <td>
+                <span id="mb" class="hidden"> mb </span>
+                
+                <span id="mbʲ" class="hidden"> mbʲ </span>
+                
+                <span id="mp" class="hidden"> mp </span>
+                
+                <span id="mpʲ" class="hidden"> mpʲ </span>
+                
+                <span id="mɸʲ" class="hidden"> mɸʲ </span>
+                </td><td></td><td></td><td>
+                <span id="nd" class="hidden"> nd </span>
+                
+                <span id="ndʲ" class="hidden"> ndʲ </span>
+                
+                <span id="nt" class="hidden"> nt </span>
+                
+                <span id="ntʲ" class="hidden"> ntʲ </span>
+                
+                <span id="ns" class="hidden"> ns </span>
+                
+                <span id="nsʲ" class="hidden"> nsʲ </span>
+                </td><td></td><td></td><td></td><td>
+                <span id="ŋɡ" class="hidden"> ŋɡ </span>
+                
+                <span id="ŋɡʷ" class="hidden"> ŋɡʷ </span>
+                
+                <span id="ŋk" class="hidden"> ŋk </span>
+                </td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr id="trill"><th>trill</th>
+        <td>
+                <span id="ʙ" class="hidden"> ʙ </span>
+                </td><td></td><td></td><td>
+                <span id="r" class="hidden"> r </span>
+                
+                <span id="r̥" class="hidden"> r̥ </span>
+                </td><td></td><td></td><td></td><td></td><td>
+                <span id="ʀ" class="hidden"> ʀ </span>
+                </td><td></td><td></td><td></td><td></td></tr>
+        <tr id="tap, flap"><th>tap, flap</th>
+        <td></td><td></td><td></td><td>
+                <span id="ɾ" class="hidden"> ɾ </span>
+                
+                <span id="ɾ̃" class="hidden"> ɾ̃ </span>
+                
+                <span id="ɾʲ" class="hidden"> ɾʲ </span>
+                
+                <span id="ʔɾ" class="hidden"> ʔɾ </span>
+                
+                <span id="ʰɾ" class="hidden"> ʰɾ </span>
+                </td><td></td><td>
+                <span id="ɽ" class="hidden"> ɽ </span>
+                
+                <span id="ɽʰ" class="hidden"> ɽʰ </span>
+                </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr id="lateral"><th>lateral</th>
+        <td></td><td>
                 <span id="l̪" class="hidden"> l̪ </span>
                 </td><td>
                 <span id="l̪" class="hidden"> l̪ </span>
@@ -385,7 +409,9 @@
                 <span id="ʎ" class="hidden"> ʎ </span>
                 </td><td>
                 <span id="kl" class="hidden"> kl </span>
-                </td><td></td><td></td><td></td><td></td><td></td></tr><tr><th>approximant</th><td>
+                </td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr id="approximant"><th>approximant</th>
+        <td>
                 <span id="β̞" class="hidden"> β̞ </span>
                 </td><td>
                 <span id="ð̞" class="hidden"> ð̞ </span>
@@ -435,7 +461,9 @@
                 <span id="wʰ" class="hidden"> wʰ </span>
                 
                 <span id="w̥" class="hidden"> w̥ </span>
-                </td><td></td></tr><tr><th>implosive</th><td>
+                </td><td></td></tr>
+        <tr id="implosive"><th>implosive</th>
+        <td>
                 <span id="ɓ" class="hidden"> ɓ </span>
                 
                 <span id="ɓ̥" class="hidden"> ɓ̥ </span>
@@ -447,7 +475,9 @@
                 <span id="ʄ" class="hidden"> ʄ </span>
                 </td><td>
                 <span id="ɠ" class="hidden"> ɠ </span>
-                </td><td></td><td></td><td></td><td></td><td></td></tr><tr><th>extra</th><td>
+                </td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr id="extra"><th>extra</th>
+        <td>
                 <span id="b̰" class="hidden"> b̰ </span>
                 
                 <span id="ʔb" class="hidden"> ʔb </span>

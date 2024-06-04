@@ -23,11 +23,11 @@ places = {
 manners = {
     "stop": "s",
     "aspirated stop": "a",
+    "fricative": "f",
     "nasal": "n",
     "nasal compound": "p",
     "trill": "r",
     "tap, flap": "t",
-    "fricative": "f",
     "lateral": "l",
     "approximant": "x",
     "implosive": "i",
@@ -58,12 +58,12 @@ def generate_base_consonant_chart(ipa):
     iterations = 0
     for manner in manners:
         manner_prefix = "c" + manners[manner]
-        html += f"<tr><th>{manner}</th>"
+        html += f"""
+        <tr id="{manner}"><th>{manner}</th>
+        """
         for place in places:
             place_prefix = manner_prefix + places[place]
             voiced_cat_id, unvoiced_cat_id = place_prefix + "v", place_prefix + "u"
-            print(voiced_cat_id)
-            print(unvoiced_cat_id)
             voiced_cats = [cat for cat in ipa if cat.get("category") == voiced_cat_id]
             unvoiced_cats = [cat for cat in ipa if cat.get("category") == unvoiced_cat_id]
             if voiced_cats != []:
@@ -118,7 +118,7 @@ base_consonant_chart = generate_base_consonant_chart(ipa)
 base_vowel_chart = generate_base_vowel_chart(ipa)
 
 #Generates JavaScript that can be imbedded in the HTML file. 
-def generate_phoneme_script(phonemes):
+def generate_phoneme_script(phonemes, allophones):
     phoneme_script = """
     function writePhonemes() {
         const phonemes = """
@@ -126,23 +126,33 @@ def generate_phoneme_script(phonemes):
     phoneme_script += str(phonemes) + ";"
 
     phoneme_script += """
+        const allophones = """
+    
+    phoneme_script += str(allophones) + ";"
+
+    phoneme_script += """
+        const phonSet = new Set()
         for (var i = 0; i < phonemes.length; i += 1) {
-            console.log(phonemes[i])
             this_phon = document.getElementById(phonemes[i])
             if(this_phon != null) {
-                console.log(this_phon)
                 this_phon.classList.toggle("visible-phoneme")
+                phonSet.add(this_phon)
+            }
+        }
+        for (var i = 0; i < allophones.length; i += 1) {
+            this_aphon = document.getElementById(allophones[i])
+            if(this_aphon != null && !phonSet.has(this_aphon)) {
+                console.log("hello")
+                this_aphon.classList.toggle("visible-allophone")
             }
         }
     }
     """
     return phoneme_script
 
-def generate_html_body(template):
+def generate_html_body(template, processes):
     name = template.get("name", "")
     family = template.get("family", "")
-    phonemes = template.get("phonemes", [])
-    processes = process_scraper(phonemes)
     if (type(template.get("iso_codes", [""])) == list and len(template.get("iso_codes", [""])) != 0):
         iso_code = template.get("iso_codes", [""])[0]
     else:
@@ -172,16 +182,20 @@ def generate_html_body(template):
     return html_content
 
 def generate_html(template):
+    phonemes = []
+    processes = ""
+    allophones = []
     if type(template) != list:
-        phonemes = [phoneme["phoneme"] for phoneme in template.get("phonemes", [])]
-    else:
-        phonemes = []
+        processes, phonemes, allophones = process_scraper(template.get("phonemes", []))
+        print(template.get("name", ""))
+        print(phonemes)
+        print(allophones)
     html_content = f"""
     <html>
     <head> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
-    <script type="text/javascript">{generate_phoneme_script(phonemes)}</script>
+    <script type="text/javascript">{generate_phoneme_script(phonemes, allophones)}</script>
     </head>
     <body onload="writePhonemes()">
     """
@@ -190,9 +204,9 @@ def generate_html(template):
         <h1>Reference Documents</h1>
         """
         for ref in template:
-            html_content = html_content + generate_html_body(ref)
+            html_content = html_content + generate_html_body(ref, processes)
     else:
-        html_content += generate_html_body(template)
+        html_content += generate_html_body(template, processes)
     html_content += f"""
     </div>
     </body>
@@ -201,13 +215,17 @@ def generate_html(template):
     return html_content
 
 def process_scraper(phonemes):
+    phoneme_list = []
+    allophone_list = []
     mappings =  {}
     for phoneme in phonemes:
+        phoneme_list.append(phoneme["phoneme"])
         mappings[phoneme["phoneme"]] = []
         for environment in phoneme["environments"]:
             if type(environment) == dict:
                 for allophone in environment["allophones"]:
                     if allophone["allophone"] != phoneme["phoneme"]:
+                        allophone_list.append(allophone["allophone"])
                         processes = ""
                         for k in range(len(allophone["processnames"])):
                             if k != 0:
@@ -242,54 +260,7 @@ def process_scraper(phonemes):
     html_content += f"""
     </table></div>
     """
-    return html_content
-
-def phoneme_placer(phonemes, document):
-    for phoneme in phonemes:
-        phon_element = document.getElementById(phoneme)
-
-
-
-def generate_ipa_html_table(phonemes):
-    # Consonant categories
-    places = ["bilabial", "labiodental", "dental", "alveolar", "postalveolar", "retroflex", "palatal", "velar", "uvular", "pharyngeal", "glottal"]
-    manners = ["stop", "nasal", "trill", "tap", "fricative", "lateral fricative", "approximant", "lateral approximant"]
-
-    # Vowel categories
-    heights = ["high", "near-high", "close-mid", "mid", "open-mid", "near-open", "open"]
-    backness = ["front", "central", "back"]
-
-    # Initialize HTML table structure
-    html = "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }</style></head><body>"
-
-    # Generate consonant table
-    html += "<h2>Consonants</h2><table>"
-    html += "<tr><th></th>" + "".join(f"<th>{place}</th>" for place in places) + "</tr>"
-    for manner in manners:
-        html += f"<tr><th>{manner}</th>"
-        for place in places:
-            cell_content = [phoneme for phoneme in phonemes if phoneme in ipa_consonants and ipa_consonants[phoneme][:2] == (place, manner)]
-            for phoneme in phonemes:
-                if phoneme not in ipa_consonants:
-                    lost_phonemes.add(phoneme)
-            html += f"<td>{' '.join(cell_content)}</td>"
-        html += "</tr>"
-    html += "</table>"
-
-    # Generate vowel table
-    html += "<h2>Vowels</h2><table>"
-    html += "<tr><th></th>" + "".join(f"<th>{back}</th>" for back in backness) + "</tr>"
-    for height in heights:
-        html += f"<tr><th>{height}</th>"
-        for back in backness:
-            cell_content = [phoneme for phoneme in phonemes if phoneme in ipa_vowels and ipa_vowels[phoneme] == (height, back)]
-            html += f"<td>{' '.join(cell_content)}</td>"
-        html += "</tr>"
-    html += "</table>"
-
-    # Close HTML structure
-    html += "</body></html>"
-    return html
+    return html_content, phoneme_list, allophone_list
 
 def process_templates_from_folder(input_folder, synth_output_folder, ref_output_folder):
     if not os.path.exists(synth_output_folder):
