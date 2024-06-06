@@ -50,6 +50,15 @@ backness = {
     "Back": "b"
 }
 
+def flip_ipa(ipa):
+    new_map = {}
+    for category in ipa:
+        for symbol in category["symbols"]:
+            new_map[symbol["symbol"]] = category["category"]
+    return new_map
+
+print(flip_ipa(ipa))
+
 def generate_base_consonant_chart(ipa):
     html = "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }</style></head><body>"
     # Generate consonant table
@@ -142,7 +151,6 @@ def generate_phoneme_script(phonemes, allophones):
         for (var i = 0; i < allophones.length; i += 1) {
             this_aphon = document.getElementById(allophones[i])
             if(this_aphon != null && !phonSet.has(this_aphon)) {
-                console.log("hello")
                 this_aphon.classList.toggle("visible-allophone")
             }
         }
@@ -187,26 +195,33 @@ def generate_html(template):
     allophones = []
     if type(template) != list:
         processes, phonemes, allophones = process_scraper(template.get("phonemes", []))
-        print(template.get("name", ""))
-        print(phonemes)
-        print(allophones)
-    html_content = f"""
-    <html>
-    <head> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
-    <script type="text/javascript">{generate_phoneme_script(phonemes, allophones)}</script>
-    </head>
-    <body onload="writePhonemes()">
-    """
-    if type(template) == list:
-        html_content += f"""
-        <h1>Reference Documents</h1>
+        html_content = f"""
+        <html>
+        <head> 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
+        <script type="text/javascript">{generate_phoneme_script(phonemes, allophones)}</script>
+        </head>
+        <body onload="writePhonemes()">
+        """
+        html_content = html_content + generate_html_body(template, processes)
+    else:
+        html_content = f"""
+        <html>
+        <head> 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
+        <h1>Reference Documents: {template[0].get("name", "")}</h1>
         """
         for ref in template:
+            processes, phonemes, allophones = process_scraper(ref.get("phonemes", []))
+            html_content += f"""
+            <script type="text/javascript">{generate_phoneme_script(phonemes, allophones)}</script>
+            </head>
+            <body onload="writePhonemes()">
+            """
             html_content = html_content + generate_html_body(ref, processes)
-    else:
-        html_content += generate_html_body(template, processes)
+        
     html_content += f"""
     </div>
     </body>

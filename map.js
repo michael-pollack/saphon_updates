@@ -15,7 +15,7 @@ var icons = {
   'Araucanian' : ['#FF00FF', '#000000'], // Magenta & Black
   'Aymaran' : ['#00FFFF', '#000000'],    // Cyan & Black
   'Barbacoan' : ['#800000', '#FFFFFF'],  // Maroon & White
-  'Boran' : ['#008000', '#FFFFFF'],      // Green & White
+  'Boran' : ['#FFD700', '#000000'],      // Green & White
   'Cahuapanan' : ['#000080', '#FFFFFF'], // Navy & White
   'Carib' : ['#808000', '#000000'],      // Olive & Black
   'Chapakuran' : ['#800080', '#FFFFFF'], // Purple & White
@@ -23,7 +23,7 @@ var icons = {
   'Chibchan' : ['#FFA500', '#000000'],   // Orange & Black
   'Choco' : ['#A52A2A', '#FFFFFF'],      // Brown & White
   'Chon' : ['#D2691E', '#FFFFFF'],       // Chocolate & White
-  'Guaicuru' : ['#FF4500', '#000000'],   // OrangeRed & Black
+  'Guaicuru' : ['#808080', '#FFFFFF'],   // OrangeRed & Black
   'Guahiban' : ['#2E8B57', '#000000'],   // SeaGreen & Black
   'Harakmbet' : ['#ADFF2F', '#000000'],  // GreenYellow & Black
   'Hibito-Cholon' : ['#7FFF00', '#000000'], // Chartreuse & Black
@@ -31,7 +31,7 @@ var icons = {
   'Jivaroan' : ['#4B0082', '#FFFFFF'],   // Indigo & White
   'Kakua-Nukak' : ['#6A5ACD', '#FFFFFF'], // SlateBlue & White
   'Katukinan' : ['#FF6347', '#000000'],  // Tomato & Black
-  'Macro-Ge' : ['#FFD700', '#000000'],   // Gold & Black
+  'Macro-Ge' : ['#008000', '#FFFFFF'],   // Gold & Black
   'Mataco' : ['#8A2BE2', '#FFFFFF'],     // BlueViolet & White
   'Mixed' : ['#1E90FF', '#000000'],      // DodgerBlue & Black
   'Mosetenan' : ['#FF1493', '#000000'],  // DeepPink & Black
@@ -39,10 +39,10 @@ var icons = {
   'Nadahup' : ['#20B2AA', '#000000'],    // LightSeaGreen & Black
   'Nambiquaran' : ['#FF8C00', '#000000'], // DarkOrange & Black
   'Other' : ['#D3D3D3', '#000000'],      // LightGray & Black
-  'Panoan' : ['#FF69B4', '#000000'],     // HotPink & Black
+  'Panoan' : ['#964B00', '#000000'],     // HotPink & Black
   'Peba-Yaguan' : ['#98FB98', '#000000'], // PaleGreen & Black
   'Quechua' : ['#DB7093', '#000000'],    // PaleVioletRed & Black
-  'Salivan' : ['#AFEEEE', '#000000'],    // PaleTurquoise & Black
+  'Salivan' : ['#A9A9A9', '#000000'],    // PaleTurquoise & Black
   'Tacanan' : ['#4682B4', '#000000'],    // SteelBlue & Black
   'Tucanoan' : ['#40E0D0', '#000000'],   // Turquoise & Black
   'Tupi' : ['#FF0000', '#000000'],       // Red & Black
