@@ -117,6 +117,48 @@ def generate_ipa_subsets(name, phonemes):
 
     return consonant_subset, vowels_subset
 
+def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: bool):
+    if consonant:
+        title = "Consonants"
+        col, subCol = places, "places"
+        row, subRow = manners, "manners"
+    else:
+        title = "Vowels"
+        col, subCol = backness, "backness"
+        row, subRow = heights, "heights"
+    html = f"<h2>{title}</h2><table>"
+    html += "<tr><th></th>" + "".join(f"<th>{x}</th>" for x in col if x in subset[subCol]) + "</tr>"
+    pure_allophones = allophones - phonemes
+    for y in row: 
+        if y in subset[subRow]:
+            html += f"""
+            <tr id="{y}"><th>{y}</th>
+            """
+            for x in col:
+                if x in subset[subCol]:
+                    html += f"<td>"
+                    these_symbols = subset[subRow][y] & subset[subCol][x]
+                    voiced, unvoiced = [], []
+                    for symbol in these_symbols:
+                        if ipa_flipped[symbol][3] == "u":
+                            unvoiced.append(symbol)
+                        else:
+                            voiced.append(symbol)
+                    ordered = unvoiced + voiced
+                    for symbol in ordered:
+                        if symbol in pure_allophones:
+                            html += f"""
+                            <span id="{symbol}" class="visible-allophone"> {symbol} </span>
+                            """
+                        else: 
+                            html += f"""
+                            <span id="{symbol}" class="visible-phoneme"> {symbol} </span>
+                            """
+                    html += f"</td>"
+            html += "</tr>"
+    html += "</table>"
+    return html
+
 def generate_consonant_chart(phonemes: set, allophones: set, subset: dict):
     html = "<h2>Consonants</h2><table>"
     html += "<tr><th></th>" + "".join(f"<th>{place}</th>" for place in places if place in subset["places"]) + "</tr>"
@@ -240,8 +282,10 @@ def generate_html_body(template, processes, phonemes, allophones):
     <div class=field><div class=key>Family</div><div class=value>{family}</div></div>
     <div class=field><table class=inv>
     """
-    html_content += generate_consonant_chart(phonemes, allophones, consonant_subset)
-    html_content += generate_vowel_chart(phonemes, allophones, vowel_subset)
+    html_content += generate_ipa_chart(phonemes, allophones, consonant_subset, True)
+    html_content += generate_ipa_chart(phonemes, allophones, vowel_subset, False)
+    # html_content += generate_consonant_chart(phonemes, allophones, consonant_subset)
+    # html_content += generate_vowel_chart(phonemes, allophones, vowel_subset)
     html_content += f"""
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>Processes</h2>{processes}</div>
