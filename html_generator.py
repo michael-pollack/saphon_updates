@@ -74,7 +74,7 @@ backness_flipped = flip_dict(backness)
 
 lost_phonemes = set()
 
-def generate_ipa_subsets(name, phonemes):
+def generate_ipa_subsets(phonemes):
     consonant_subset = {
         "manners": {},
         "places": {}
@@ -159,74 +159,6 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
     html += "</table>"
     return html
 
-def generate_consonant_chart(phonemes: set, allophones: set, subset: dict):
-    html = "<h2>Consonants</h2><table>"
-    html += "<tr><th></th>" + "".join(f"<th>{place}</th>" for place in places if place in subset["places"]) + "</tr>"
-    pure_allophones = allophones - phonemes
-    for manner in manners: 
-        if manner in subset["manners"]:
-            html += f"""
-            <tr id="{manner}"><th>{manner}</th>
-            """
-            for place in places:
-                if place in subset["places"]:
-                    html += f"<td>"
-                    these_symbols = subset["manners"][manner] & subset["places"][place]
-                    voiced, unvoiced = [], []
-                    for symbol in these_symbols:
-                        if ipa_flipped[symbol][3] == "u":
-                            unvoiced.append(symbol)
-                        else:
-                            voiced.append(symbol)
-                    ordered = unvoiced + voiced
-                    for symbol in ordered:
-                        if symbol in pure_allophones:
-                            html += f"""
-                            <span id="{symbol}" class="visible-allophone"> {symbol} </span>
-                            """
-                        else: 
-                            html += f"""
-                            <span id="{symbol}" class="visible-phoneme"> {symbol} </span>
-                            """
-                    html += f"</td>"
-            html += "</tr>"
-    html += "</table>"
-    return html
-
-def generate_vowel_chart(phonemes: set, allophones: set, subset: dict):
-    html = "<h2>Vowels</h2><table>"
-    html += "<tr><th></th>" + "".join(f"<th>{depth}</th>" for depth in backness if depth in subset["backness"]) + "</tr>"
-    pure_allophones = allophones - phonemes
-    for height in heights: 
-        if height in subset["heights"]:
-            html += f"""
-            <tr id="{height}"><th>{height}</th>
-            """
-            for depth in backness:
-                if depth in subset["backness"]:
-                    html += f"<td>"
-                    these_symbols = subset["heights"][height] & subset["backness"][depth]
-                    rounded, unrounded = [], []
-                    for symbol in these_symbols:
-                        if ipa_flipped[symbol][3] == "u":
-                            unrounded.append(symbol)
-                        else:
-                            rounded.append(symbol)
-                    ordered = unrounded + rounded
-                    for symbol in ordered:
-                        if symbol in pure_allophones:
-                            html += f"""
-                            <span id="{symbol}" class="visible-allophone"> {symbol} </span>
-                            """
-                        else: 
-                            html += f"""
-                            <span id="{symbol}" class="visible-phoneme"> {symbol} </span>
-                            """
-                    html += f"</td>"
-            html += "</tr>"
-    html += "</table>"
-    return html
-
 #Generates JavaScript that can be imbedded in the HTML file. 
 # def generate_phoneme_script(phonemes, allophones):
 #     phoneme_script = """
@@ -273,7 +205,7 @@ def generate_html_body(template, processes, phonemes, allophones):
     else: 
         latitude, longitude = "N/A", "N/A"
     synthesis_notes = template.get("synthesis", "")
-    consonant_subset, vowel_subset = generate_ipa_subsets(name, phonemes | allophones)
+    consonant_subset, vowel_subset = generate_ipa_subsets(phonemes | allophones)
     html_content = f"""
     <div class=entry>
     <h1>{name}</h1>
@@ -284,8 +216,6 @@ def generate_html_body(template, processes, phonemes, allophones):
     """
     html_content += generate_ipa_chart(phonemes, allophones, consonant_subset, True)
     html_content += generate_ipa_chart(phonemes, allophones, vowel_subset, False)
-    # html_content += generate_consonant_chart(phonemes, allophones, consonant_subset)
-    # html_content += generate_vowel_chart(phonemes, allophones, vowel_subset)
     html_content += f"""
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>Processes</h2>{processes}</div>
