@@ -12,8 +12,6 @@ def flip_ipa(ipa):
             new_map[symbol["symbol"]] = category["category"]
     return new_map
 
-ipa_flipped = flip_ipa(ipa)
-
 #Dictionary flipper to ensure mappings only have to be done once
 def flip_dict(original_dict):
     flipped_dict = {}
@@ -67,6 +65,7 @@ backness = {
     "Back": "b"
 }
 
+ipa_flipped = flip_ipa(ipa)
 places_flipped = flip_dict(places)
 manners_flipped = flip_dict(manners)
 heights_flipped = flip_dict(heights)
@@ -89,7 +88,6 @@ def generate_ipa_subsets(phonemes):
             category_set.add(ipa_flipped[phoneme])
         else:
             lost_phonemes.add(phoneme)
-    #category_set = set([ipa_flipped[phoneme] for phoneme in phonemes])
 
     #Determines the rows and columns needed for this table
     for cat in category_set:
@@ -278,7 +276,7 @@ def process_scraper(phonemes):
                             if k == len(allophone["processnames"]) - 1:
                                 processes += ": "
                         process = f"""
-                        <span class="processname"> {processes} </span> <br> <span class="process">/{phoneme["phoneme"]}/ -> [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span>
+                        <span class="processname"> {processes} </span> <br> <span class="process">/{phoneme["phoneme"]}/ &#8594; [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span>
                         """
                         mappings[phoneme["phoneme"]].append(process)
 
