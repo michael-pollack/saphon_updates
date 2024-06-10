@@ -157,7 +157,6 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
     html += "</table>"
     return html
 
-#Generates JavaScript that can be imbedded in the HTML file. 
 # def generate_phoneme_script(phonemes, allophones):
 #     phoneme_script = """
 #     function writePhonemes() {
@@ -215,8 +214,8 @@ def generate_html_body(template, processes, phonemes, allophones):
     html_content += generate_ipa_chart(phonemes, allophones, consonant_subset, True)
     html_content += generate_ipa_chart(phonemes, allophones, vowel_subset, False)
     html_content += f"""
-    <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>Processes</h2>{processes}</div>
+    <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>References</h2></div>
     """
     return html_content
@@ -229,8 +228,9 @@ def generate_html(template):
         <head> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
+        <script type="text/javascript"> {generate_script()} </script>
         </head>
-        <body>
+        <body onload="initialize()">
         """
         html_content = html_content + generate_html_body(template, processes, phonemes, allophones)
     else:
@@ -256,10 +256,33 @@ def generate_html(template):
     """
     return html_content
 
+def generate_script():
+    process_hider = """
+    function initialize() {
+        const process_count_span = document.getElementById("processIndexCount");
+        const process_count = process_count_span.textContent;
+        for (var i = 0; i < process_count; i += 1) {
+            let this_process = "process-" + i;
+            let this_name = "process-name-" + i;
+            let process_span = document.getElementById(this_process);
+            let name_span = document.getElementById(this_name);
+            process_span.addEventListener("click", function () {
+                if (name_span.style.display === "none" || name_span.style.display === "") {
+                    name_span.style.display = "inline";
+                } else {
+                    name_span.style.display = "none";
+                }
+            });
+        }
+    }
+    """
+    return process_hider
+
 def process_scraper(phonemes):
     phoneme_set = set()
     allophone_set = set()
     mappings =  {}
+    process_index = 0
     for phoneme in phonemes:
         phoneme_set.add(phoneme["phoneme"])
         mappings[phoneme["phoneme"]] = []
@@ -267,16 +290,15 @@ def process_scraper(phonemes):
             if type(environment) == dict:
                 for allophone in environment["allophones"]:
                     if allophone["allophone"] != phoneme["phoneme"]:
+                        process_id = "process-" + str(process_index)
+                        process_name_id = "process-name-" + str(process_index)
+                        process_index += 1
                         allophone_set.add(allophone["allophone"])
                         processes = ""
                         for k in range(len(allophone["processnames"])):
-                            if k != 0:
-                                processes += " ,"
-                            processes +=  allophone["processnames"][k]
-                            if k == len(allophone["processnames"]) - 1:
-                                processes += ": "
+                            processes += allophone["processnames"][k]
                         process = f"""
-                        <span class="processname"> {processes} </span> <br> <span class="process">/{phoneme["phoneme"]}/ &#8594; [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span>
+                        <span class="process" id="{process_id}">/{phoneme["phoneme"]}/ &#8594; [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span> <span class="processname" id="{process_name_id}"> <br> {processes} </span>
                         """
                         mappings[phoneme["phoneme"]].append(process)
 
@@ -301,6 +323,7 @@ def process_scraper(phonemes):
             """
     html_content += f"""
     </table></div>
+    <span class="hidden" id="processIndexCount">{process_index}</span>
     """
     return html_content, phoneme_set, allophone_set
 

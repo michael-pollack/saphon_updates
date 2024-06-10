@@ -3,8 +3,27 @@
         <head> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
+        <script type="text/javascript"> 
+    function initialize() {
+        const process_count_span = document.getElementById("processIndexCount");
+        const process_count = process_count_span.textContent;
+        for (var i = 0; i < process_count; i += 1) {
+            let this_process = "process-" + i;
+            let this_name = "process-name-" + i;
+            let process_span = document.getElementById(this_process);
+            let name_span = document.getElementById(this_name);
+            process_span.addEventListener("click", function () {
+                if (name_span.style.display === "none" || name_span.style.display === "") {
+                    name_span.style.display = "inline";
+                } else {
+                    name_span.style.display = "none";
+                }
+            });
+        }
+    }
+     </script>
         </head>
-        <body>
+        <body onload="initialize()">
         
     <div class=entry>
     <h1>Tenharim [pah] (parintintin)</h1>
@@ -25,13 +44,13 @@
                             
                             <span id="dʒ" class="visible-allophone"> dʒ </span>
                             </td><td></td><td>
-                            <span id="kʷ" class="visible-phoneme"> kʷ </span>
-                            
                             <span id="k" class="visible-phoneme"> k </span>
                             
-                            <span id="ɡ" class="visible-allophone"> ɡ </span>
+                            <span id="kʷ" class="visible-phoneme"> kʷ </span>
                             
                             <span id="ɡʷ" class="visible-allophone"> ɡʷ </span>
+                            
+                            <span id="ɡ" class="visible-allophone"> ɡ </span>
                             </td><td>
                             <span id="ʔ" class="visible-phoneme"> ʔ </span>
                             </td><td></td></tr>
@@ -65,17 +84,17 @@
                             </td><td></td><td></td></tr>
             <tr id="Tap, Flap"><th>Tap, Flap</th>
             <td></td><td></td><td>
-                            <span id="ɾ̃" class="visible-allophone"> ɾ̃ </span>
-                            
                             <span id="ɾ" class="visible-phoneme"> ɾ </span>
+                            
+                            <span id="ɾ̃" class="visible-allophone"> ɾ̃ </span>
                             </td><td></td><td></td><td></td><td></td><td></td></tr>
             <tr id="Approximant"><th>Approximant</th>
             <td></td><td>
                             <span id="ʋ" class="visible-phoneme"> ʋ </span>
                             </td><td></td><td></td><td>
-                            <span id="j" class="visible-phoneme"> j </span>
-                            
                             <span id="j̃" class="visible-allophone"> j̃ </span>
+                            
+                            <span id="j" class="visible-phoneme"> j </span>
                             </td><td>
                             <span id="ɰ" class="visible-allophone"> ɰ </span>
                             </td><td></td><td>
@@ -125,30 +144,29 @@
                             </td><td></td></tr>
             <tr id="Low"><th>Low</th>
             <td></td><td>
-                            <span id="ã" class="visible-phoneme"> ã </span>
-                            
                             <span id="a" class="visible-phoneme"> a </span>
+                            
+                            <span id="ã" class="visible-phoneme"> ã </span>
                             </td><td></td></tr></table>
-    <div class=field><h2>Synthesis Notes</h2><p>Our synthesis for Tenharim is mainly based on Marçoli's (2018) analysis, with supplemented and slightly modified process from Betts & Pease (1971). We assume Tenharim has the following processes: (1) leftward BO/LO, (post)-oralization of /m, ŋ/ word-initially before an oral vowel, resulting in the following variation [mb~b], [ɡ~ŋɡ]; (2) leftward LO, post-oralization of  /m, ŋ/ to [mb, ŋɡ] word-medially before an oral vowel; (3) leftward LO, post-oralization of /n/ to [nd] before an oral vowel. We do not group /m, n, ŋ/ together because there is [d] allophone that is attested for underlying /n/.  We also assume a process of leftward LDNH, adapted from Betts & Pease's original proposal and Marçoli: the right-most nasal vowel or nasal consonant triggers leftward nasalization of vowels and approximants. We assume that flap also nasalizes within a nasal harmony span, just like /j, w/, which are explicitly discussed by Marçoli. Although none of the authors explicitly discuss oral obstruents being transparent to the LDNH process, we assume this to be true given some of the data provided by Marçoli, Betts, and Sampaio. Unlike Sampaio and Betts' analysis, we do not assume underlying /ɲ, ŋʷ/ post-oralize to [ndʒ, ŋɡʷ]. LDNH predicts that /ndʒ, ŋɡʷ/ never occur post-oralized triggering leftward nasal harmony if they're not underlyingly nasal, which is borne out in the data: [aˈɡʷajɐ] /a-waj-a/ ‘rabo’ and not *[ãˈŋɡʷajɐ], (Marçoli 2018 p. 115) and /aeɾajɨk-a/ [aeɾaˈdʒɨɰa] 'veia' (Marçoli 2018, p. 118) and not *[ãẽɾ̃ãˈɲdʒɨɰa] (but closely related Amondawa crucially differs in this respect). We also assume that [ɲ, ŋʷ] only ever occur inside of a nasal harmony span based on the proposal above, which is borne out in the data.  We also assume one morphophonological process: pre-nasalization of morpheme-initial /p, k/ to [mb, ŋɡ] when following a morpheme-final nasal vowel.</p></div>
     <div class=field><h2>Processes</h2>
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
     
             <tr><th> /k/ </th><td>
             
                 
-                        <span class="processname"> lenition:  </span> <br> <span class="process">/k/ &#8594; [ɰ] / $*_ </span>
+                        <span class="process" id="process-0">/k/ &#8594; [ɰ] / $*_ </span> <span class="processname" id="process-name-0"> <br> lenition </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> voicing:  </span> <br> <span class="process">/k/ &#8594; [ɡ] / N_ </span>
+                        <span class="process" id="process-1">/k/ &#8594; [ɡ] / N_ </span> <span class="processname" id="process-name-1"> <br> voicing </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> voicing:  </span> <br> <span class="process">/k/ &#8594; [ɡ] / V+_i </span>
+                        <span class="process" id="process-2">/k/ &#8594; [ɡ] / V+_i </span> <span class="processname" id="process-name-2"> <br> voicing </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> MPP=LN:pk:  </span> <br> <span class="process">/k/ &#8594; [ŋɡ] / Ṽ+_ </span>
+                        <span class="process" id="process-3">/k/ &#8594; [ŋɡ] / Ṽ+_ </span> <span class="processname" id="process-name-3"> <br> MPP=LN:pk </span>
                          <br>
             
             </td></tr>
@@ -156,15 +174,15 @@
             <tr><th> /m/ </th><td>
             
                 
-                        <span class="processname"> LO:DorND:  </span> <br> <span class="process">/m/ &#8594; [b] / #_V </span>
+                        <span class="process" id="process-4">/m/ &#8594; [b] / #_V </span> <span class="processname" id="process-name-4"> <br> LO:DorND </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LO:DorND:  </span> <br> <span class="process">/m/ &#8594; [mb] / #_V </span>
+                        <span class="process" id="process-5">/m/ &#8594; [mb] / #_V </span> <span class="processname" id="process-name-5"> <br> LO:DorND </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LO:mŋ:  </span> <br> <span class="process">/m/ &#8594; [mb] / {Ṽ, V}_V </span>
+                        <span class="process" id="process-6">/m/ &#8594; [mb] / {Ṽ, V}_V </span> <span class="processname" id="process-name-6"> <br> LO:mŋ </span>
                          <br>
             
             </td></tr>
@@ -172,7 +190,7 @@
             <tr><th> /n/ </th><td>
             
                 
-                        <span class="processname"> LO:n:  </span> <br> <span class="process">/n/ &#8594; [nd] / _V </span>
+                        <span class="process" id="process-7">/n/ &#8594; [nd] / _V </span> <span class="processname" id="process-name-7"> <br> LO:n </span>
                          <br>
             
             </td></tr>
@@ -180,15 +198,15 @@
             <tr><th> /ŋ/ </th><td>
             
                 
-                        <span class="processname"> LO:DorND:  </span> <br> <span class="process">/ŋ/ &#8594; [ɡ] / #_V </span>
+                        <span class="process" id="process-8">/ŋ/ &#8594; [ɡ] / #_V </span> <span class="processname" id="process-name-8"> <br> LO:DorND </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LO:DorND:  </span> <br> <span class="process">/ŋ/ &#8594; [ŋɡ] / #_V </span>
+                        <span class="process" id="process-9">/ŋ/ &#8594; [ŋɡ] / #_V </span> <span class="processname" id="process-name-9"> <br> LO:DorND </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LO:mŋ:  </span> <br> <span class="process">/ŋ/ &#8594; [ŋɡ] / {Ṽ, V}_V </span>
+                        <span class="process" id="process-10">/ŋ/ &#8594; [ŋɡ] / {Ṽ, V}_V </span> <span class="processname" id="process-name-10"> <br> LO:mŋ </span>
                          <br>
             
             </td></tr>
@@ -196,11 +214,11 @@
             <tr><th> /ʋ/ </th><td>
             
                 
-                        <span class="processname"> fortition:  </span> <br> <span class="process">/ʋ/ &#8594; [β] / _V </span>
+                        <span class="process" id="process-11">/ʋ/ &#8594; [β] / _V </span> <span class="processname" id="process-name-11"> <br> fortition </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> bilabialization:  </span> <br> <span class="process">/ʋ/ &#8594; [w] / _V </span>
+                        <span class="process" id="process-12">/ʋ/ &#8594; [w] / _V </span> <span class="processname" id="process-name-12"> <br> bilabialization </span>
                          <br>
             
             </td></tr>
@@ -208,19 +226,19 @@
             <tr><th> /j/ </th><td>
             
                 
-                        <span class="processname"> fortition:  </span> <br> <span class="process">/j/ &#8594; [dʒ] / _V </span>
+                        <span class="process" id="process-13">/j/ &#8594; [dʒ] / _V </span> <span class="processname" id="process-name-13"> <br> fortition </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> fortition:  </span> <br> <span class="process">/j/ &#8594; [ʒ] / _V </span>
+                        <span class="process" id="process-14">/j/ &#8594; [ʒ] / _V </span> <span class="processname" id="process-name-14"> <br> fortition </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/j/ &#8594; [ɲ] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-15">/j/ &#8594; [ɲ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-15"> <br> LDNH </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/j/ &#8594; [j̃] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-16">/j/ &#8594; [j̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-16"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -228,15 +246,15 @@
             <tr><th> /w/ </th><td>
             
                 
-                        <span class="processname"> LO:  </span> <br> <span class="process">/w/ &#8594; [ɡʷ] / _V </span>
+                        <span class="process" id="process-17">/w/ &#8594; [ɡʷ] / _V </span> <span class="processname" id="process-name-17"> <br> LO </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/w/ &#8594; [w̃] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-18">/w/ &#8594; [w̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-18"> <br> LDNH </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/w/ &#8594; [ŋʷ] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-19">/w/ &#8594; [ŋʷ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-19"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -244,7 +262,7 @@
             <tr><th> /ɾ/ </th><td>
             
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/ɾ/ &#8594; [ɾ̃] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-20">/ɾ/ &#8594; [ɾ̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-20"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -252,11 +270,11 @@
             <tr><th> /i/ </th><td>
             
                 
-                        <span class="processname"> centralization:  </span> <br> <span class="process">/i/ &#8594; [ɪ] / $*_ </span>
+                        <span class="process" id="process-21">/i/ &#8594; [ɪ] / $*_ </span> <span class="processname" id="process-name-21"> <br> centralization </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/i/ &#8594; [ĩ] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-22">/i/ &#8594; [ĩ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-22"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -264,7 +282,7 @@
             <tr><th> /ɨ/ </th><td>
             
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/ɨ/ &#8594; [ɨ̃] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-23">/ɨ/ &#8594; [ɨ̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-23"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -272,11 +290,11 @@
             <tr><th> /e/ </th><td>
             
                 
-                        <span class="processname"> lowering:  </span> <br> <span class="process">/e/ &#8594; [ɛ] / $'_ </span>
+                        <span class="process" id="process-24">/e/ &#8594; [ɛ] / $'_ </span> <span class="processname" id="process-name-24"> <br> lowering </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/e/ &#8594; [ẽ] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-25">/e/ &#8594; [ẽ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-25"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -284,15 +302,15 @@
             <tr><th> /a/ </th><td>
             
                 
-                        <span class="processname"> centralization:  </span> <br> <span class="process">/a/ &#8594; [ɐ] / $*_ </span>
+                        <span class="process" id="process-26">/a/ &#8594; [ɐ] / $*_ </span> <span class="processname" id="process-name-26"> <br> centralization </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> centralization:  </span> <br> <span class="process">/a/ &#8594; [ɐ] / _# </span>
+                        <span class="process" id="process-27">/a/ &#8594; [ɐ] / _# </span> <span class="processname" id="process-name-27"> <br> centralization </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/a/ &#8594; [ã] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-28">/a/ &#8594; [ã] / TODO: &_TODO: & </span> <span class="processname" id="process-name-28"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -300,15 +318,15 @@
             <tr><th> /o/ </th><td>
             
                 
-                        <span class="processname"> lowering:  </span> <br> <span class="process">/o/ &#8594; [ɔ] / $'_ </span>
+                        <span class="process" id="process-29">/o/ &#8594; [ɔ] / $'_ </span> <span class="processname" id="process-name-29"> <br> lowering </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> raising:  </span> <br> <span class="process">/o/ &#8594; [ʊ] / $*_ </span>
+                        <span class="process" id="process-30">/o/ &#8594; [ʊ] / $*_ </span> <span class="processname" id="process-name-30"> <br> raising </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/o/ &#8594; [õ] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-31">/o/ &#8594; [õ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-31"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -316,7 +334,7 @@
             <tr><th> /u/ </th><td>
             
                 
-                        <span class="processname"> LDNH:  </span> <br> <span class="process">/u/ &#8594; [ũ] / TODO: &_TODO: & </span>
+                        <span class="process" id="process-32">/u/ &#8594; [ũ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-32"> <br> LDNH </span>
                          <br>
             
             </td></tr>
@@ -324,17 +342,19 @@
             <tr><th> /p/ </th><td>
             
                 
-                        <span class="processname"> lenition:  </span> <br> <span class="process">/p/ &#8594; [w] / $*_# </span>
+                        <span class="process" id="process-33">/p/ &#8594; [w] / $*_# </span> <span class="processname" id="process-name-33"> <br> lenition </span>
                          <br>
                 <br>
                 
-                        <span class="processname"> MPP=LN:pk:  </span> <br> <span class="process">/p/ &#8594; [mb] / Ṽ+_ </span>
+                        <span class="process" id="process-34">/p/ &#8594; [mb] / Ṽ+_ </span> <span class="processname" id="process-name-34"> <br> MPP=LN:pk </span>
                          <br>
             
             </td></tr>
             
     </table></div>
+    <span class="hidden" id="processIndexCount">35</span>
     </div>
+    <div class=field><h2>Synthesis Notes</h2><p>Our synthesis for Tenharim is mainly based on Marçoli's (2018) analysis, with supplemented and slightly modified process from Betts & Pease (1971). We assume Tenharim has the following processes: (1) leftward BO/LO, (post)-oralization of /m, ŋ/ word-initially before an oral vowel, resulting in the following variation [mb~b], [ɡ~ŋɡ]; (2) leftward LO, post-oralization of  /m, ŋ/ to [mb, ŋɡ] word-medially before an oral vowel; (3) leftward LO, post-oralization of /n/ to [nd] before an oral vowel. We do not group /m, n, ŋ/ together because there is [d] allophone that is attested for underlying /n/.  We also assume a process of leftward LDNH, adapted from Betts & Pease's original proposal and Marçoli: the right-most nasal vowel or nasal consonant triggers leftward nasalization of vowels and approximants. We assume that flap also nasalizes within a nasal harmony span, just like /j, w/, which are explicitly discussed by Marçoli. Although none of the authors explicitly discuss oral obstruents being transparent to the LDNH process, we assume this to be true given some of the data provided by Marçoli, Betts, and Sampaio. Unlike Sampaio and Betts' analysis, we do not assume underlying /ɲ, ŋʷ/ post-oralize to [ndʒ, ŋɡʷ]. LDNH predicts that /ndʒ, ŋɡʷ/ never occur post-oralized triggering leftward nasal harmony if they're not underlyingly nasal, which is borne out in the data: [aˈɡʷajɐ] /a-waj-a/ ‘rabo’ and not *[ãˈŋɡʷajɐ], (Marçoli 2018 p. 115) and /aeɾajɨk-a/ [aeɾaˈdʒɨɰa] 'veia' (Marçoli 2018, p. 118) and not *[ãẽɾ̃ãˈɲdʒɨɰa] (but closely related Amondawa crucially differs in this respect). We also assume that [ɲ, ŋʷ] only ever occur inside of a nasal harmony span based on the proposal above, which is borne out in the data.  We also assume one morphophonological process: pre-nasalization of morpheme-initial /p, k/ to [mb, ŋɡ] when following a morpheme-final nasal vowel.</p></div>
     <div class=field><h2>References</h2></div>
     
     </div>
