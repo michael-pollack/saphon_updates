@@ -39,6 +39,7 @@ manners = {
     "Stop": "s",
     "Aspirated stop": "a",
     "Fricative": "f",
+    "Affricate": "aff",
     "Nasal": "n",
     "Nasal compound": "p",
     "Trill": "r",
@@ -91,11 +92,18 @@ def generate_ipa_subsets(phonemes):
 
     #Determines the rows and columns needed for this table
     for cat in category_set:
+
+        #Other Consonants
         if cat[0] == "c":
-            manner_name = manners_flipped[cat[1]]
+            if len(cat) > 4:
+                manner_name = "Affricate"
+            else:
+                manner_name = manners_flipped[cat[1]]
             place_name = places_flipped[cat[2]]
             consonant_subset["manners"][manner_name] = set()
             consonant_subset["places"][place_name] = set()
+        
+        #Vowels
         elif cat[0] == "v":
             height_name = heights_flipped[cat[1]]
             backness_name = backness_flipped[cat[2]]
@@ -107,7 +115,10 @@ def generate_ipa_subsets(phonemes):
         if phoneme in ipa_flipped:
             this_cat = ipa_flipped[phoneme]
             if this_cat[0] == "c":
-                consonant_subset["manners"][manners_flipped[this_cat[1]]].add(phoneme)
+                if len(this_cat) > 4:
+                    consonant_subset["manners"]["Affricate"].add(phoneme)
+                else:  
+                    consonant_subset["manners"][manners_flipped[this_cat[1]]].add(phoneme)
                 consonant_subset["places"][places_flipped[this_cat[2]]].add(phoneme)
             elif this_cat[0] == "v":
                 vowels_subset["heights"][heights_flipped[this_cat[1]]].add(phoneme)
@@ -156,37 +167,6 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
             html += "</tr>"
     html += "</table>"
     return html
-
-# def generate_phoneme_script(phonemes, allophones):
-#     phoneme_script = """
-#     function writePhonemes() {
-#         const phonemes = """
-    
-#     phoneme_script += str(phonemes) + ";"
-
-#     phoneme_script += """
-#         const allophones = """
-    
-#     phoneme_script += str(allophones) + ";"
-
-#     phoneme_script += """
-#         const phonSet = new Set()
-#         for (var i = 0; i < phonemes.length; i += 1) {
-#             this_phon = document.getElementById(phonemes[i])
-#             if(this_phon != null) {
-#                 this_phon.classList.toggle("visible-phoneme")
-#                 phonSet.add(this_phon)
-#             }
-#         }
-#         for (var i = 0; i < allophones.length; i += 1) {
-#             this_aphon = document.getElementById(allophones[i])
-#             if(this_aphon != null && !phonSet.has(this_aphon)) {
-#                 this_aphon.classList.toggle("visible-allophone")
-#             }
-#         }
-#     }
-#     """
-#     return phoneme_script
 
 def generate_html_body(template, processes, phonemes, allophones):
     name = template.get("name", "")
