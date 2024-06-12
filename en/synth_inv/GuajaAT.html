@@ -7,6 +7,9 @@
     function initialize() {
         const process_count_span = document.getElementById("processIndexCount");
         const process_count = process_count_span.textContent;
+        const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
+        const process_subsections_count_span = document.getElementById("processSubsectionCount");
+        const process_subsections_count = process_subsections_count_span.textContent;
         for (var i = 0; i < process_count; i += 1) {
             let this_process = "process-" + i;
             let this_name = "process-name-" + i;
@@ -19,6 +22,21 @@
                     name_span.style.display = "none";
                 }
             });
+        }
+        for (var j = 0; j <= process_subsections_count; j += 1) {
+            for (var k = 0; k < process_subsections_list.length; k += 1) {
+                let this_process_title = process_subsections_list[k] + j;
+                let this_process_sub =  process_subsections_list[k] + "-sub" + j;
+                let process_title_span = document.getElementById(this_process_title);
+                let process_sub_span = document.getElementById(this_process_sub);
+                process_title_span.addEventListener("click", function () {
+                if (process_sub_span.style.display === "none" || process_sub_span.style.display === "") {
+                    process_sub_span.style.display = "inline";
+                } else {
+                    process_sub_span.style.display = "none";
+                }
+            });
+            }
         }
     }
      </script>
@@ -42,9 +60,9 @@
                             
                             <span id="d" class="visible-allophone"> d </span>
                             </td><td></td><td></td><td>
-                            <span id="kʲ" class="visible-allophone"> kʲ </span>
-                            
                             <span id="k" class="visible-phoneme"> k </span>
+                            
+                            <span id="kʲ" class="visible-allophone"> kʲ </span>
                             
                             <span id="kʷ" class="visible-phoneme"> kʷ </span>
                             
@@ -76,9 +94,9 @@
                             </td><td></td><td></td><td></td><td></td></tr>
             <tr id="Nasal"><th>Nasal</th>
             <td>
-                            <span id="m" class="visible-phoneme"> m </span>
-                            
                             <span id="mʷ" class="visible-allophone"> mʷ </span>
+                            
+                            <span id="m" class="visible-phoneme"> m </span>
                             </td><td>
                             <span id="n" class="visible-phoneme"> n </span>
                             </td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -106,13 +124,13 @@
                             </td></tr></table><h2>Vowels</h2><table><tr><th></th><th>Front</th><th>Center</th><th>Back</th></tr>
             <tr id="High"><th>High</th>
             <td>
-                            <span id="ḭ" class="visible-allophone"> ḭ </span>
+                            <span id="ḭ̃" class="visible-allophone"> ḭ̃ </span>
                             
                             <span id="i" class="visible-phoneme"> i </span>
                             
-                            <span id="ĩ" class="visible-phoneme"> ĩ </span>
+                            <span id="ḭ" class="visible-allophone"> ḭ </span>
                             
-                            <span id="ḭ̃" class="visible-allophone"> ḭ̃ </span>
+                            <span id="ĩ" class="visible-phoneme"> ĩ </span>
                             
                             <span id="y" class="visible-allophone"> y </span>
                             </td><td>
@@ -126,11 +144,11 @@
                             </td><td>
                             <span id="ṵ" class="visible-allophone"> ṵ </span>
                             
-                            <span id="ũ" class="visible-phoneme"> ũ </span>
-                            
                             <span id="u" class="visible-phoneme"> u </span>
                             
                             <span id="ṵ̃" class="visible-allophone"> ṵ̃ </span>
+                            
+                            <span id="ũ" class="visible-phoneme"> ũ </span>
                             </td></tr>
             <tr id="Low-High"><th>Low-High</th>
             <td>
@@ -142,17 +160,17 @@
             <td>
                             <span id="ḛ̃" class="visible-allophone"> ḛ̃ </span>
                             
-                            <span id="ḛ" class="visible-allophone"> ḛ </span>
+                            <span id="ẽ" class="visible-phoneme"> ẽ </span>
                             
                             <span id="e" class="visible-phoneme"> e </span>
                             
-                            <span id="ẽ" class="visible-phoneme"> ẽ </span>
+                            <span id="ḛ" class="visible-allophone"> ḛ </span>
                             </td><td></td><td>
                             <span id="õ" class="visible-phoneme"> õ </span>
                             
-                            <span id="o" class="visible-phoneme"> o </span>
-                            
                             <span id="o̰" class="visible-allophone"> o̰ </span>
+                            
+                            <span id="o" class="visible-phoneme"> o </span>
                             </td></tr>
             <tr id="Mid"><th>Mid</th>
             <td></td><td>
@@ -168,13 +186,13 @@
                             </td></tr>
             <tr id="Low"><th>Low</th>
             <td></td><td>
-                            <span id="a" class="visible-phoneme"> a </span>
+                            <span id="a̰" class="visible-allophone"> a̰ </span>
                             
                             <span id="ã" class="visible-phoneme"> ã </span>
                             
                             <span id="ã̰" class="visible-allophone"> ã̰ </span>
                             
-                            <span id="a̰" class="visible-allophone"> a̰ </span>
+                            <span id="a" class="visible-phoneme"> a </span>
                             </td><td>
                             <span id="ɑ" class="visible-allophone"> ɑ </span>
                             </td></tr></table>
@@ -609,44 +627,43 @@
         <span class="process-descriptor">Directionality: </span><span class="process-description"> leftward </span><br>
         <span class="process-descriptor">Alternation Type: </span><span class="process-description"> phonological </span><br>
         <span class="process-descriptor">Domain: </span><span class="process-description"> word-internal </span><br>
-        <span class="process-descriptor">Undergoers: </span><br>
-        
+        <span class="process-descriptor" id=undergoers0>Undergoers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=undergoers-sub0> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> m, n </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {word} </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
-    
-        <span class="process-descriptor">Triggers: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=triggers0>Triggers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=triggers-sub0> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> V </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {word} </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
-        <span class="process-descriptor">Transparent: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=transparent0>Transparent:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=transparent-sub0> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> NA </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
-        <span class="process-descriptor">Opaque: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=opaque0>Opaque:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=opaque-sub0> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> NA </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
+     </span>
         <br>
-        
         </div>
         
         <div class="processtable">
@@ -657,44 +674,43 @@
         <span class="process-descriptor">Directionality: </span><span class="process-description"> leftward </span><br>
         <span class="process-descriptor">Alternation Type: </span><span class="process-description"> phonological </span><br>
         <span class="process-descriptor">Domain: </span><span class="process-description"> word-internal </span><br>
-        <span class="process-descriptor">Undergoers: </span><br>
-        
+        <span class="process-descriptor" id=undergoers1>Undergoers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=undergoers-sub1> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> V </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {word} </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
-    
-        <span class="process-descriptor">Triggers: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=triggers1>Triggers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=triggers-sub1> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> Ṽ </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {stressed syllable, nucleus} > {morpheme, final} </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
-        <span class="process-descriptor">Transparent: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=transparent1>Transparent:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=transparent-sub1> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> S, r </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
-        <span class="process-descriptor">Opaque: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=opaque1>Opaque:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=opaque-sub1> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> T </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
+     </span>
         <br>
-        
         </div>
         
         <div class="processtable">
@@ -705,46 +721,47 @@
         <span class="process-descriptor">Directionality: </span><span class="process-description"> bidirectional </span><br>
         <span class="process-descriptor">Alternation Type: </span><span class="process-description"> phonological </span><br>
         <span class="process-descriptor">Domain: </span><span class="process-description"> word-internal </span><br>
-        <span class="process-descriptor">Undergoers: </span><br>
-        
+        <span class="process-descriptor" id=undergoers2>Undergoers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=undergoers-sub2> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> V </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {word} </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
-    
-        <span class="process-descriptor">Triggers: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=triggers2>Triggers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=triggers-sub2> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> N </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {word} </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
-        <span class="process-descriptor">Transparent: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=transparent2>Transparent:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=transparent-sub2> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> NA </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
-        <span class="process-descriptor">Opaque: </span><br>
-        
+     </span>
+        <span class="process-descriptor" id=opaque2>Opaque:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id=opaque-sub2> 
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> NA </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description">  </span><br>
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> [] </span><br>
-    
+     </span>
         <br>
+        </div>
         
-        </div>
-        </div>
+    <span class="hidden" id="processSubsectionCount">2</span>
+    </div>
     <div class=field><h2>Synthesis Notes</h2><p>Our analysis is significantly informed by Cunha 1987, and we propose the following rules: (1) optional post oralization of /m,n/ when preceding oral V; (2) leftward LDNH triggered by stressed root final nasal Ṽ, with oral V and glides as undergoers and obstruents as blockers; (3) bidirectional nasalization of vowels adjacent to nasal consonants. Regarding (3), we note that Cunha divides this process into two: (i) nasalization of oral V when preceding nasal m,n; (ii) nasalization of oral V when following word initial m,n; however, we assume that these two procesesses are actually just part of a more general processes of LN:V.</p></div>
     <div class=field><h2>References</h2></div>
     

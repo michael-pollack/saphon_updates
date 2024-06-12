@@ -243,6 +243,9 @@ def generate_script():
     function initialize() {
         const process_count_span = document.getElementById("processIndexCount");
         const process_count = process_count_span.textContent;
+        const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
+        const process_subsections_count_span = document.getElementById("processSubsectionCount");
+        const process_subsections_count = process_subsections_count_span.textContent;
         for (var i = 0; i < process_count; i += 1) {
             let this_process = "process-" + i;
             let this_name = "process-name-" + i;
@@ -255,6 +258,21 @@ def generate_script():
                     name_span.style.display = "none";
                 }
             });
+        }
+        for (var j = 0; j <= process_subsections_count; j += 1) {
+            for (var k = 0; k < process_subsections_list.length; k += 1) {
+                let this_process_title = process_subsections_list[k] + j;
+                let this_process_sub =  process_subsections_list[k] + "-sub" + j;
+                let process_title_span = document.getElementById(this_process_title);
+                let process_sub_span = document.getElementById(this_process_sub);
+                process_title_span.addEventListener("click", function () {
+                if (process_sub_span.style.display === "none" || process_sub_span.style.display === "") {
+                    process_sub_span.style.display = "inline";
+                } else {
+                    process_sub_span.style.display = "none";
+                }
+            });
+            }
         }
     }
     """
@@ -309,11 +327,10 @@ def process_scraper(phonemes):
     """
     return html_content, phoneme_set, allophone_set
 
+
 def segments_morphemes_and_other_fun(category):
     segments = category["segments"]
     if type(segments) == list and segments != []:
-        if len(segments) > 1:
-            print(segments)
         segments = segments[0]
     elif segments == []:
         segments = {'units': [], 'positional_restrictions': []}
@@ -345,6 +362,7 @@ def segments_morphemes_and_other_fun(category):
 
 def process_detail_scraper(processes):
     html_content = ""
+    process_index = 0
     for process in processes:
         process_name = process["processname"]
         process_type = process["processtype"]
@@ -362,19 +380,21 @@ def process_detail_scraper(processes):
         <span class="process-descriptor">Directionality: </span><span class="process-description"> {directionality} </span><br>
         <span class="process-descriptor">Alternation Type: </span><span class="process-description"> {alternation_type} </span><br>
         <span class="process-descriptor">Domain: </span><span class="process-description"> {domain} </span><br>
-        <span class="process-descriptor">Undergoers: </span><br>
-        {segments_morphemes_and_other_fun(process["undergoers"])}
-        <span class="process-descriptor">Triggers: </span><br>
-        {segments_morphemes_and_other_fun(process["triggers"])}
-        <span class="process-descriptor">Transparent: </span><br>
-        {segments_morphemes_and_other_fun(process["transparent"])}
-        <span class="process-descriptor">Opaque: </span><br>
-        {segments_morphemes_and_other_fun(process["opaque"])}
+        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["undergoers"])} </span>
+        <span class="process-descriptor" id={"triggers" + str(process_index)}>Triggers:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["triggers"])} </span>
+        <span class="process-descriptor" id={"transparent" + str(process_index)}>Transparent:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id={"transparent-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["transparent"])} </span>
+        <span class="process-descriptor" id={"opaque" + str(process_index)}>Opaque:<span class="elipses"> (...)</span></span><br>
+        <span class="pd-subsection" id={"opaque-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["opaque"])} </span>
         <br>
-        """
-        html_content += f"""
         </div>
         """
+        process_index += 1
+    html_content += f"""
+    <span class="hidden" id="processSubsectionCount">{process_index - 1}</span>
+    """
     return html_content
 
 def process_templates_from_folder(input_folder, synth_output_folder, ref_output_folder):
