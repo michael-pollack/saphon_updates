@@ -1,6 +1,6 @@
 import csv, math, re, sys, os, unicodedata
 import glob
-import yaml # type: ignore
+# import yaml # type: ignore
 from collections import *
 
 class SaphonData:

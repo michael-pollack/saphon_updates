@@ -1,6 +1,6 @@
 import json
 import os
-import io
+from IPAio import normalizeIPA
 
 with open("ipa.json", 'r', encoding='utf-8') as ipa_file:
     ipa = json.load(ipa_file)
@@ -89,7 +89,11 @@ def generate_ipa_subsets(phonemes):
         if phoneme in ipa_flipped:
             category_set.add(ipa_flipped[phoneme])
         else:
-            lost_phonemes.add(phoneme)
+            normalized_phoneme = normalizeIPA(phoneme)
+            if normalized_phoneme in ipa_flipped:
+                category_set.add(ipa_flipped[normalized_phoneme])
+            else:
+                lost_phonemes.add(phoneme)
 
     #Determines the rows and columns needed for this table
     for cat in category_set:
@@ -112,20 +116,29 @@ def generate_ipa_subsets(phonemes):
             vowels_subset["backness"][backness_name] = set()
     
     #Creates the sets used to map each phoneme to a cell
+    these_lost_phonemes = set()
     for phoneme in phonemes:
-        if phoneme in ipa_flipped:
+        if phoneme not in ipa_flipped:
+            normalized_phoneme = normalizeIPA(phoneme)
+            if normalized_phoneme in ipa_flipped:
+                this_cat = ipa_flipped[normalized_phoneme]
+            else:
+                #TODO: Handle lost phonemes
+                these_lost_phonemes.add(phoneme)
+                continue
+        else:
             this_cat = ipa_flipped[phoneme]
-            if this_cat[0] == "c":
-                if len(this_cat) > 4:
-                    consonant_subset["manners"]["Affricate"].add(phoneme)
-                else:  
-                    consonant_subset["manners"][manners_flipped[this_cat[1]]].add(phoneme)
-                consonant_subset["places"][places_flipped[this_cat[2]]].add(phoneme)
-            elif this_cat[0] == "v":
-                vowels_subset["heights"][heights_flipped[this_cat[1]]].add(phoneme)
-                vowels_subset["backness"][backness_flipped[this_cat[2]]].add(phoneme)
+        if this_cat[0] == "c":
+            if len(this_cat) > 4:
+                consonant_subset["manners"]["Affricate"].add(phoneme)
+            else:  
+                consonant_subset["manners"][manners_flipped[this_cat[1]]].add(phoneme)
+            consonant_subset["places"][places_flipped[this_cat[2]]].add(phoneme)
+        elif this_cat[0] == "v":
+            vowels_subset["heights"][heights_flipped[this_cat[1]]].add(phoneme)
+            vowels_subset["backness"][backness_flipped[this_cat[2]]].add(phoneme)
 
-    return consonant_subset, vowels_subset
+    return consonant_subset, vowels_subset, these_lost_phonemes
 
 def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: bool):
     if consonant:
@@ -150,7 +163,12 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
                     these_symbols = subset[subRow][y] & subset[subCol][x]
                     voiced, unvoiced = [], []
                     for symbol in these_symbols:
-                        if ipa_flipped[symbol][3] == "u":
+                        #TODO: Handle lost phonemes
+                        if symbol in ipa_flipped:
+                            normalized_symbol = symbol
+                        else:
+                            normalized_symbol = normalizeIPA(symbol)
+                        if ipa_flipped[normalized_symbol][3] == "u":
                             unvoiced.append(symbol)
                         else:
                             voiced.append(symbol)
@@ -183,17 +201,20 @@ def generate_html_body(template, processes, phonemes, allophones):
     else: 
         latitude, longitude = "N/A", "N/A"
     synthesis_notes = template.get("synthesis", "")
-    consonant_subset, vowel_subset = generate_ipa_subsets(phonemes | allophones)
+    consonant_subset, vowel_subset, these_lost_phonemes = generate_ipa_subsets(phonemes | allophones)
     html_content = f"""
     <div class=entry>
     <h1>{name}</h1>
     <div class=field><div class=key>Language code</div><div class=value>{iso_code}</div></div>
     <div class=field><div class=key>Location</div><div class=value>{latitude}° {longitude}°</div></div>
     <div class=field><div class=key>Family</div><div class=value>{family}</div></div>
-    <div class=field><table class=inv>
     """
     html_content += generate_ipa_chart(phonemes, allophones, consonant_subset, True)
     html_content += generate_ipa_chart(phonemes, allophones, vowel_subset, False)
+    if len(these_lost_phonemes) != 0:
+        html_content += f"""
+        <div class=field><h2>Uncategorized Phonemes</h2>{these_lost_phonemes}</div>
+        """
     html_content += f"""
     <div class=field><h2>Processes</h2>{processes}</div>
     <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []))}</div>
