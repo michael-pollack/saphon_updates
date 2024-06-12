@@ -1,5 +1,6 @@
 import json
 import os
+import io
 
 with open("ipa.json", 'r', encoding='utf-8') as ipa_file:
     ipa = json.load(ipa_file)
@@ -195,6 +196,7 @@ def generate_html_body(template, processes, phonemes, allophones):
     html_content += generate_ipa_chart(phonemes, allophones, vowel_subset, False)
     html_content += f"""
     <div class=field><h2>Processes</h2>{processes}</div>
+    <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []))}</div>
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     <div class=field><h2>References</h2></div>
     """
@@ -306,6 +308,74 @@ def process_scraper(phonemes):
     <span class="hidden" id="processIndexCount">{process_index}</span>
     """
     return html_content, phoneme_set, allophone_set
+
+def segments_morphemes_and_other_fun(category):
+    segments = category["segments"]
+    if type(segments) == list and segments != []:
+        if len(segments) > 1:
+            print(segments)
+        segments = segments[0]
+    elif segments == []:
+        segments = {'units': [], 'positional_restrictions': []}
+    morphemes = category["morphemes"]  
+    if type(morphemes) == list and morphemes != []:
+        morphemes = morphemes[0]
+    elif morphemes == []:
+        morphemes = {'units': [], 'positional_restrictions': []}
+    segment_units = ""
+    morpheme_units = ""
+    for i in range(len(segments["units"])):
+        segment_units += segments["units"][i]
+        if i < len(segments["units"]) - 1:
+            segment_units += ", "
+    for i in range(len(morphemes["units"])):
+        morpheme_units += morphemes["units"][i]
+        if i < len(morphemes["units"]) - 1:
+            morpheme_units += ", "
+    html_content = f"""
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {segment_units} </span><br>
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {segments["positional_restrictions"]} </span><br>
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {morpheme_units} </span><br>
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {morphemes["positional_restrictions"]} </span><br>
+    """
+    return html_content
+    
+
+def process_detail_scraper(processes):
+    html_content = ""
+    for process in processes:
+        process_name = process["processname"]
+        process_type = process["processtype"]
+        description = process["description"]
+        optionality = process["optionality"]
+        directionality = process["directionality"]
+        alternation_type = process["alternation_type"]
+        domain = process["domain"]
+        html_content += f"""
+        <div class="processtable">
+        <span class="process-title">{process_name}</span><br>
+        <span class="process-descriptor">Type: </span><span class="process-description"> {process_type} </span><br>
+        <span class="process-descriptor">Description: </span><span class="process-description"> {description} </span><br>
+        <span class="process-descriptor">Optionality: </span><span class="process-description"> {optionality} </span><br>
+        <span class="process-descriptor">Directionality: </span><span class="process-description"> {directionality} </span><br>
+        <span class="process-descriptor">Alternation Type: </span><span class="process-description"> {alternation_type} </span><br>
+        <span class="process-descriptor">Domain: </span><span class="process-description"> {domain} </span><br>
+        <span class="process-descriptor">Undergoers: </span><br>
+        {segments_morphemes_and_other_fun(process["undergoers"])}
+        <span class="process-descriptor">Triggers: </span><br>
+        {segments_morphemes_and_other_fun(process["triggers"])}
+        <span class="process-descriptor">Transparent: </span><br>
+        {segments_morphemes_and_other_fun(process["transparent"])}
+        <span class="process-descriptor">Opaque: </span><br>
+        {segments_morphemes_and_other_fun(process["opaque"])}
+        <br>
+        """
+        html_content += f"""
+        </div>
+        """
+    return html_content
 
 def process_templates_from_folder(input_folder, synth_output_folder, ref_output_folder):
     if not os.path.exists(synth_output_folder):
