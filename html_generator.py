@@ -211,6 +211,7 @@ def generate_html_body(template, processes, phonemes, allophones):
     """
     html_content += generate_ipa_chart(phonemes, allophones, consonant_subset, True)
     html_content += generate_ipa_chart(phonemes, allophones, vowel_subset, False)
+    #TODO: Handle Lost Phonemes
     if len(these_lost_phonemes) != 0:
         html_content += f"""
         <div class=field><h2>Uncategorized Phonemes</h2>{these_lost_phonemes}</div>
@@ -219,11 +220,10 @@ def generate_html_body(template, processes, phonemes, allophones):
     <div class=field><h2>Processes</h2>{processes}</div>
     <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []))}</div>
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
-    <div class=field><h2>References</h2></div>
     """
     return html_content
 
-def generate_html(template):
+def generate_html(template, filename):
     if type(template) != list:
         processes, phonemes, allophones = process_scraper(template.get("phonemes", []))
         html_content = f"""
@@ -236,12 +236,16 @@ def generate_html(template):
         <body onload="initialize()">
         """
         html_content = html_content + generate_html_body(template, processes, phonemes, allophones)
+        html_content += f"""
+        <div class=field><h2><a href="/en/ref_inv/{filename}">References</h2></div>
+        """
     else:
         html_content = f"""
         <html>
         <head> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
+        <script type="text/javascript"> {generate_script()} </script>
         <h1>Reference Documents: {template[0].get("name", "")}</h1>
         """
         for ref in template:
@@ -436,7 +440,7 @@ def process_templates_from_folder(input_folder, synth_output_folder, ref_output_
                         doctype = template.get("doctype", "")
                         output_file = f"{filename.replace('.json', '.html')}"
                         if doctype == "synthesis":
-                            html_content = generate_html(template)
+                            html_content = generate_html(template, output_file)
                             output_path = os.path.join(synth_output_folder, output_file)
                         elif doctype == "reference":
                             ref_templates.append(template)
@@ -446,7 +450,7 @@ def process_templates_from_folder(input_folder, synth_output_folder, ref_output_
                             html_file.write(html_content)
                         print(f"Generated Synthesis HTML file: {output_path}")
                     if ref_templates != []:
-                        ref_html_content = generate_html(ref_templates)
+                        ref_html_content = generate_html(ref_templates, output_file)
                         ref_output_path = os.path.join(ref_output_folder, output_file)
                         with open(ref_output_path, 'w', encoding='utf-8') as ref_html_file:
                             ref_html_file.write(ref_html_content)
