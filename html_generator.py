@@ -391,10 +391,14 @@ def segments_morphemes_and_other_fun(category):
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
     """
     for segment in segments:
+        if len(segment["units"]) > 1:
+            segment_units += "{"
         for i in range(len(segment["units"])):
             segment_units += segment["units"][i]
             if i < len(segment["units"]) - 1:
                 segment_units += ", "
+        if len(segment["units"]) > 1:
+            segment_units += "}"
         html_content += f"""
         <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {segment_units} </span><br>
         <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {segment["positional_restrictions"]} </span><br><br>
@@ -434,7 +438,7 @@ def process_detail_scraper(processes):
         <span class="process-descriptor">Directionality: </span><span class="process-description"> {directionality} </span><br>
         <span class="process-descriptor">Alternation Type: </span><span class="process-description"> {alternation_type} </span><br>
         <span class="process-descriptor">Domain: </span><span class="process-description"> {domain} </span><br>
-        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:<span class="elipses"> (more info) </span></span><br>
+        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:<span class="elipses"> (...) </span></span><br>
         <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["undergoers"])} </span>
         <span class="process-descriptor" id={"triggers" + str(process_index)}>Triggers:<span class="elipses"> (...)</span></span><br>
         <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["triggers"])} </span>
