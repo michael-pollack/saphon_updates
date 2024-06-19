@@ -310,13 +310,15 @@ def generate_script():
                 let this_process_sub =  process_subsections_list[k] + "-sub" + j;
                 let process_title_span = document.getElementById(this_process_title);
                 let process_sub_span = document.getElementById(this_process_sub);
-                process_title_span.addEventListener("click", function () {
-                if (process_sub_span.style.display === "none" || process_sub_span.style.display === "") {
-                    process_sub_span.style.display = "inline";
-                } else {
-                    process_sub_span.style.display = "none";
+                if (process_title_span != null && process_sub_span != null) {
+                    process_title_span.addEventListener("click", function () {
+                        if (process_sub_span.style.display === "none" || process_sub_span.style.display === "") {
+                            process_sub_span.style.display = "inline";
+                        } else {
+                            process_sub_span.style.display = "none";
+                        }
+                    });
                 }
-            });
             }
         }
     }
@@ -386,7 +388,7 @@ def segments_morphemes_and_other_fun(category):
     segment_units = ""
     morpheme_units = ""
     html_content = f"""
-    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span>
+    <span class="process-descriptor-sub">Segments: </span>
     """
     if segments == [] or (len(segments) == 1 and ((segments[0]["units"] == [] or segments[0]["units"] == ["NA"] or segments[0]["units"] == [""]) and (segments[0]["positional_restrictions"] == "" or segments[0]["positional_restrictions"] == "NA"))):
         segNA = True
@@ -407,11 +409,11 @@ def segments_morphemes_and_other_fun(category):
             if len(seg_u_list) > 1:
                 segment_units += "}"
             html_content += f"""
-            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {segment_units} </span><br>
-            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {pos_res_list} </span><br><br>
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {segment_units} </span><br>
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {pos_res_list} </span><br><br>
             """
     html_content += f"""
-    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span>
+    <span class="process-descriptor-sub">Morphemes: </span>
     """
     if morphemes == [] or (len(morphemes) == 1 and ((morphemes[0]["units"] == [] or morphemes[0]["units"] == ["NA"] or morphemes[0]["units"] == [""]) and (morphemes[0]["positional_restrictions"] == "" or morphemes[0]["positional_restrictions"] == "NA"))):
         morphNA = True
@@ -428,8 +430,8 @@ def segments_morphemes_and_other_fun(category):
                 if i < len(morph_u_list) - 1:
                     morpheme_units += ", "
             html_content += f"""
-            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {morpheme_units} </span><br>
-            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {morpheme["positional_restrictions"]} </span><br><br>
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {morpheme_units} </span><br>
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {morpheme["positional_restrictions"]} </span><br><br>
             """
     if segNA and morphNA:
         return "NA"
@@ -453,67 +455,64 @@ def process_detail_scraper(processes):
         transparent = segments_morphemes_and_other_fun(process["transparent"])
         opaque = segments_morphemes_and_other_fun(process["opaque"])
         html_content += f"""
-        <div class="processtable">
-        <span class="process-title">{process_name}</span><br>
-        <span class="process-descriptor">Type: </span><span class="process-description"> {process_type} </span><br>
-        <span class="process-descriptor">Description: </span><span class="process-description"> {description} </span><br>
-        <span class="process-descriptor">Optionality: </span><span class="process-description"> {optionality} </span><br>
-        <span class="process-descriptor">Directionality: </span><span class="process-description"> {directionality} </span><br>
-        <span class="process-descriptor">Alternation Type: </span><span class="process-description"> {alternation_type} </span><br>
-        <span class="process-descriptor">Domain: </span><span class="process-description"> {domain} </span><br>
-        """
-        html_content += f"""
-        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:
+        <span class="process-title">{process_name}</span>
+        <div><table class="processDescTable">
+        <tr><th><span class="process-descriptor">Type: </span></th><td><span class="process-description"> {process_type} </span></td></tr>
+        <tr><th><span class="process-descriptor">Description: </span></th><td><span class="process-description"> {description} </span></td></tr>
+        <tr><th><span class="process-descriptor">Optionality: </span></th><td><span class="process-description"> {optionality} </span></td></tr>
+        <tr><th><span class="process-descriptor">Directionality: </span></th><td><span class="process-description"> {directionality} </span></td></tr>
+        <tr><th><span class="process-descriptor">Alternation Type: </span></th><td><span class="process-description"> {alternation_type} </span></td></tr>
+        <tr><th><span class="process-descriptor">Domain: </span></th><td><span class="process-description"> {domain} </span></td></tr>
+        <tr><th><span class="process-descriptor">Undergoers: </span></th><td>
         """
         if undergoers != "NA":
             html_content += f"""
-            <span class="elipses">(...) </span></span><br>
-            <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {undergoers} </span>
+            <span class="elipses" id={"undergoers" + str(process_index)}>(...) </span><br>
+            <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {undergoers} </span></td></tr>
             """
         else: 
             html_content += f"""
-            <span class="na"> NA </span><br>
+            <span class="na"> NA </span></td></tr>
             """
         html_content += f"""
-        <span class="process-descriptor" id={"triggers" + str(process_index)}>Triggers:
+        <tr><th><span class="process-descriptor">Triggers: </span></th><td>
         """
         if triggers != "NA":
             html_content += f"""
-            <span class="elipses">(...) </span></span><br>
-            <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {triggers} </span>
+            <span class="elipses" id={"triggers" + str(process_index)}>(...) </span><br>
+            <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {triggers} </span></td></tr>
             """
         else: 
             html_content += f"""
-            <span class="na"> NA </span><br>
+            <span class="na"> NA </span><br></td></tr>
             """
         html_content += f"""
-        <span class="process-descriptor" id={"transparent" + str(process_index)}>Transparent:
+        <tr><th><span class="process-descriptor">Transparent: </span></th><td>
         """
         if transparent != "NA":
             html_content += f"""
-            <span class="elipses">(...) </span></span><br>
-            <span class="pd-subsection" id={"transparent-sub" + str(process_index)}> {transparent} </span>
+            <span class="elipses" id={"transparent" + str(process_index)}>(...) </span><br>
+            <span class="pd-subsection" id={"transparent-sub" + str(process_index)}> {transparent} </span></td></tr>
             """
         else: 
             html_content += f"""
-            <span class="na"> NA </span><br>
+            <span class="na"> NA </span></td></tr>
             """
         html_content += f"""
-        <span class="process-descriptor" id={"opaque" + str(process_index)}>Opaque:
+        <tr><th><span class="process-descriptor">Opaque: </span></th><td>
         """
         if opaque != "NA":
             html_content += f"""
-            <span class="elipses">(...) </span></span><br>
-            <span class="pd-subsection" id={"opaque-sub" + str(process_index)}> {opaque} </span>
+            <span class="elipses" id={"opaque" + str(process_index)}>(...) </span><br>
+            <span class="pd-subsection" id={"opaque-sub" + str(process_index)}> {opaque} </span></td></tr>
             """
         else: 
-            print("yoohoo")
             html_content += f"""
-            <span class="na"> NA </span><br>
+            <span class="na"> NA </span></td></tr>
             """
         html_content += f"""
-        <br>
-        </div>
+        </table></div>
+        <br><br>
         """
         process_index += 1
     html_content += f"""
