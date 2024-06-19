@@ -375,7 +375,8 @@ def process_scraper(phonemes):
 
 
 def segments_morphemes_and_other_fun(category):
-    print(category)
+    segNA = False
+    morphNA = False
     segments = category["segments"]
     if type(segments) != list:
         segments = [segments]
@@ -387,11 +388,8 @@ def segments_morphemes_and_other_fun(category):
     html_content = f"""
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span>
     """
-    if segments == []:
-        html_content += f"""
-        <span class="process-descriptor-sub">NA</span><br><br>
-        """
-    elif (len(segments) == 1 and ((segments[0]["units"] == [] or segments[0]["units"] == ["NA"] or segments[0]["units"] == [""]) and (segments[0]["positional_restrictions"] == "" or segments[0]["positional_restrictions"] == "NA"))):
+    if segments == [] or (len(segments) == 1 and ((segments[0]["units"] == [] or segments[0]["units"] == ["NA"] or segments[0]["units"] == [""]) and (segments[0]["positional_restrictions"] == "" or segments[0]["positional_restrictions"] == "NA"))):
+        segNA = True
         html_content += f"""
         <span class="process-descriptor-sub">NA</span><br><br>
         """
@@ -415,11 +413,8 @@ def segments_morphemes_and_other_fun(category):
     html_content += f"""
     <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span>
     """
-    if morphemes == []:
-        html_content += f"""
-        <span class="process-descriptor-sub">NA</span><br><br>
-        """
-    elif (len(morphemes) == 1 and ((morphemes[0]["units"] == [] or morphemes[0]["units"] == ["NA"] or morphemes[0]["units"] == [""]) and (morphemes[0]["positional_restrictions"] == "" or morphemes[0]["positional_restrictions"] == "NA"))):
+    if morphemes == [] or (len(morphemes) == 1 and ((morphemes[0]["units"] == [] or morphemes[0]["units"] == ["NA"] or morphemes[0]["units"] == [""]) and (morphemes[0]["positional_restrictions"] == "" or morphemes[0]["positional_restrictions"] == "NA"))):
+        morphNA = True
         html_content += f"""
         <span class="process-descriptor-sub">NA</span><br><br>
         """
@@ -436,7 +431,10 @@ def segments_morphemes_and_other_fun(category):
             <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {morpheme_units} </span><br>
             <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {morpheme["positional_restrictions"]} </span><br><br>
             """
-    return html_content
+    if segNA and morphNA:
+        return "NA"
+    else:
+        return html_content
     
 
 def process_detail_scraper(processes):
@@ -444,13 +442,16 @@ def process_detail_scraper(processes):
     process_index = 0
     for process in processes:
         process_name = process["processname"]
-        print(process_name)
         process_type = process["processtype"]
         description = process["description"]
         optionality = process["optionality"]
         directionality = process["directionality"]
         alternation_type = process["alternation_type"]
         domain = process["domain"]
+        undergoers = segments_morphemes_and_other_fun(process["undergoers"])
+        triggers = segments_morphemes_and_other_fun(process["triggers"])
+        transparent = segments_morphemes_and_other_fun(process["transparent"])
+        opaque = segments_morphemes_and_other_fun(process["opaque"])
         html_content += f"""
         <div class="processtable">
         <span class="process-title">{process_name}</span><br>
@@ -460,14 +461,57 @@ def process_detail_scraper(processes):
         <span class="process-descriptor">Directionality: </span><span class="process-description"> {directionality} </span><br>
         <span class="process-descriptor">Alternation Type: </span><span class="process-description"> {alternation_type} </span><br>
         <span class="process-descriptor">Domain: </span><span class="process-description"> {domain} </span><br>
-        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:<span class="elipses"> (...) </span></span><br>
-        <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["undergoers"])} </span>
-        <span class="process-descriptor" id={"triggers" + str(process_index)}>Triggers:<span class="elipses"> (...)</span></span><br>
-        <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["triggers"])} </span>
-        <span class="process-descriptor" id={"transparent" + str(process_index)}>Transparent:<span class="elipses"> (...)</span></span><br>
-        <span class="pd-subsection" id={"transparent-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["transparent"])} </span>
-        <span class="process-descriptor" id={"opaque" + str(process_index)}>Opaque:<span class="elipses"> (...)</span></span><br>
-        <span class="pd-subsection" id={"opaque-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["opaque"])} </span>
+        """
+        html_content += f"""
+        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:
+        """
+        if undergoers != "NA":
+            html_content += f"""
+            <span class="elipses">(...) </span></span><br>
+            <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {undergoers} </span>
+            """
+        else: 
+            html_content += f"""
+            <span class="na"> NA </span><br>
+            """
+        html_content += f"""
+        <span class="process-descriptor" id={"triggers" + str(process_index)}>Triggers:
+        """
+        if triggers != "NA":
+            html_content += f"""
+            <span class="elipses">(...) </span></span><br>
+            <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {triggers} </span>
+            """
+        else: 
+            html_content += f"""
+            <span class="na"> NA </span><br>
+            """
+        html_content += f"""
+        <span class="process-descriptor" id={"transparent" + str(process_index)}>Transparent:
+        """
+        if transparent != "NA":
+            html_content += f"""
+            <span class="elipses">(...) </span></span><br>
+            <span class="pd-subsection" id={"transparent-sub" + str(process_index)}> {transparent} </span>
+            """
+        else: 
+            html_content += f"""
+            <span class="na"> NA </span><br>
+            """
+        html_content += f"""
+        <span class="process-descriptor" id={"opaque" + str(process_index)}>Opaque:
+        """
+        if opaque != "NA":
+            html_content += f"""
+            <span class="elipses">(...) </span></span><br>
+            <span class="pd-subsection" id={"opaque-sub" + str(process_index)}> {opaque} </span>
+            """
+        else: 
+            print("yoohoo")
+            html_content += f"""
+            <span class="na"> NA </span><br>
+            """
+        html_content += f"""
         <br>
         </div>
         """
