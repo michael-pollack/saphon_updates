@@ -375,46 +375,67 @@ def process_scraper(phonemes):
 
 
 def segments_morphemes_and_other_fun(category):
+    print(category)
     segments = category["segments"]
     if type(segments) != list:
         segments = [segments]
-    elif segments == []:
-        segments = [{'units': [], 'positional_restrictions': []}]
     morphemes = category["morphemes"]  
     if type(morphemes) != list:
         morphemes = [morphemes]
-    elif morphemes == []:
-        morphemes = [{'units': [], 'positional_restrictions': []}]
     segment_units = ""
     morpheme_units = ""
     html_content = f"""
-    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span><br>
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Segments: </span>
     """
-    for segment in segments:
-        if len(segment["units"]) > 1:
-            segment_units += "{"
-        for i in range(len(segment["units"])):
-            segment_units += segment["units"][i]
-            if i < len(segment["units"]) - 1:
-                segment_units += ", "
-        if len(segment["units"]) > 1:
-            segment_units += "}"
+    if segments == []:
         html_content += f"""
-        <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {segment_units} </span><br>
-        <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {segment["positional_restrictions"]} </span><br><br>
+        <span class="process-descriptor-sub">NA</span><br><br>
         """
+    elif (len(segments) == 1 and ((segments[0]["units"] == [] or segments[0]["units"] == ["NA"] or segments[0]["units"] == [""]) and (segments[0]["positional_restrictions"] == "" or segments[0]["positional_restrictions"] == "NA"))):
+        html_content += f"""
+        <span class="process-descriptor-sub">NA</span><br><br>
+        """
+    else: 
+        html_content += "<br>"
+        for segment in segments:
+            seg_u_list = segment["units"]
+            pos_res_list = segment["positional_restrictions"]
+            if len(seg_u_list) > 1:
+                segment_units += "{"
+            for i in range(len(seg_u_list)):
+                segment_units += seg_u_list[i]
+                if i < len(seg_u_list) - 1:
+                    segment_units += ", "
+            if len(seg_u_list) > 1:
+                segment_units += "}"
+            html_content += f"""
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {segment_units} </span><br>
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {pos_res_list} </span><br><br>
+            """
     html_content += f"""
-    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span><br>
+    <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Morphemes: </span>
     """
-    for morpheme in morphemes:
-        for i in range(len(morpheme["units"])):
-            morpheme_units += morpheme["units"][i]
-            if i < len(morpheme["units"]) - 1:
-                morpheme_units += ", "
+    if morphemes == []:
         html_content += f"""
-        <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {morpheme_units} </span><br>
-        <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {morpheme["positional_restrictions"]} </span><br><br>
+        <span class="process-descriptor-sub">NA</span><br><br>
         """
+    elif (len(morphemes) == 1 and ((morphemes[0]["units"] == [] or morphemes[0]["units"] == ["NA"] or morphemes[0]["units"] == [""]) and (morphemes[0]["positional_restrictions"] == "" or morphemes[0]["positional_restrictions"] == "NA"))):
+        html_content += f"""
+        <span class="process-descriptor-sub">NA</span><br><br>
+        """
+    else:
+        html_content += "<br>"
+        for morpheme in morphemes:
+            morph_u_list = morpheme["units"]
+            pos_res_list = morpheme["positional_restrictions"]
+            for i in range(len(morph_u_list)):
+                morpheme_units += morph_u_list[i]
+                if i < len(morph_u_list) - 1:
+                    morpheme_units += ", "
+            html_content += f"""
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> {morpheme_units} </span><br>
+            <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Positional Restrictions: </span><span class="process-description"> {morpheme["positional_restrictions"]} </span><br><br>
+            """
     return html_content
     
 
@@ -423,6 +444,7 @@ def process_detail_scraper(processes):
     process_index = 0
     for process in processes:
         process_name = process["processname"]
+        print(process_name)
         process_type = process["processtype"]
         description = process["description"]
         optionality = process["optionality"]
