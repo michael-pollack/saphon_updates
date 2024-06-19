@@ -8,10 +8,12 @@ with open("ipa.json", 'r', encoding='utf-8') as ipa_file:
 #Generates a dictionary that maps phonemes to their category codes for easy access
 def flip_ipa(ipa):
     new_map = {}
+    scraped_order = []
     for category in ipa:
         for symbol in category["symbols"]:
             new_map[symbol["symbol"]] = category["category"]
-    return new_map
+            scraped_order.append(symbol["symbol"])
+    return new_map, scraped_order
 
 #Dictionary flipper to ensure mappings only have to be done once
 def flip_dict(original_dict):
@@ -67,11 +69,12 @@ backness = {
     "Back": "b"
 }
 
-ipa_flipped = flip_ipa(ipa)
+ipa_flipped, scraped_order = flip_ipa(ipa)
 places_flipped = flip_dict(places)
 manners_flipped = flip_dict(manners)
 heights_flipped = flip_dict(heights)
 backness_flipped = flip_dict(backness)
+print(scraped_order)
 
 lost_phonemes = set()
 
@@ -123,9 +126,11 @@ def generate_ipa_subsets(phonemes):
             if normalized_phoneme in ipa_flipped:
                 this_cat = ipa_flipped[normalized_phoneme]
             else:
+
                 #TODO: Handle lost phonemes
                 these_lost_phonemes.add(phoneme)
                 continue
+
         else:
             this_cat = ipa_flipped[phoneme]
         if this_cat[0] == "c":
@@ -163,9 +168,11 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
                     these_symbols = subset[subRow][y] & subset[subCol][x]
                     voiced, unvoiced = [], []
                     for symbol in these_symbols:
+
                         #TODO: Handle lost phonemes
                         if symbol in ipa_flipped:
                             normalized_symbol = symbol
+
                         else:
                             normalized_symbol = normalizeIPA(symbol)
                         if ipa_flipped[normalized_symbol][3] == "u":
@@ -187,7 +194,7 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
     html += "</table>"
     return html
 
-def generate_html_body(template, processes, phonemes, allophones):
+def generate_html_body(template, processes, phonemes, allophones, num_references=0):
     name = template.get("name", "")
     family = template.get("family", "")
     if (type(template.get("iso_codes", [""])) == list and len(template.get("iso_codes", [""])) != 0):
@@ -204,6 +211,13 @@ def generate_html_body(template, processes, phonemes, allophones):
     consonant_subset, vowel_subset, these_lost_phonemes = generate_ipa_subsets(phonemes | allophones)
     html_content = f"""
     <div class=entry>
+    """
+    if num_references != 0:
+        html_content += f"""
+        <hr>
+        <h1>Document</h1>
+        """
+    html_content += f"""
     <h1>{name}</h1>
     <div class=field><div class=key>Language code</div><div class=value>{iso_code}</div></div>
     <div class=field><div class=key>Location</div><div class=value>{latitude}° {longitude}°</div></div>
@@ -211,14 +225,20 @@ def generate_html_body(template, processes, phonemes, allophones):
     """
     html_content += generate_ipa_chart(phonemes, allophones, consonant_subset, True)
     html_content += generate_ipa_chart(phonemes, allophones, vowel_subset, False)
+
     #TODO: Handle Lost Phonemes
     if len(these_lost_phonemes) != 0:
         html_content += f"""
-        <div class=field><h2>Uncategorized Phonemes</h2>{these_lost_phonemes}</div>
+        <div class=field><h2>Lost Phonemes</h2>{these_lost_phonemes}</div>
         """
+
     html_content += f"""
     <div class=field><h2>Processes</h2>{processes}</div>
     <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []))}</div>
+    """
+    if synthesis_notes == "":
+        synthesis_notes = "N/A"
+    html_content += f"""
     <div class=field><h2>Synthesis Notes</h2><p>{synthesis_notes}</p></div>
     """
     return html_content
@@ -254,7 +274,7 @@ def generate_html(template, filename):
             </head>
             <body>
             """
-            html_content = html_content + generate_html_body(ref, processes, phonemes, allophones)
+            html_content = html_content + generate_html_body(ref, processes, phonemes, allophones, True)
         
     html_content += f"""
     </div>
@@ -330,8 +350,9 @@ def process_scraper(phonemes):
     html_content = f"""
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
     """
-    for mapping in mappings:
-        if mappings[mapping] != []:
+
+    for mapping in scraped_order:
+        if mapping in mappings and mappings[mapping] != []:
             html_content += f"""
             <tr><th> /{mapping}/ </th><td>
             """
@@ -413,7 +434,7 @@ def process_detail_scraper(processes):
         <span class="process-descriptor">Directionality: </span><span class="process-description"> {directionality} </span><br>
         <span class="process-descriptor">Alternation Type: </span><span class="process-description"> {alternation_type} </span><br>
         <span class="process-descriptor">Domain: </span><span class="process-description"> {domain} </span><br>
-        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:<span class="elipses"> (...)</span></span><br>
+        <span class="process-descriptor" id={"undergoers" + str(process_index)}>Undergoers:<span class="elipses"> (more info) </span></span><br>
         <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["undergoers"])} </span>
         <span class="process-descriptor" id={"triggers" + str(process_index)}>Triggers:<span class="elipses"> (...)</span></span><br>
         <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {segments_morphemes_and_other_fun(process["triggers"])} </span>
