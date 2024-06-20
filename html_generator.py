@@ -495,7 +495,7 @@ def process_detail_scraper(processes, process_map):
         """
         if undergoers != "NA":
             html_content += f"""
-            <span class="elipses" id={"undergoers" + str(process_index)}>(...) </span><br>
+            <button class="dropdown-button" id={"undergoers" + str(process_index)}> &#9660 </button>
             <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {undergoers} </span></td></tr>
             """
         else: 
@@ -507,7 +507,7 @@ def process_detail_scraper(processes, process_map):
         """
         if triggers != "NA":
             html_content += f"""
-            <span class="elipses" id={"triggers" + str(process_index)}>(...) </span><br>
+            <button class="dropdown-button" id={"triggers" + str(process_index)}> &#9660 </button>
             <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {triggers} </span></td></tr>
             """
         else: 
@@ -519,7 +519,7 @@ def process_detail_scraper(processes, process_map):
         """
         if transparent != "NA":
             html_content += f"""
-            <span class="elipses" id={"transparent" + str(process_index)}>(...) </span><br>
+            <button class="dropdown-button" id={"transparent" + str(process_index)}> &#9660 </button>
             <span class="pd-subsection" id={"transparent-sub" + str(process_index)}> {transparent} </span></td></tr>
             """
         else: 
@@ -531,7 +531,7 @@ def process_detail_scraper(processes, process_map):
         """
         if opaque != "NA":
             html_content += f"""
-            <span class="elipses" id={"opaque" + str(process_index)}>(...) </span><br>
+            <button class="dropdown-button" id={"opaque" + str(process_index)}> &#9660 </button>
             <span class="pd-subsection" id={"opaque-sub" + str(process_index)}> {opaque} </span></td></tr>
             """
         else: 
