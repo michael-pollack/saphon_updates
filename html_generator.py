@@ -85,8 +85,6 @@ places_flipped = flip_dict(places)
 manners_flipped = flip_dict(manners)
 heights_flipped = flip_dict(heights)
 backness_flipped = flip_dict(backness)
-print(scraped_order)
-
 lost_phonemes = set()
 
 def generate_ipa_subsets(phonemes):
@@ -156,7 +154,7 @@ def generate_ipa_subsets(phonemes):
 
     return consonant_subset, vowels_subset, these_lost_phonemes
 
-def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: bool):
+def generate_ipa_chart(phonemes: set, allophones: dict, subset: dict, consonant: bool):
     if consonant:
         title = "Consonants"
         col, subCol = places, "places"
@@ -167,7 +165,7 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
         row, subRow = heights, "heights"
     html = f"<h2>{title}</h2><table>"
     html += "<tr><th></th>" + "".join(f"<th>{x}</th>" for x in col if x in subset[subCol]) + "</tr>"
-    pure_allophones = allophones - phonemes
+    pure_allophones = set(allophones.keys()) - phonemes
     for y in row: 
         if y in subset[subRow]:
             html += f"""
@@ -219,7 +217,7 @@ def generate_html_body(template, processes, process_map, phonemes, allophones, n
     else: 
         latitude, longitude = "N/A", "N/A"
     synthesis_notes = template.get("synthesis", "")
-    consonant_subset, vowel_subset, these_lost_phonemes = generate_ipa_subsets(phonemes | allophones)
+    consonant_subset, vowel_subset, these_lost_phonemes = generate_ipa_subsets(phonemes | set(allophones.keys()))
     html_content = f"""
     <div class=entry>
     """
@@ -342,20 +340,25 @@ def generate_script():
 
 def process_scraper(phonemes, process_map):
     phoneme_set = set()
-    allophone_set = set()
+    allophone_map = {}
     mappings =  {}
     process_index = 0
     for phoneme in phonemes:
-        phoneme_set.add(phoneme["phoneme"])
-        mappings[phoneme["phoneme"]] = []
+        this_phoneme = phoneme["phoneme"]
+        phoneme_set.add(this_phoneme)
+        mappings[this_phoneme] = []
         for environment in phoneme["environments"]:
             if type(environment) == dict:
                 for allophone in environment["allophones"]:
-                    if allophone["allophone"] != phoneme["phoneme"]:
+                    this_allophone = allophone["allophone"]
+                    if this_allophone != this_phoneme:
                         process_id = "process-" + str(process_index)
                         process_name_id = "process-name-" + str(process_index)
                         process_index += 1
-                        allophone_set.add(allophone["allophone"])
+                        if this_allophone in allophone_map:
+                            allophone_map[this_allophone].add(this_phoneme)
+                        else:
+                            allophone_map[this_allophone] = {this_phoneme}
                         processes = ""
                         for k in range(len(allophone["processnames"])):
                             this_process = allophone["processnames"][k]
@@ -363,9 +366,9 @@ def process_scraper(phonemes, process_map):
                                 this_process = process_map[this_process]
                             processes += this_process
                         process = f"""
-                        <span class="process" id="{process_id}">/{phoneme["phoneme"]}/ &#8594; [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span> <span class="processname" id="{process_name_id}"> <br> {processes} </span>
+                        <span class="process" id="{process_id}">/{this_phoneme}/ &#8594; [{this_allophone}] / {environment["preceding"]}_{environment["following"]} </span> <span class="processname" id="{process_name_id}"> <br> {processes} </span>
                         """
-                        mappings[phoneme["phoneme"]].append(process)
+                        mappings[this_phoneme].append(process)
     html_content = f"""
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
     """
@@ -389,7 +392,7 @@ def process_scraper(phonemes, process_map):
     </table></div>
     <span class="hidden" id="processIndexCount">{process_index}</span>
     """
-    return html_content, phoneme_set, allophone_set
+    return html_content, phoneme_set, allophone_map
 
 
 def segments_morphemes_and_other_fun(category):
