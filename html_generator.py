@@ -69,6 +69,17 @@ backness = {
     "Back": "b"
 }
 
+abbreviations = {
+    "BN": "Nasal Boundary",
+    "BO": "Oral Boundary",
+    "LDNH": "Long Distance Nasal Harmony",
+    "LDOH": "Long Distance Oral Harmony",
+    "LN": "Local Nasalization",
+    "LNsyll": "Long Distance Nasal Assimilation",
+    "LO": "Local Oralization",
+    "PNV": "Post Nasal Voicing"
+}
+
 ipa_flipped, scraped_order = flip_ipa(ipa)
 places_flipped = flip_dict(places)
 manners_flipped = flip_dict(manners)
@@ -194,7 +205,7 @@ def generate_ipa_chart(phonemes: set, allophones: set, subset: dict, consonant: 
     html += "</table>"
     return html
 
-def generate_html_body(template, processes, phonemes, allophones, num_references=0):
+def generate_html_body(template, processes, process_map, phonemes, allophones, num_references=0):
     name = template.get("name", "")
     family = template.get("family", "")
     if (type(template.get("iso_codes", [""])) == list and len(template.get("iso_codes", [""])) != 0):
@@ -234,7 +245,7 @@ def generate_html_body(template, processes, phonemes, allophones, num_references
 
     html_content += f"""
     <div class=field><h2>Processes</h2>{processes}</div>
-    <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []))}</div>
+    <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []), process_map)}</div>
     """
     if synthesis_notes == "":
         synthesis_notes = "N/A"
@@ -245,7 +256,8 @@ def generate_html_body(template, processes, phonemes, allophones, num_references
 
 def generate_html(template, filename):
     if type(template) != list:
-        processes, phonemes, allophones = process_scraper(template.get("phonemes", []))
+        process_map = generate_process_map(template.get("processdetails", []))
+        processes, phonemes, allophones = process_scraper(template.get("phonemes", []), process_map)
         html_content = f"""
         <html>
         <head> 
@@ -255,7 +267,7 @@ def generate_html(template, filename):
         </head>
         <body onload="initialize()">
         """
-        html_content = html_content + generate_html_body(template, processes, phonemes, allophones)
+        html_content = html_content + generate_html_body(template, processes, process_map, phonemes, allophones)
         html_content += f"""
         <div class=field><h2><a href="/en/ref_inv/{filename}">References</h2></div>
         """
@@ -269,12 +281,13 @@ def generate_html(template, filename):
         <h1>Reference Documents: {template[0].get("name", "")}</h1>
         """
         for ref in template:
-            processes, phonemes, allophones = process_scraper(ref.get("phonemes", []))
+            process_map = generate_process_map(ref.get("processdetails", []))
+            processes, phonemes, allophones = process_scraper(ref.get("phonemes", []), process_map)
             html_content += f"""
             </head>
             <body>
             """
-            html_content = html_content + generate_html_body(ref, processes, phonemes, allophones, True)
+            html_content = html_content + generate_html_body(ref, processes, process_map, phonemes, allophones, True)
         
     html_content += f"""
     </div>
@@ -325,7 +338,7 @@ def generate_script():
     """
     return process_hider
 
-def process_scraper(phonemes):
+def process_scraper(phonemes, process_map):
     phoneme_set = set()
     allophone_set = set()
     mappings =  {}
@@ -343,16 +356,17 @@ def process_scraper(phonemes):
                         allophone_set.add(allophone["allophone"])
                         processes = ""
                         for k in range(len(allophone["processnames"])):
-                            processes += allophone["processnames"][k]
+                            this_process = allophone["processnames"][k]
+                            if this_process in process_map:
+                                this_process = process_map[this_process]
+                            processes += this_process
                         process = f"""
                         <span class="process" id="{process_id}">/{phoneme["phoneme"]}/ &#8594; [{allophone["allophone"]}] / {environment["preceding"]}_{environment["following"]} </span> <span class="processname" id="{process_name_id}"> <br> {processes} </span>
                         """
                         mappings[phoneme["phoneme"]].append(process)
-
     html_content = f"""
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
     """
-
     for mapping in scraped_order:
         if mapping in mappings and mappings[mapping] != []:
             html_content += f"""
@@ -438,12 +452,25 @@ def segments_morphemes_and_other_fun(category):
     else:
         return html_content
     
+def generate_process_map(processes):
+    process_map = {}
+    prefix_count = {}
+    for process in processes:
+        process_name = process["processname"]
+        process_prefix = process_name[:process_name.find(":")] if process_name.find(":") != -1 else process_name
+        simple_name = abbreviations[process_prefix] if process_prefix in abbreviations else process_name
+        this_count = prefix_count[process_prefix] + 1 if process_prefix in prefix_count else 1
+        prefix_count[process_prefix] = this_count
+        simple_name += " " + str(this_count)
+        process_map[process_name] = simple_name
+    return process_map
 
-def process_detail_scraper(processes):
+def process_detail_scraper(processes, process_map):
     html_content = ""
     process_index = 0
     for process in processes:
         process_name = process["processname"]
+        simple_name = process_map[process_name]
         process_type = process["processtype"]
         description = process["description"]
         optionality = process["optionality"]
@@ -455,8 +482,9 @@ def process_detail_scraper(processes):
         transparent = segments_morphemes_and_other_fun(process["transparent"])
         opaque = segments_morphemes_and_other_fun(process["opaque"])
         html_content += f"""
-        <span class="process-title">{process_name}</span>
+        <span class="process-title">{simple_name}</span>
         <div><table class="processDescTable">
+        <tr><th><span class="process-descriptor">Abbreviation: </span></th><td><span class="process-description"> {process_name} </span></td></tr>
         <tr><th><span class="process-descriptor">Type: </span></th><td><span class="process-description"> {process_type} </span></td></tr>
         <tr><th><span class="process-descriptor">Description: </span></th><td><span class="process-description"> {description} </span></td></tr>
         <tr><th><span class="process-descriptor">Optionality: </span></th><td><span class="process-description"> {optionality} </span></td></tr>
