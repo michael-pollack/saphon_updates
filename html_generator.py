@@ -327,8 +327,10 @@ def generate_script():
                     process_title_span.addEventListener("click", function () {
                         if (process_sub_span.style.display === "none" || process_sub_span.style.display === "") {
                             process_sub_span.style.display = "inline";
+                            process_title_span.style.transform = "rotate(180deg)";
                         } else {
                             process_sub_span.style.display = "none";
+                            process_title_span.style.transform = "rotate(0deg)";
                         }
                     });
                 }
