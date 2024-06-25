@@ -201,6 +201,7 @@ def generate_ipa_chart(phonemes: set, allophones: dict, subset: dict, consonant:
                     html += f"</td>"
             html += "</tr>"
     html += "</table>"
+    # html += highlight_phonemes_script(allophones)
     return html
 
 def generate_html_body(template, processes, process_map, phonemes, allophones, num_references=0):
@@ -261,7 +262,7 @@ def generate_html(template, filename):
         <head> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
-        <script type="text/javascript"> {generate_script()} </script>
+        <script type="text/javascript"> {initialize_script(allophones)} </script>
         </head>
         <body onload="initialize()">
         """
@@ -270,12 +271,14 @@ def generate_html(template, filename):
         <div class=field><h2><a href="/en/ref_inv/{filename}">References</h2></div>
         """
     else:
+        #TODO: Make allophones work here
+        allophones = {}
         html_content = f"""
         <html>
         <head> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
-        <script type="text/javascript"> {generate_script()} </script>
+        <script type="text/javascript"> {initialize_script(allophones)} </script>
         <h1>Reference Documents: {template[0].get("name", "")}</h1>
         """
         for ref in template:
@@ -294,9 +297,41 @@ def generate_html(template, filename):
     """
     return html_content
 
-def generate_script():
+def highlight_phonemes_script(allophones):
+    json_friendly = {allophone: list(phonemes) for allophone, phonemes in allophones.items()}
+    json_allophones = json.dumps(json_friendly)
+    html_content = """
+    function highlight_phonemes() {
+    """
+    html_content += f"""
+        allophones = {json_allophones};
+    """
+    html_content += """ 
+
+        Object.keys(allophones).forEach(id => {
+            const span = document.getElementById(id);
+            if (span != null) {
+                span.addEventListener('mouseover', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.add('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+                span.addEventListener('mouseout', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.remove('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+            }
+        });
+    }
+    """
+    return html_content
+
+def dropdown_script():
     process_hider = """
-    function initialize() {
+    function dropdown() {
         const process_count_span = document.getElementById("processIndexCount");
         const process_count = process_count_span.textContent;
         const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
@@ -337,6 +372,17 @@ def generate_script():
     }
     """
     return process_hider
+
+def initialize_script(allophones):
+    html_content = dropdown_script()
+    html_content += highlight_phonemes_script(allophones)
+    html_content += """
+    function initialize() {
+        dropdown();
+        highlight_phonemes();
+    }
+    """
+    return html_content
 
 def process_scraper(phonemes, process_map):
     phoneme_set = set()

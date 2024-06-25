@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
         <script type="text/javascript"> 
-    function initialize() {
+    function dropdown() {
         const process_count_span = document.getElementById("processIndexCount");
         const process_count = process_count_span.textContent;
         const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
@@ -42,6 +42,35 @@
                 }
             }
         }
+    }
+    
+    function highlight_phonemes() {
+    
+        allophones = {"b": ["p"], "p\u02b0": ["p"], "d": ["t"], "t\u02b0": ["t"], "dz": ["ts"], "s": ["ts"], "t\u0283": ["ts"], "d\u0292": ["t\u0283"], "\u0283": ["t\u0283"], "\u0261": ["k"], "k\u02b0": ["k"], "\u0272": ["n"], "\u014b": ["n"], "h": ["x"], "l": ["\u027e"], "\u03b2": ["w"], "z": ["j"], "\u026a": ["e", "\u0268", "i"], "e": ["i"], "j": ["e", "i"], "i\u0325": ["i"], "i\u02d0": ["i"], "\u0268\u0325": ["\u0268"], "\u0268\u02d0": ["\u0268"], "\u0259": ["e"], "\u1e01": ["a"], "a\u02d0": ["a"], "\u028a": ["u"], "o": ["u"], "w": ["u"], "u\u0325": ["u"], "u\u02d0": ["u"], "y\u0325": ["y"], "y\u02d0": ["y"]};
+     
+
+        Object.keys(allophones).forEach(id => {
+            const span = document.getElementById(id);
+            if (span != null) {
+                span.addEventListener('mouseover', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.add('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+                span.addEventListener('mouseout', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.remove('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+            }
+        });
+    }
+    
+    function initialize() {
+        dropdown();
+        highlight_phonemes();
     }
      </script>
         </head>
@@ -128,15 +157,15 @@
                             </td></tr></table><h2>Vowels</h2><table><tr><th></th><th>Front</th><th>Center</th><th>Back</th></tr>
             <tr id="High"><th>High</th>
             <td>
-                            <span id="i" class="visible-phoneme"> i </span>
-                            
                             <span id="iː" class="visible-allophone"> iː </span>
+                            
+                            <span id="i" class="visible-phoneme"> i </span>
                             
                             <span id="y" class="visible-phoneme"> y </span>
                             </td><td>
-                            <span id="ɨː" class="visible-allophone"> ɨː </span>
-                            
                             <span id="ɨ" class="visible-phoneme"> ɨ </span>
+                            
+                            <span id="ɨː" class="visible-allophone"> ɨː </span>
                             </td><td>
                             <span id="u" class="visible-phoneme"> u </span>
                             
@@ -164,7 +193,7 @@
                             
                             <span id="a" class="visible-phoneme"> a </span>
                             </td><td></td></tr></table>
-        <div class=field><h2>Lost Phonemes</h2>{'i̥', 'ɨ̥', 'ḁ', 'u̥', 'yː', 'y̥'}</div>
+        <div class=field><h2>Lost Phonemes</h2>{'yː', 'ɨ̥', 'i̥', 'u̥', 'ḁ', 'y̥'}</div>
         
     <div class=field><h2>Processes</h2>
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>

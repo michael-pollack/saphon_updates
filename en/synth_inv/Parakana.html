@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
         <script type="text/javascript"> 
-    function initialize() {
+    function dropdown() {
         const process_count_span = document.getElementById("processIndexCount");
         const process_count = process_count_span.textContent;
         const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
@@ -43,6 +43,35 @@
             }
         }
     }
+    
+    function highlight_phonemes() {
+    
+        allophones = {"b": ["p"], "m": ["p"], "ts": ["t\u0283"], "\u0261": ["k"], "\u014b": ["k"], "\u0261\u02b7": ["k\u02b7"], "x": ["h"], "l": ["\u027e"], "\u03b2": ["w"], "v": ["w"], "d\u0292": ["j"], "t\u0283": ["s"], "\u0283": ["s"], "\u0292": ["s"], "y": ["i"], "i\u0303": ["i"], "i\u0308": ["i"], "\u0289": ["\u0268"], "\u0268\u0303": ["\u0268"], "\u0268\u0308": ["\u0268"], "\u025b": ["e"], "e\u0303": ["e"], "e\u0308": ["e"], "\u0252": ["a"], "\u0259": ["a"], "a\u0303": ["a"], "a\u0308": ["a"], "\u0254": ["o"], "u": ["o"], "\u028a": ["o"], "o\u0303": ["o"], "o\u0308": ["o"]};
+     
+
+        Object.keys(allophones).forEach(id => {
+            const span = document.getElementById(id);
+            if (span != null) {
+                span.addEventListener('mouseover', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.add('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+                span.addEventListener('mouseout', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.remove('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+            }
+        });
+    }
+    
+    function initialize() {
+        dropdown();
+        highlight_phonemes();
+    }
      </script>
         </head>
         <body onload="initialize()">
@@ -66,9 +95,9 @@
                             
                             <span id="k" class="visible-phoneme"> k </span>
                             
-                            <span id="ɡ" class="visible-allophone"> ɡ </span>
-                            
                             <span id="ɡʷ" class="visible-allophone"> ɡʷ </span>
+                            
+                            <span id="ɡ" class="visible-allophone"> ɡ </span>
                             </td><td>
                             <span id="ʔ" class="visible-phoneme"> ʔ </span>
                             </td><td></td></tr>
@@ -120,15 +149,15 @@
                             </td></tr></table><h2>Vowels</h2><table><tr><th></th><th>Front</th><th>Center</th><th>Back</th></tr>
             <tr id="High"><th>High</th>
             <td>
-                            <span id="i" class="visible-phoneme"> i </span>
-                            
                             <span id="ĩ" class="visible-phoneme"> ĩ </span>
+                            
+                            <span id="i" class="visible-phoneme"> i </span>
                             
                             <span id="y" class="visible-allophone"> y </span>
                             </td><td>
-                            <span id="ɨ̃" class="visible-phoneme"> ɨ̃ </span>
-                            
                             <span id="ɨ" class="visible-phoneme"> ɨ </span>
+                            
+                            <span id="ɨ̃" class="visible-phoneme"> ɨ̃ </span>
                             
                             <span id="ʉ" class="visible-allophone"> ʉ </span>
                             </td><td>
@@ -140,9 +169,9 @@
                             </td></tr>
             <tr id="High-Mid"><th>High-Mid</th>
             <td>
-                            <span id="ẽ" class="visible-phoneme"> ẽ </span>
-                            
                             <span id="e" class="visible-phoneme"> e </span>
+                            
+                            <span id="ẽ" class="visible-phoneme"> ẽ </span>
                             </td><td></td><td>
                             <span id="o" class="visible-phoneme"> o </span>
                             
@@ -160,13 +189,13 @@
                             </td></tr>
             <tr id="Low"><th>Low</th>
             <td></td><td>
-                            <span id="a" class="visible-phoneme"> a </span>
-                            
                             <span id="ã" class="visible-phoneme"> ã </span>
+                            
+                            <span id="a" class="visible-phoneme"> a </span>
                             </td><td>
                             <span id="ɒ" class="visible-allophone"> ɒ </span>
                             </td></tr></table>
-        <div class=field><h2>Lost Phonemes</h2>{'ɨ̈', 'ö', 'ï', 'ä', 'ë'}</div>
+        <div class=field><h2>Lost Phonemes</h2>{'ɨ̈', 'ö', 'ä', 'ï', 'ë'}</div>
         
     <div class=field><h2>Processes</h2>
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>

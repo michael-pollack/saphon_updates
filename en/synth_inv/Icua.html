@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
         <script type="text/javascript"> 
-    function initialize() {
+    function dropdown() {
         const process_count_span = document.getElementById("processIndexCount");
         const process_count = process_count_span.textContent;
         const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
@@ -42,6 +42,35 @@
                 }
             }
         }
+    }
+    
+    function highlight_phonemes() {
+    
+        allophones = {"mb": ["m"], "bm": ["m"], "b": ["m"], "nd": ["n"], "dn": ["n"], "d": ["n"], "\u014b\u0261": ["\u014b"], "\u0261\u014b": ["\u014b"], "\u0261": ["\u014b"], "d\u0292": ["\u0272"], "i\u0303": ["i"], "\u025b\u0303": ["\u025b"], "\u0259": ["a"], "a\u0303": ["a"], "\u026f\u0303": ["\u026f"], "\u0259\u0303": ["a\u0303"]};
+     
+
+        Object.keys(allophones).forEach(id => {
+            const span = document.getElementById(id);
+            if (span != null) {
+                span.addEventListener('mouseover', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.add('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+                span.addEventListener('mouseout', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.remove('highlight');
+                        console.log(`added ${associatedId}`);
+                    });
+                });
+            }
+        });
+    }
+    
+    function initialize() {
+        dropdown();
+        highlight_phonemes();
     }
      </script>
         </head>
@@ -106,19 +135,19 @@
                             </td><td></td><td></td></tr></table><h2>Vowels</h2><table><tr><th></th><th>Front</th><th>Center</th><th>Back</th></tr>
             <tr id="High"><th>High</th>
             <td>
-                            <span id="i" class="visible-phoneme"> i </span>
-                            
                             <span id="ĩ" class="visible-phoneme"> ĩ </span>
-                            </td><td></td><td>
-                            <span id="ɯ" class="visible-phoneme"> ɯ </span>
                             
+                            <span id="i" class="visible-phoneme"> i </span>
+                            </td><td></td><td>
                             <span id="ɯ̃" class="visible-phoneme"> ɯ̃ </span>
+                            
+                            <span id="ɯ" class="visible-phoneme"> ɯ </span>
                             </td></tr>
             <tr id="Mid"><th>Mid</th>
             <td></td><td>
-                            <span id="ə" class="visible-allophone"> ə </span>
-                            
                             <span id="ə̃" class="visible-allophone"> ə̃ </span>
+                            
+                            <span id="ə" class="visible-allophone"> ə </span>
                             </td><td></td></tr>
             <tr id="Low-Mid"><th>Low-Mid</th>
             <td>
@@ -126,17 +155,17 @@
                             
                             <span id="ɛ̃" class="visible-phoneme"> ɛ̃ </span>
                             </td><td></td><td>
-                            <span id="ɔ̃" class="visible-phoneme"> ɔ̃ </span>
-                            
                             <span id="ɔ" class="visible-phoneme"> ɔ </span>
+                            
+                            <span id="ɔ̃" class="visible-phoneme"> ɔ̃ </span>
                             </td></tr>
             <tr id="Low"><th>Low</th>
             <td></td><td>
-                            <span id="a" class="visible-phoneme"> a </span>
-                            
                             <span id="ã" class="visible-phoneme"> ã </span>
+                            
+                            <span id="a" class="visible-phoneme"> a </span>
                             </td><td></td></tr></table>
-        <div class=field><h2>Lost Phonemes</h2>{'bm', 'ɡŋ', 'dn'}</div>
+        <div class=field><h2>Lost Phonemes</h2>{'dn', 'ɡŋ', 'bm'}</div>
         
     <div class=field><h2>Processes</h2>
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
