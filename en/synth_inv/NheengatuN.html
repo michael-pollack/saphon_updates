@@ -5,14 +5,16 @@
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
         <script type="text/javascript"> 
     function dropdown() {
-        const process_count_span = document.getElementById("processIndexCount");
-        const process_count = process_count_span.textContent;
+        const process_indices_span = document.getElementById("processIndexCount");
+        const process_indices_raw = process_indices_span.getAttribute("data-set");
+        console.log(process_indices_raw);
+        const process_indices_array = JSON.parse(process_indices_raw);
         const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
         const process_subsections_count_span = document.getElementById("processSubsectionCount");
         const process_subsections_count = process_subsections_count_span.textContent;
-        for (var i = 0; i < process_count; i += 1) {
-            let this_process = "process-" + i;
-            let this_name = "process-name-" + i;
+        for (var i = 0; i < process_indices_array.length; i += 1) {
+            let this_process = "process-" + process_indices_array[i];
+            let this_name = "process-name-" + process_indices_array[i];
             let process_span = document.getElementById(this_process);
             let name_span = document.getElementById(this_name);
             process_span.addEventListener("click", function () {
@@ -23,6 +25,9 @@
                 }
             });
         }
+
+
+        
         for (var j = 0; j <= process_subsections_count; j += 1) {
             for (var k = 0; k < process_subsections_list.length; k += 1) {
                 let this_process_title = process_subsections_list[k] + j;
@@ -48,20 +53,17 @@
     
         allophones = {"\u0261": ["k"], "w\u0303": ["w"], "j\u0303": ["j"], "\u0129": ["i"], "\u1ebd\u02d0": ["e"], "\u1ebd": ["e"], "\u025b": ["e"], "\u00e3": ["a"], "\u0259\u0303": ["a"], "\u0169": ["u"], "\u00f5": ["u"], "\u00e3\u02d0": ["\u00e3"], "m": ["p"]};
      
-
         Object.keys(allophones).forEach(id => {
             const span = document.getElementById(id);
             if (span != null) {
                 span.addEventListener('mouseover', function () {
                     allophones[id].forEach(associatedId => {
                         document.getElementById(associatedId).classList.add('highlight');
-                        console.log(`added ${associatedId}`);
                     });
                 });
                 span.addEventListener('mouseout', function () {
                     allophones[id].forEach(associatedId => {
                         document.getElementById(associatedId).classList.remove('highlight');
-                        console.log(`added ${associatedId}`);
                     });
                 });
             }
@@ -91,9 +93,9 @@
                             </td><td></td><td>
                             <span id="t" class="visible-phoneme"> t </span>
                             </td><td></td><td></td><td>
-                            <span id="kʷ" class="visible-phoneme"> kʷ </span>
-                            
                             <span id="k" class="visible-phoneme"> k </span>
+                            
+                            <span id="kʷ" class="visible-phoneme"> kʷ </span>
                             
                             <span id="ɡ" class="visible-phoneme"> ɡ </span>
                             </td><td></td></tr>
@@ -137,9 +139,9 @@
                             </td><td></td><td></td><td></td><td></td></tr>
             <tr id="Approximant"><th>Approximant</th>
             <td></td><td></td><td></td><td></td><td>
-                            <span id="j̃" class="visible-allophone"> j̃ </span>
-                            
                             <span id="j" class="visible-phoneme"> j </span>
+                            
+                            <span id="j̃" class="visible-allophone"> j̃ </span>
                             </td><td></td><td>
                             <span id="w" class="visible-phoneme"> w </span>
                             
@@ -151,17 +153,17 @@
                             
                             <span id="i" class="visible-phoneme"> i </span>
                             </td><td></td><td>
-                            <span id="u" class="visible-phoneme"> u </span>
-                            
                             <span id="ũ" class="visible-phoneme"> ũ </span>
+                            
+                            <span id="u" class="visible-phoneme"> u </span>
                             </td></tr>
             <tr id="High-Mid"><th>High-Mid</th>
             <td>
+                            <span id="ẽː" class="visible-allophone"> ẽː </span>
+                            
                             <span id="e" class="visible-phoneme"> e </span>
                             
                             <span id="ẽ" class="visible-phoneme"> ẽ </span>
-                            
-                            <span id="ẽː" class="visible-allophone"> ẽː </span>
                             </td><td></td><td>
                             <span id="õ" class="visible-allophone"> õ </span>
                             </td></tr>
@@ -177,9 +179,9 @@
             <td></td><td>
                             <span id="ã" class="visible-phoneme"> ã </span>
                             
-                            <span id="a" class="visible-phoneme"> a </span>
-                            
                             <span id="ãː" class="visible-allophone"> ãː </span>
+                            
+                            <span id="a" class="visible-phoneme"> a </span>
                             </td><td></td></tr></table>
     <div class=field><h2>Processes</h2>
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
@@ -187,7 +189,7 @@
             <tr><th> /p/ </th><td>
             
                 
-                        <span class="process" id="process-23">/p/ &#8594; [m] / Ṽ+_ </span> <span class="processname" id="process-name-23"> <br> MPP=LN:pe </span>
+                        <span class="process" id="process-d332c5b2-6226-4899-a467-e122e71d0089">/p/ &#8594; [m] / Ṽ+_ </span> <span class="processname" id="process-name-d332c5b2-6226-4899-a467-e122e71d0089"> <br> MPP=LN:pe </span>
                          <br>
             
             </td></tr>
@@ -195,7 +197,7 @@
             <tr><th> /k/ </th><td>
             
                 
-                        <span class="process" id="process-0">/k/ &#8594; [ɡ] / Ṽ_ </span> <span class="processname" id="process-name-0"> <br> voicing </span>
+                        <span class="process" id="process-8fa8c77c-7934-4a0f-bbcb-617bd9144378">/k/ &#8594; [ɡ] / Ṽ_ </span> <span class="processname" id="process-name-8fa8c77c-7934-4a0f-bbcb-617bd9144378"> <br> voicing </span>
                          <br>
             
             </td></tr>
@@ -203,7 +205,7 @@
             <tr><th> /j/ </th><td>
             
                 
-                        <span class="process" id="process-2">/j/ &#8594; [j̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-2"> <br> Long Distance Nasal Harmony 1 </span>
+                        <span class="process" id="process-4a7c4e6d-c480-4789-ae2a-c806848bf936">/j/ &#8594; [j̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-4a7c4e6d-c480-4789-ae2a-c806848bf936"> <br> Long Distance Nasal Harmony 1 </span>
                          <br>
             
             </td></tr>
@@ -211,7 +213,7 @@
             <tr><th> /w/ </th><td>
             
                 
-                        <span class="process" id="process-1">/w/ &#8594; [w̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-1"> <br> Long Distance Nasal Harmony 1 </span>
+                        <span class="process" id="process-32f3f35d-ceb5-4024-940d-10522e67319c">/w/ &#8594; [w̃] / TODO: &_TODO: & </span> <span class="processname" id="process-name-32f3f35d-ceb5-4024-940d-10522e67319c"> <br> Long Distance Nasal Harmony 1 </span>
                          <br>
             
             </td></tr>
@@ -219,15 +221,15 @@
             <tr><th> /i/ </th><td>
             
                 
-                        <span class="process" id="process-3">/i/ &#8594; [ĩ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-3"> <br> Long Distance Nasal Harmony 1 </span>
+                        <span class="process" id="process-e730feed-cc4e-45e7-aa61-488d590fba85">/i/ &#8594; [ĩ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-e730feed-cc4e-45e7-aa61-488d590fba85"> <br> Long Distance Nasal Harmony 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-4">/i/ &#8594; [ĩ] / _{N, ND} </span> <span class="processname" id="process-name-4"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-cfd55297-815c-4457-b780-a99d1dc0d52a">/i/ &#8594; [ĩ] / _{N, ND} </span> <span class="processname" id="process-name-cfd55297-815c-4457-b780-a99d1dc0d52a"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-5">/i/ &#8594; [ĩ] / N_ </span> <span class="processname" id="process-name-5"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-4f443bd0-7fc0-4218-9588-e82010d1d4dc">/i/ &#8594; [ĩ] / N_ </span> <span class="processname" id="process-name-4f443bd0-7fc0-4218-9588-e82010d1d4dc"> <br> Local Nasalization 2 </span>
                          <br>
             
             </td></tr>
@@ -235,23 +237,23 @@
             <tr><th> /u/ </th><td>
             
                 
-                        <span class="process" id="process-17">/u/ &#8594; [ũ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-17"> <br> Long Distance Nasal Harmony 1 </span>
+                        <span class="process" id="process-46f41a85-a1f5-4bf4-a752-f354310a4302">/u/ &#8594; [ũ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-46f41a85-a1f5-4bf4-a752-f354310a4302"> <br> Long Distance Nasal Harmony 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-18">/u/ &#8594; [ũ] / _{N, ND} </span> <span class="processname" id="process-name-18"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-65f4efef-fbce-45b7-8533-bd9953c7e8be">/u/ &#8594; [ũ] / _{N, ND} </span> <span class="processname" id="process-name-65f4efef-fbce-45b7-8533-bd9953c7e8be"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-19">/u/ &#8594; [õ] / _{N, ND} </span> <span class="processname" id="process-name-19"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-16533d93-1173-4e6a-8c36-074f795a43b1">/u/ &#8594; [õ] / _{N, ND} </span> <span class="processname" id="process-name-16533d93-1173-4e6a-8c36-074f795a43b1"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-20">/u/ &#8594; [ũ] / N_ </span> <span class="processname" id="process-name-20"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-2077af63-ab0c-4d63-9c13-24fd786efd2f">/u/ &#8594; [ũ] / N_ </span> <span class="processname" id="process-name-2077af63-ab0c-4d63-9c13-24fd786efd2f"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-21">/u/ &#8594; [õ] / N_ </span> <span class="processname" id="process-name-21"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-0da70e68-497a-4ba0-b082-7389d65661cd">/u/ &#8594; [õ] / N_ </span> <span class="processname" id="process-name-0da70e68-497a-4ba0-b082-7389d65661cd"> <br> Local Nasalization 2 </span>
                          <br>
             
             </td></tr>
@@ -259,27 +261,27 @@
             <tr><th> /e/ </th><td>
             
                 
-                        <span class="process" id="process-6">/e/ &#8594; [ẽː] / _ </span> <span class="processname" id="process-name-6"> <br>  </span>
+                        <span class="process" id="process-693a4d38-bae1-469e-a9b4-42aeec9a97d4">/e/ &#8594; [ẽː] / _ </span> <span class="processname" id="process-name-693a4d38-bae1-469e-a9b4-42aeec9a97d4"> <br>  </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-7">/e/ &#8594; [ẽ] / _ </span> <span class="processname" id="process-name-7"> <br>  </span>
+                        <span class="process" id="process-c3ab5afc-f565-414e-ba18-dea2c7628fe5">/e/ &#8594; [ẽ] / _ </span> <span class="processname" id="process-name-c3ab5afc-f565-414e-ba18-dea2c7628fe5"> <br>  </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-8">/e/ &#8594; [ɛ] / $'_ </span> <span class="processname" id="process-name-8"> <br> lowering </span>
+                        <span class="process" id="process-fb3ec89e-939a-46a6-bd17-71fce65f5412">/e/ &#8594; [ɛ] / $'_ </span> <span class="processname" id="process-name-fb3ec89e-939a-46a6-bd17-71fce65f5412"> <br> lowering </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-9">/e/ &#8594; [ẽ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-9"> <br> Long Distance Nasal Harmony 1 </span>
+                        <span class="process" id="process-941531f8-5067-4567-b76f-5ada92dad3da">/e/ &#8594; [ẽ] / TODO: &_TODO: & </span> <span class="processname" id="process-name-941531f8-5067-4567-b76f-5ada92dad3da"> <br> Long Distance Nasal Harmony 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-10">/e/ &#8594; [ẽ] / _{N, ND} </span> <span class="processname" id="process-name-10"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-4744b7ed-4007-4e2a-a912-4cb446357fde">/e/ &#8594; [ẽ] / _{N, ND} </span> <span class="processname" id="process-name-4744b7ed-4007-4e2a-a912-4cb446357fde"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-11">/e/ &#8594; [ẽ] / N_ </span> <span class="processname" id="process-name-11"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-68f7206c-c944-4c28-994b-cee4c129efd1">/e/ &#8594; [ẽ] / N_ </span> <span class="processname" id="process-name-68f7206c-c944-4c28-994b-cee4c129efd1"> <br> Local Nasalization 2 </span>
                          <br>
             
             </td></tr>
@@ -287,29 +289,29 @@
             <tr><th> /a/ </th><td>
             
                 
-                        <span class="process" id="process-12">/a/ &#8594; [ã] / TODO: &_TODO: & </span> <span class="processname" id="process-name-12"> <br> Long Distance Nasal Harmony 1 </span>
+                        <span class="process" id="process-586af628-c1c9-49a0-92a5-70db6760df1c">/a/ &#8594; [ã] / TODO: &_TODO: & </span> <span class="processname" id="process-name-586af628-c1c9-49a0-92a5-70db6760df1c"> <br> Long Distance Nasal Harmony 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-13">/a/ &#8594; [ə̃] / _{N, ND} </span> <span class="processname" id="process-name-13"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-9a079fb4-8f22-49ad-aa52-b5c73e13d176">/a/ &#8594; [ə̃] / _{N, ND} </span> <span class="processname" id="process-name-9a079fb4-8f22-49ad-aa52-b5c73e13d176"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-14">/a/ &#8594; [ã] / _{N, ND} </span> <span class="processname" id="process-name-14"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-3a7d9b95-06ad-4fde-aa1b-a41c0defeff7">/a/ &#8594; [ã] / _{N, ND} </span> <span class="processname" id="process-name-3a7d9b95-06ad-4fde-aa1b-a41c0defeff7"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-15">/a/ &#8594; [ə̃] / N_ </span> <span class="processname" id="process-name-15"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-013fa49b-7963-44d6-b5cc-16a18ed8fd2b">/a/ &#8594; [ə̃] / N_ </span> <span class="processname" id="process-name-013fa49b-7963-44d6-b5cc-16a18ed8fd2b"> <br> Local Nasalization 2 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-16">/a/ &#8594; [ã] / N_ </span> <span class="processname" id="process-name-16"> <br> Local Nasalization 2 </span>
+                        <span class="process" id="process-edde67c2-157f-4b4b-a55e-1638cf6c39c6">/a/ &#8594; [ã] / N_ </span> <span class="processname" id="process-name-edde67c2-157f-4b4b-a55e-1638cf6c39c6"> <br> Local Nasalization 2 </span>
                          <br>
             
             </td></tr>
             
     </table></div>
-    <span class="hidden" id="processIndexCount">24</span>
+    <span class="hidden" id="processIndexCount" data-set='["edde67c2-157f-4b4b-a55e-1638cf6c39c6", "3a7d9b95-06ad-4fde-aa1b-a41c0defeff7", "2077af63-ab0c-4d63-9c13-24fd786efd2f", "46f41a85-a1f5-4bf4-a752-f354310a4302", "8fa8c77c-7934-4a0f-bbcb-617bd9144378", "586af628-c1c9-49a0-92a5-70db6760df1c", "693a4d38-bae1-469e-a9b4-42aeec9a97d4", "68f7206c-c944-4c28-994b-cee4c129efd1", "4744b7ed-4007-4e2a-a912-4cb446357fde", "d332c5b2-6226-4899-a467-e122e71d0089", "899fb9dd-bfc7-4fcf-ae58-b95cf5124f7f", "0da70e68-497a-4ba0-b082-7389d65661cd", "013fa49b-7963-44d6-b5cc-16a18ed8fd2b", "fb3ec89e-939a-46a6-bd17-71fce65f5412", "4a7c4e6d-c480-4789-ae2a-c806848bf936", "c3ab5afc-f565-414e-ba18-dea2c7628fe5", "65f4efef-fbce-45b7-8533-bd9953c7e8be", "32f3f35d-ceb5-4024-940d-10522e67319c", "4f443bd0-7fc0-4218-9588-e82010d1d4dc", "9a079fb4-8f22-49ad-aa52-b5c73e13d176", "e730feed-cc4e-45e7-aa61-488d590fba85", "cfd55297-815c-4457-b780-a99d1dc0d52a", "941531f8-5067-4567-b76f-5ada92dad3da", "16533d93-1173-4e6a-8c36-074f795a43b1"]'></span>
     </div>
     <div class=field><h2>Process Details</h2>
         <span class="process-title">Long Distance Nasal Harmony 1</span>

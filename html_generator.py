@@ -1,5 +1,6 @@
 import json
 import os
+import uuid
 from IPAio import normalizeIPA
 
 with open("ipa.json", 'r', encoding='utf-8') as ipa_file:
@@ -201,7 +202,6 @@ def generate_ipa_chart(phonemes: set, allophones: dict, subset: dict, consonant:
                     html += f"</td>"
             html += "</tr>"
     html += "</table>"
-    # html += highlight_phonemes_script(allophones)
     return html
 
 def generate_html_body(template, processes, process_map, phonemes, allophones, num_references=0):
@@ -306,21 +306,19 @@ def highlight_phonemes_script(allophones):
     html_content += f"""
         allophones = {json_allophones};
     """
+    #TODO: figure out why background-color doesn't come through in 'highlight' class
     html_content += """ 
-
         Object.keys(allophones).forEach(id => {
             const span = document.getElementById(id);
             if (span != null) {
                 span.addEventListener('mouseover', function () {
                     allophones[id].forEach(associatedId => {
                         document.getElementById(associatedId).classList.add('highlight');
-                        console.log(`added ${associatedId}`);
                     });
                 });
                 span.addEventListener('mouseout', function () {
                     allophones[id].forEach(associatedId => {
                         document.getElementById(associatedId).classList.remove('highlight');
-                        console.log(`added ${associatedId}`);
                     });
                 });
             }
@@ -332,14 +330,16 @@ def highlight_phonemes_script(allophones):
 def dropdown_script():
     process_hider = """
     function dropdown() {
-        const process_count_span = document.getElementById("processIndexCount");
-        const process_count = process_count_span.textContent;
+        const process_indices_span = document.getElementById("processIndexCount");
+        const process_indices_raw = process_indices_span.getAttribute("data-set");
+        console.log(process_indices_raw);
+        const process_indices_array = JSON.parse(process_indices_raw);
         const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
         const process_subsections_count_span = document.getElementById("processSubsectionCount");
         const process_subsections_count = process_subsections_count_span.textContent;
-        for (var i = 0; i < process_count; i += 1) {
-            let this_process = "process-" + i;
-            let this_name = "process-name-" + i;
+        for (var i = 0; i < process_indices_array.length; i += 1) {
+            let this_process = "process-" + process_indices_array[i];
+            let this_name = "process-name-" + process_indices_array[i];
             let process_span = document.getElementById(this_process);
             let name_span = document.getElementById(this_name);
             process_span.addEventListener("click", function () {
@@ -350,6 +350,9 @@ def dropdown_script():
                 }
             });
         }
+
+
+        
         for (var j = 0; j <= process_subsections_count; j += 1) {
             for (var k = 0; k < process_subsections_list.length; k += 1) {
                 let this_process_title = process_subsections_list[k] + j;
@@ -389,6 +392,7 @@ def process_scraper(phonemes, process_map):
     allophone_map = {}
     mappings =  {}
     process_index = 0
+    process_indices = set()
     for phoneme in phonemes:
         this_phoneme = phoneme["phoneme"]
         phoneme_set.add(this_phoneme)
@@ -398,8 +402,10 @@ def process_scraper(phonemes, process_map):
                 for allophone in environment["allophones"]:
                     this_allophone = allophone["allophone"]
                     if this_allophone != this_phoneme:
-                        process_id = "process-" + str(process_index)
-                        process_name_id = "process-name-" + str(process_index)
+                        index_hash = str(uuid.uuid4())
+                        process_indices.add(index_hash)
+                        process_id = "process-" + index_hash
+                        process_name_id = "process-name-" + index_hash
                         process_index += 1
                         if this_allophone in allophone_map:
                             allophone_map[this_allophone].add(this_phoneme)
@@ -434,9 +440,11 @@ def process_scraper(phonemes, process_map):
             html_content += f"""
             </td></tr>
             """
+    json_ready = json.dumps(list(process_indices))
+    print(json_ready)
     html_content += f"""
     </table></div>
-    <span class="hidden" id="processIndexCount">{process_index}</span>
+    <span class="hidden" id="processIndexCount" data-set='{json_ready}'></span>
     """
     return html_content, phoneme_set, allophone_map
 

@@ -5,14 +5,16 @@
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
         <script type="text/javascript"> 
     function dropdown() {
-        const process_count_span = document.getElementById("processIndexCount");
-        const process_count = process_count_span.textContent;
+        const process_indices_span = document.getElementById("processIndexCount");
+        const process_indices_raw = process_indices_span.getAttribute("data-set");
+        console.log(process_indices_raw);
+        const process_indices_array = JSON.parse(process_indices_raw);
         const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
         const process_subsections_count_span = document.getElementById("processSubsectionCount");
         const process_subsections_count = process_subsections_count_span.textContent;
-        for (var i = 0; i < process_count; i += 1) {
-            let this_process = "process-" + i;
-            let this_name = "process-name-" + i;
+        for (var i = 0; i < process_indices_array.length; i += 1) {
+            let this_process = "process-" + process_indices_array[i];
+            let this_name = "process-name-" + process_indices_array[i];
             let process_span = document.getElementById(this_process);
             let name_span = document.getElementById(this_name);
             process_span.addEventListener("click", function () {
@@ -23,6 +25,9 @@
                 }
             });
         }
+
+
+        
         for (var j = 0; j <= process_subsections_count; j += 1) {
             for (var k = 0; k < process_subsections_list.length; k += 1) {
                 let this_process_title = process_subsections_list[k] + j;
@@ -48,20 +53,17 @@
     
         allophones = {"\u03b2": ["b"], "mb": ["m"], "b": ["m"], "nd": ["n"], "d": ["n"], "dj": ["d\u0292"], "j": ["\u0292"], "l": ["\u027e"], "\u0261": ["\u0261\u02b7"], "x": ["h"], "\u0259": ["\u0268"], "\u0259\u0303": ["\u0268\u0303"]};
      
-
         Object.keys(allophones).forEach(id => {
             const span = document.getElementById(id);
             if (span != null) {
                 span.addEventListener('mouseover', function () {
                     allophones[id].forEach(associatedId => {
                         document.getElementById(associatedId).classList.add('highlight');
-                        console.log(`added ${associatedId}`);
                     });
                 });
                 span.addEventListener('mouseout', function () {
                     allophones[id].forEach(associatedId => {
                         document.getElementById(associatedId).classList.remove('highlight');
-                        console.log(`added ${associatedId}`);
                     });
                 });
             }
@@ -93,9 +95,9 @@
                             
                             <span id="d" class="visible-phoneme"> d </span>
                             </td><td></td><td></td><td>
-                            <span id="kʷ" class="visible-phoneme"> kʷ </span>
-                            
                             <span id="k" class="visible-phoneme"> k </span>
+                            
+                            <span id="kʷ" class="visible-phoneme"> kʷ </span>
                             
                             <span id="ɡʷ" class="visible-phoneme"> ɡʷ </span>
                             
@@ -159,13 +161,13 @@
                             
                             <span id="i" class="visible-phoneme"> i </span>
                             </td><td>
-                            <span id="ɨ" class="visible-phoneme"> ɨ </span>
-                            
                             <span id="ɨ̃" class="visible-phoneme"> ɨ̃ </span>
-                            </td><td>
-                            <span id="ũ" class="visible-phoneme"> ũ </span>
                             
+                            <span id="ɨ" class="visible-phoneme"> ɨ </span>
+                            </td><td>
                             <span id="u" class="visible-phoneme"> u </span>
+                            
+                            <span id="ũ" class="visible-phoneme"> ũ </span>
                             </td></tr>
             <tr id="High-Mid"><th>High-Mid</th>
             <td>
@@ -195,7 +197,7 @@
             <tr><th> /b/ </th><td>
             
                 
-                        <span class="process" id="process-0">/b/ &#8594; [β] / TODO: US_TODO: US </span> <span class="processname" id="process-name-0"> <br> lenitionspirantization </span>
+                        <span class="process" id="process-6d3ecb40-0798-4c92-8bed-901ec592bf3c">/b/ &#8594; [β] / TODO: US_TODO: US </span> <span class="processname" id="process-name-6d3ecb40-0798-4c92-8bed-901ec592bf3c"> <br> lenitionspirantization </span>
                          <br>
             
             </td></tr>
@@ -203,7 +205,7 @@
             <tr><th> /ɡʷ/ </th><td>
             
                 
-                        <span class="process" id="process-8">/ɡʷ/ &#8594; [ɡ] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-8"> <br> delabialization </span>
+                        <span class="process" id="process-67de7c22-8285-4c49-9f13-c5d3afeb4987">/ɡʷ/ &#8594; [ɡ] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-67de7c22-8285-4c49-9f13-c5d3afeb4987"> <br> delabialization </span>
                          <br>
             
             </td></tr>
@@ -211,7 +213,7 @@
             <tr><th> /dʒ/ </th><td>
             
                 
-                        <span class="process" id="process-5">/dʒ/ &#8594; [dj] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-5"> <br> lenition </span>
+                        <span class="process" id="process-599fbc2b-eb48-4e67-b8ce-6191788d429d">/dʒ/ &#8594; [dj] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-599fbc2b-eb48-4e67-b8ce-6191788d429d"> <br> lenition </span>
                          <br>
             
             </td></tr>
@@ -219,11 +221,11 @@
             <tr><th> /m/ </th><td>
             
                 
-                        <span class="process" id="process-1">/m/ &#8594; [mb] / _V </span> <span class="processname" id="process-name-1"> <br> Local Oralization 1 </span>
+                        <span class="process" id="process-5e06ae1b-290c-45c8-864d-5836c3253977">/m/ &#8594; [mb] / _V </span> <span class="processname" id="process-name-5e06ae1b-290c-45c8-864d-5836c3253977"> <br> Local Oralization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-2">/m/ &#8594; [b] / _V </span> <span class="processname" id="process-name-2"> <br> Local Oralization 1 </span>
+                        <span class="process" id="process-4a195baa-206d-4039-9ae1-a4caf10ea12e">/m/ &#8594; [b] / _V </span> <span class="processname" id="process-name-4a195baa-206d-4039-9ae1-a4caf10ea12e"> <br> Local Oralization 1 </span>
                          <br>
             
             </td></tr>
@@ -231,11 +233,11 @@
             <tr><th> /n/ </th><td>
             
                 
-                        <span class="process" id="process-3">/n/ &#8594; [nd] / _V </span> <span class="processname" id="process-name-3"> <br> Local Oralization 1 </span>
+                        <span class="process" id="process-508378dd-fe5b-48cd-8647-64fcd6056eb4">/n/ &#8594; [nd] / _V </span> <span class="processname" id="process-name-508378dd-fe5b-48cd-8647-64fcd6056eb4"> <br> Local Oralization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="process-4">/n/ &#8594; [d] / _V </span> <span class="processname" id="process-name-4"> <br> Local Oralization 1 </span>
+                        <span class="process" id="process-01dd3a73-c7f4-4b0c-9503-6448439aa4bc">/n/ &#8594; [d] / _V </span> <span class="processname" id="process-name-01dd3a73-c7f4-4b0c-9503-6448439aa4bc"> <br> Local Oralization 1 </span>
                          <br>
             
             </td></tr>
@@ -243,7 +245,7 @@
             <tr><th> /ʒ/ </th><td>
             
                 
-                        <span class="process" id="process-6">/ʒ/ &#8594; [j] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-6"> <br> lenition </span>
+                        <span class="process" id="process-37c7784e-6b60-4b19-b7f3-24e592bf8cd2">/ʒ/ &#8594; [j] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-37c7784e-6b60-4b19-b7f3-24e592bf8cd2"> <br> lenition </span>
                          <br>
             
             </td></tr>
@@ -251,7 +253,7 @@
             <tr><th> /h/ </th><td>
             
                 
-                        <span class="process" id="process-9">/h/ &#8594; [x] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-9"> <br> fortition </span>
+                        <span class="process" id="process-c84e90cd-32ad-4567-bdaf-da2dbae340a3">/h/ &#8594; [x] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-c84e90cd-32ad-4567-bdaf-da2dbae340a3"> <br> fortition </span>
                          <br>
             
             </td></tr>
@@ -259,7 +261,7 @@
             <tr><th> /ɾ/ </th><td>
             
                 
-                        <span class="process" id="process-7">/ɾ/ &#8594; [l] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-7"> <br> lateralization </span>
+                        <span class="process" id="process-eb7d6a71-c242-4f8b-a3ba-52cbd9e7673e">/ɾ/ &#8594; [l] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-eb7d6a71-c242-4f8b-a3ba-52cbd9e7673e"> <br> lateralization </span>
                          <br>
             
             </td></tr>
@@ -267,7 +269,7 @@
             <tr><th> /ɨ/ </th><td>
             
                 
-                        <span class="process" id="process-10">/ɨ/ &#8594; [ə] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-10"> <br> centralization </span>
+                        <span class="process" id="process-115ed20d-225e-41f1-bd6a-688960f5dad2">/ɨ/ &#8594; [ə] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-115ed20d-225e-41f1-bd6a-688960f5dad2"> <br> centralization </span>
                          <br>
             
             </td></tr>
@@ -275,13 +277,13 @@
             <tr><th> /ɨ̃/ </th><td>
             
                 
-                        <span class="process" id="process-11">/ɨ̃/ &#8594; [ə̃] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-11"> <br> centralization </span>
+                        <span class="process" id="process-3e9f0d6d-5806-4573-9f4e-22c07336887e">/ɨ̃/ &#8594; [ə̃] / TODO: @_TODO: @ </span> <span class="processname" id="process-name-3e9f0d6d-5806-4573-9f4e-22c07336887e"> <br> centralization </span>
                          <br>
             
             </td></tr>
             
     </table></div>
-    <span class="hidden" id="processIndexCount">12</span>
+    <span class="hidden" id="processIndexCount" data-set='["37c7784e-6b60-4b19-b7f3-24e592bf8cd2", "115ed20d-225e-41f1-bd6a-688960f5dad2", "3e9f0d6d-5806-4573-9f4e-22c07336887e", "599fbc2b-eb48-4e67-b8ce-6191788d429d", "5e06ae1b-290c-45c8-864d-5836c3253977", "508378dd-fe5b-48cd-8647-64fcd6056eb4", "eb7d6a71-c242-4f8b-a3ba-52cbd9e7673e", "67de7c22-8285-4c49-9f13-c5d3afeb4987", "6d3ecb40-0798-4c92-8bed-901ec592bf3c", "01dd3a73-c7f4-4b0c-9503-6448439aa4bc", "4a195baa-206d-4039-9ae1-a4caf10ea12e", "c84e90cd-32ad-4567-bdaf-da2dbae340a3"]'></span>
     </div>
     <div class=field><h2>Process Details</h2>
         <span class="process-title">Local Oralization 1</span>
