@@ -88,6 +88,13 @@ heights_flipped = flip_dict(heights)
 backness_flipped = flip_dict(backness)
 lost_phonemes = set()
 
+def new_index(indices: set):
+    index_hash = str(uuid.uuid4())
+    while index_hash in indices:
+        index_hash = str(uuid.uuid4())
+    indices.add(index_hash)
+    return index_hash
+
 def generate_ipa_subsets(phonemes):
     consonant_subset = {
         "manners": {},
@@ -204,7 +211,7 @@ def generate_ipa_chart(phonemes: set, allophones: dict, subset: dict, consonant:
     html += "</table>"
     return html
 
-def generate_html_body(template, processes, process_map, phonemes, allophones, num_references=0):
+def generate_html_body(template, processes, process_map, phonemes, allophones, indices, num_references=0):
     name = template.get("name", "")
     family = template.get("family", "")
     if (type(template.get("iso_codes", [""])) == list and len(template.get("iso_codes", [""])) != 0):
@@ -244,7 +251,7 @@ def generate_html_body(template, processes, process_map, phonemes, allophones, n
 
     html_content += f"""
     <div class=field><h2>Processes</h2>{processes}</div>
-    <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []), process_map)}</div>
+    <div class=field><h2>Process Details</h2>{process_detail_scraper(template.get("processdetails", []), process_map, indices)}</div>
     """
     if synthesis_notes == "":
         synthesis_notes = "N/A"
@@ -254,9 +261,11 @@ def generate_html_body(template, processes, process_map, phonemes, allophones, n
     return html_content
 
 def generate_html(template, filename):
+    global_dropdown_indices = set()
     if type(template) != list:
         process_map = generate_process_map(template.get("processdetails", []))
-        processes, phonemes, allophones = process_scraper(template.get("phonemes", []), process_map)
+        processes, phonemes, allophones = process_scraper(template.get("phonemes", []), process_map, global_dropdown_indices)
+        print(allophones)
         html_content = f"""
         <html>
         <head> 
@@ -266,7 +275,7 @@ def generate_html(template, filename):
         </head>
         <body onload="initialize()">
         """
-        html_content = html_content + generate_html_body(template, processes, process_map, phonemes, allophones)
+        html_content += generate_html_body(template, processes, process_map, phonemes, allophones, global_dropdown_indices)
         html_content += f"""
         <div class=field><h2><a href="/en/ref_inv/{filename}">References</h2></div>
         """
@@ -280,18 +289,18 @@ def generate_html(template, filename):
         <link rel="stylesheet" type="text/css" href="../../lang_info.css" />
         <script type="text/javascript"> {initialize_script(allophones)} </script>
         <h1>Reference Documents: {template[0].get("name", "")}</h1>
+        </head>
+        <body onload="initialize()">
         """
         for ref in template:
             process_map = generate_process_map(ref.get("processdetails", []))
-            processes, phonemes, allophones = process_scraper(ref.get("phonemes", []), process_map)
-            html_content += f"""
-            </head>
-            <body>
-            """
-            html_content = html_content + generate_html_body(ref, processes, process_map, phonemes, allophones, True)
-        
+            processes, phonemes, allophones = process_scraper(ref.get("phonemes", []), process_map, global_dropdown_indices)
+            html_content = html_content + generate_html_body(ref, processes, process_map, phonemes, allophones, global_dropdown_indices, True)
+
+    json_ready = json.dumps(list(global_dropdown_indices))
     html_content += f"""
     </div>
+    <div class="hidden" id="globalDropdownIndices" data-set='{json_ready}'></div> 
     </body>
     </html>
     """
@@ -330,47 +339,21 @@ def highlight_phonemes_script(allophones):
 def dropdown_script():
     process_hider = """
     function dropdown() {
-        const process_indices_span = document.getElementById("processIndexCount");
-        const process_indices_raw = process_indices_span.getAttribute("data-set");
-        console.log(process_indices_raw);
-        const process_indices_array = JSON.parse(process_indices_raw);
-        const process_subsections_list = ["undergoers", "triggers", "transparent", "opaque"];
-        const process_subsections_count_span = document.getElementById("processSubsectionCount");
-        const process_subsections_count = process_subsections_count_span.textContent;
-        for (var i = 0; i < process_indices_array.length; i += 1) {
-            let this_process = "process-" + process_indices_array[i];
-            let this_name = "process-name-" + process_indices_array[i];
-            let process_span = document.getElementById(this_process);
-            let name_span = document.getElementById(this_name);
-            process_span.addEventListener("click", function () {
-                if (name_span.style.display === "none" || name_span.style.display === "") {
-                    name_span.style.display = "inline";
+        const global_dropdown_indices_span = document.getElementById("globalDropdownIndices");
+        const global_dropdown_indices_raw = global_dropdown_indices_span.getAttribute("data-set");
+        const global_dropdown_indices_array = JSON.parse(global_dropdown_indices_raw);
+        for (var i = 0; i < global_dropdown_indices_array.length; i += 1) {
+            let this_mother = "mother-" + global_dropdown_indices_array[i];
+            let this_child = "child-" + global_dropdown_indices_array[i];
+            let mother_span = document.getElementById(this_mother);
+            let child_span = document.getElementById(this_child);
+            mother_span.addEventListener("click", function () {
+                if (child_span.style.display === "none" || child_span.style.display === "") {
+                    child_span.style.display = "inline";
                 } else {
-                    name_span.style.display = "none";
+                    child_span.style.display = "none";
                 }
             });
-        }
-
-
-        
-        for (var j = 0; j <= process_subsections_count; j += 1) {
-            for (var k = 0; k < process_subsections_list.length; k += 1) {
-                let this_process_title = process_subsections_list[k] + j;
-                let this_process_sub =  process_subsections_list[k] + "-sub" + j;
-                let process_title_span = document.getElementById(this_process_title);
-                let process_sub_span = document.getElementById(this_process_sub);
-                if (process_title_span != null && process_sub_span != null) {
-                    process_title_span.addEventListener("click", function () {
-                        if (process_sub_span.style.display === "none" || process_sub_span.style.display === "") {
-                            process_sub_span.style.display = "inline";
-                            process_title_span.style.transform = "rotate(180deg)";
-                        } else {
-                            process_sub_span.style.display = "none";
-                            process_title_span.style.transform = "rotate(0deg)";
-                        }
-                    });
-                }
-            }
         }
     }
     """
@@ -378,21 +361,24 @@ def dropdown_script():
 
 def initialize_script(allophones):
     html_content = dropdown_script()
-    html_content += highlight_phonemes_script(allophones)
+    # html_content += highlight_phonemes_script(allophones)
+    # html_content += """
+    # function initialize() {
+    #     dropdown();
+    #     highlight_phonemes();
+    # }
+    # """
     html_content += """
     function initialize() {
         dropdown();
-        highlight_phonemes();
     }
     """
     return html_content
 
-def process_scraper(phonemes, process_map):
+def process_scraper(phonemes, process_map, indices):
     phoneme_set = set()
     allophone_map = {}
     mappings =  {}
-    process_index = 0
-    process_indices = set()
     for phoneme in phonemes:
         this_phoneme = phoneme["phoneme"]
         phoneme_set.add(this_phoneme)
@@ -402,11 +388,9 @@ def process_scraper(phonemes, process_map):
                 for allophone in environment["allophones"]:
                     this_allophone = allophone["allophone"]
                     if this_allophone != this_phoneme:
-                        index_hash = str(uuid.uuid4())
-                        process_indices.add(index_hash)
-                        process_id = "process-" + index_hash
-                        process_name_id = "process-name-" + index_hash
-                        process_index += 1
+                        index_hash = new_index(indices)
+                        process_id = "mother-" + index_hash
+                        process_name_id = "child-" + index_hash
                         if this_allophone in allophone_map:
                             allophone_map[this_allophone].add(this_phoneme)
                         else:
@@ -440,11 +424,8 @@ def process_scraper(phonemes, process_map):
             html_content += f"""
             </td></tr>
             """
-    json_ready = json.dumps(list(process_indices))
-    print(json_ready)
     html_content += f"""
     </table></div>
-    <span class="hidden" id="processIndexCount" data-set='{json_ready}'></span>
     """
     return html_content, phoneme_set, allophone_map
 
@@ -524,9 +505,8 @@ def generate_process_map(processes):
         process_map[process_name] = simple_name
     return process_map
 
-def process_detail_scraper(processes, process_map):
+def process_detail_scraper(processes, process_map, indices):
     html_content = ""
-    process_index = 0
     for process in processes:
         process_name = process["processname"]
         simple_name = process_map[process_name]
@@ -553,9 +533,10 @@ def process_detail_scraper(processes, process_map):
         <tr><th><span class="process-descriptor">Undergoers: </span></th><td>
         """
         if undergoers != "NA":
+            index_hash = new_index(indices)
             html_content += f"""
-            <button class="dropdown-button" id={"undergoers" + str(process_index)}> &#9660 </button>
-            <span class="pd-subsection" id={"undergoers-sub" + str(process_index)}> {undergoers} </span></td></tr>
+            <button class="dropdown-button" id={"mother-" + index_hash}> &#9660 </button>
+            <span class="pd-subsection" id={"child-" + index_hash}> {undergoers} </span></td></tr>
             """
         else: 
             html_content += f"""
@@ -565,9 +546,10 @@ def process_detail_scraper(processes, process_map):
         <tr><th><span class="process-descriptor">Triggers: </span></th><td>
         """
         if triggers != "NA":
+            index_hash = new_index(indices)
             html_content += f"""
-            <button class="dropdown-button" id={"triggers" + str(process_index)}> &#9660 </button>
-            <span class="pd-subsection" id={"triggers-sub" + str(process_index)}> {triggers} </span></td></tr>
+            <button class="dropdown-button" id={"mother-" + index_hash}> &#9660 </button>
+            <span class="pd-subsection" id={"child-" + index_hash}> {triggers} </span></td></tr>
             """
         else: 
             html_content += f"""
@@ -577,9 +559,10 @@ def process_detail_scraper(processes, process_map):
         <tr><th><span class="process-descriptor">Transparent: </span></th><td>
         """
         if transparent != "NA":
+            index_hash = new_index(indices)
             html_content += f"""
-            <button class="dropdown-button" id={"transparent" + str(process_index)}> &#9660 </button>
-            <span class="pd-subsection" id={"transparent-sub" + str(process_index)}> {transparent} </span></td></tr>
+            <button class="dropdown-button" id={"mother-" + index_hash}> &#9660 </button>
+            <span class="pd-subsection" id={"child-" + index_hash}> {transparent} </span></td></tr>
             """
         else: 
             html_content += f"""
@@ -589,9 +572,10 @@ def process_detail_scraper(processes, process_map):
         <tr><th><span class="process-descriptor">Opaque: </span></th><td>
         """
         if opaque != "NA":
+            index_hash = new_index(indices)
             html_content += f"""
-            <button class="dropdown-button" id={"opaque" + str(process_index)}> &#9660 </button>
-            <span class="pd-subsection" id={"opaque-sub" + str(process_index)}> {opaque} </span></td></tr>
+            <button class="dropdown-button" id={"mother-" + index_hash}> &#9660 </button>
+            <span class="pd-subsection" id={"child-" + index_hash}> {opaque} </span></td></tr>
             """
         else: 
             html_content += f"""
@@ -601,10 +585,6 @@ def process_detail_scraper(processes, process_map):
         </table></div>
         <br><br>
         """
-        process_index += 1
-    html_content += f"""
-    <span class="hidden" id="processSubsectionCount">{process_index - 1}</span>
-    """
     return html_content
 
 def process_templates_from_folder(input_folder, synth_output_folder, ref_output_folder):
