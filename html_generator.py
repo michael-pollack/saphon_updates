@@ -361,16 +361,11 @@ def dropdown_script():
 
 def initialize_script(allophones):
     html_content = dropdown_script()
-    # html_content += highlight_phonemes_script(allophones)
-    # html_content += """
-    # function initialize() {
-    #     dropdown();
-    #     highlight_phonemes();
-    # }
-    # """
+    html_content += highlight_phonemes_script(allophones)
     html_content += """
     function initialize() {
         dropdown();
+        highlight_phonemes();
     }
     """
     return html_content

@@ -23,8 +23,30 @@
         }
     }
     
+    function highlight_phonemes() {
+    
+        allophones = {"p\u02b7": ["p"], "j": ["d"], "t": ["d"], "z": ["d"], "nd": ["n", "d"], "k\u02b0": ["k"], "k\u02c0": ["k"], "m\u02b7": ["m"], "bm": ["m"], "mb": ["m"], "\u0272": ["n"], "dn": ["n"], "\u0261\u014b": ["\u014b"], "t\u0283": ["s"], "\u0283": ["s"], "\u0266": ["h"], "\u027e\u02b0": ["\u027e"], "r": ["\u027e"], "\u027e\u0348": ["\u027e"], "u": ["w"], "\u0129": ["i"], "\u0254": ["o"], "\u028c": ["o"], "\u00f5": ["o"], "\u028a": ["u"], "\u026f": ["u"], "\u026a": ["u"], "\u0169": ["u"], "\u028a\u0303": ["u"], "\u025b": ["e"], "e\u031d": ["e"], "e\u0303": ["e"], "\u0259\u031d": ["\u0259"], "\u0250": ["a", "\u0259"], "\u0275": ["\u0259"], "\u0264": ["\u0259"], "\u0259\u0303": ["\u0259"], "\u0264\u0303": ["\u0259"], "\u0251": ["a"], "\u00e6": ["a"], "\u00e3": ["a"]};
+     
+        Object.keys(allophones).forEach(id => {
+            const span = document.getElementById(id);
+            if (span != null) {
+                span.addEventListener('mouseover', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.add('highlight');
+                    });
+                });
+                span.addEventListener('mouseout', function () {
+                    allophones[id].forEach(associatedId => {
+                        document.getElementById(associatedId).classList.remove('highlight');
+                    });
+                });
+            }
+        });
+    }
+    
     function initialize() {
         dropdown();
+        highlight_phonemes();
     }
      </script>
         </head>
@@ -39,17 +61,17 @@
     <h2>Consonants</h2><table><tr><th></th><th>Bilabial</th><th>Alveolar</th><th>Postalveolar</th><th>Palatal</th><th>Velar</th><th>Glottal</th><th>Other</th></tr>
             <tr id="Stop"><th>Stop</th>
             <td>
-                            <span id="pʷ" class="visible-allophone"> pʷ </span>
-                            
                             <span id="p" class="visible-phoneme"> p </span>
+                            
+                            <span id="pʷ" class="visible-allophone"> pʷ </span>
                             </td><td>
                             <span id="t" class="visible-phoneme"> t </span>
                             
                             <span id="d" class="visible-phoneme"> d </span>
                             </td><td></td><td></td><td>
-                            <span id="k" class="visible-phoneme"> k </span>
-                            
                             <span id="kʷ" class="visible-phoneme"> kʷ </span>
+                            
+                            <span id="k" class="visible-phoneme"> k </span>
                             </td><td>
                             <span id="ʔ" class="visible-phoneme"> ʔ </span>
                             </td><td></td></tr>
@@ -83,9 +105,9 @@
                             </td><td></td><td>
                             <span id="ɲ" class="visible-allophone"> ɲ </span>
                             </td><td>
-                            <span id="ŋʷ" class="visible-phoneme"> ŋʷ </span>
-                            
                             <span id="ŋ" class="visible-phoneme"> ŋ </span>
+                            
+                            <span id="ŋʷ" class="visible-phoneme"> ŋʷ </span>
                             </td><td></td><td></td></tr>
             <tr id="Nasal compound"><th>Nasal compound</th>
             <td>
@@ -115,17 +137,17 @@
                             </td><td></td><td>
                             <span id="ɯ" class="visible-allophone"> ɯ </span>
                             
-                            <span id="u" class="visible-phoneme"> u </span>
-                            
                             <span id="ũ" class="visible-allophone"> ũ </span>
+                            
+                            <span id="u" class="visible-phoneme"> u </span>
                             </td></tr>
             <tr id="Low-High"><th>Low-High</th>
             <td>
                             <span id="ɪ" class="visible-phoneme"> ɪ </span>
                             </td><td></td><td>
-                            <span id="ʊ" class="visible-allophone"> ʊ </span>
-                            
                             <span id="ʊ̃" class="visible-allophone"> ʊ̃ </span>
+                            
+                            <span id="ʊ" class="visible-allophone"> ʊ </span>
                             </td></tr>
             <tr id="High-Mid"><th>High-Mid</th>
             <td>
@@ -135,9 +157,9 @@
                             </td><td>
                             <span id="ɵ" class="visible-allophone"> ɵ </span>
                             </td><td>
-                            <span id="ɤ" class="visible-allophone"> ɤ </span>
-                            
                             <span id="ɤ̃" class="visible-allophone"> ɤ̃ </span>
+                            
+                            <span id="ɤ" class="visible-allophone"> ɤ </span>
                             
                             <span id="õ" class="visible-allophone"> õ </span>
                             
@@ -145,9 +167,9 @@
                             </td></tr>
             <tr id="Mid"><th>Mid</th>
             <td></td><td>
-                            <span id="ə̃" class="visible-allophone"> ə̃ </span>
-                            
                             <span id="ə" class="visible-phoneme"> ə </span>
+                            
+                            <span id="ə̃" class="visible-allophone"> ə̃ </span>
                             </td><td></td></tr>
             <tr id="Low-Mid"><th>Low-Mid</th>
             <td>
@@ -171,7 +193,7 @@
                             </td><td>
                             <span id="ɑ" class="visible-allophone"> ɑ </span>
                             </td></tr></table>
-        <div class=field><h2>Lost Phonemes</h2>{'dn', 'ɾ͈', 'ə̝', 'e̝', 'ɾʰ', 'ɡŋ', 'bm', 'kˀ'}</div>
+        <div class=field><h2>Lost Phonemes</h2>{'dn', 'ɾ͈', 'bm', 'ə̝', 'e̝', 'ɾʰ', 'ɡŋ', 'kˀ'}</div>
         
     <div class=field><h2>Processes</h2>
     <div class="processtable"><table><tr><th>Phoneme</th><th>Processes</th></tr>
@@ -179,11 +201,11 @@
             <tr><th> /p/ </th><td>
             
                 
-                        <span class="process" id="mother-282e00c0-c99a-4155-b496-08997a5f76a2">/p/ &#8594; [pʷ] / ɪ_ </span> <span class="processname" id="child-282e00c0-c99a-4155-b496-08997a5f76a2"> <br> labialization </span>
+                        <span class="process" id="mother-d4ffa7d2-12ba-415e-809d-3108d16cfcfb">/p/ &#8594; [pʷ] / ɪ_ </span> <span class="processname" id="child-d4ffa7d2-12ba-415e-809d-3108d16cfcfb"> <br> labialization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-0eec2c99-2cc3-446f-ab29-28f70a7efd9f">/p/ &#8594; [pʷ] / _ɪ </span> <span class="processname" id="child-0eec2c99-2cc3-446f-ab29-28f70a7efd9f"> <br> labialization </span>
+                        <span class="process" id="mother-44c3758c-78d0-420a-b898-849e91b42a21">/p/ &#8594; [pʷ] / _ɪ </span> <span class="processname" id="child-44c3758c-78d0-420a-b898-849e91b42a21"> <br> labialization </span>
                          <br>
             
             </td></tr>
@@ -191,19 +213,19 @@
             <tr><th> /d/ </th><td>
             
                 
-                        <span class="process" id="mother-640a4abe-2c25-41f2-b8fc-4ffcf3741795">/d/ &#8594; [j] / _{$, #} </span> <span class="processname" id="child-640a4abe-2c25-41f2-b8fc-4ffcf3741795"> <br> lenition </span>
+                        <span class="process" id="mother-81db7fcb-ee45-4c74-9fc8-51a09e290710">/d/ &#8594; [j] / _{$, #} </span> <span class="processname" id="child-81db7fcb-ee45-4c74-9fc8-51a09e290710"> <br> lenition </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-0e2defb1-f2dc-4b24-9777-c0854bc203b5">/d/ &#8594; [t] / TODO: @_TODO: @ </span> <span class="processname" id="child-0e2defb1-f2dc-4b24-9777-c0854bc203b5"> <br> devoicing </span>
+                        <span class="process" id="mother-1b41d5ed-701d-4505-9d13-d9f73f745610">/d/ &#8594; [t] / TODO: @_TODO: @ </span> <span class="processname" id="child-1b41d5ed-701d-4505-9d13-d9f73f745610"> <br> devoicing </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-a0ec709b-d050-420e-abcd-2747269c283a">/d/ &#8594; [z] / TODO: @_TODO: @ </span> <span class="processname" id="child-a0ec709b-d050-420e-abcd-2747269c283a"> <br> lenition </span>
+                        <span class="process" id="mother-446606d8-fbc0-49df-a054-2a0ee1230dcd">/d/ &#8594; [z] / TODO: @_TODO: @ </span> <span class="processname" id="child-446606d8-fbc0-49df-a054-2a0ee1230dcd"> <br> lenition </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-02b994f5-19b4-47cd-82cf-0cf7262266fe">/d/ &#8594; [nd] / #_ </span> <span class="processname" id="child-02b994f5-19b4-47cd-82cf-0cf7262266fe"> <br> Nasal Boundary 1 </span>
+                        <span class="process" id="mother-9297d4e1-0de2-4eef-82b2-a16e0a4c7b40">/d/ &#8594; [nd] / #_ </span> <span class="processname" id="child-9297d4e1-0de2-4eef-82b2-a16e0a4c7b40"> <br> Nasal Boundary 1 </span>
                          <br>
             
             </td></tr>
@@ -211,11 +233,11 @@
             <tr><th> /k/ </th><td>
             
                 
-                        <span class="process" id="mother-5b372a92-e1a6-4f0b-9ae8-58e1b62408eb">/k/ &#8594; [kʰ] / _# </span> <span class="processname" id="child-5b372a92-e1a6-4f0b-9ae8-58e1b62408eb"> <br> consonant aspiration </span>
+                        <span class="process" id="mother-1568bd77-7ce9-40be-8cf7-364065b84ee0">/k/ &#8594; [kʰ] / _# </span> <span class="processname" id="child-1568bd77-7ce9-40be-8cf7-364065b84ee0"> <br> consonant aspiration </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-8290d928-4064-4756-94f9-b7ad5e657043">/k/ &#8594; [kˀ] / _# </span> <span class="processname" id="child-8290d928-4064-4756-94f9-b7ad5e657043"> <br> oral consonant postglottalization </span>
+                        <span class="process" id="mother-b4f5a93a-a653-4cec-bacd-31ba3693508a">/k/ &#8594; [kˀ] / _# </span> <span class="processname" id="child-b4f5a93a-a653-4cec-bacd-31ba3693508a"> <br> oral consonant postglottalization </span>
                          <br>
             
             </td></tr>
@@ -223,19 +245,19 @@
             <tr><th> /m/ </th><td>
             
                 
-                        <span class="process" id="mother-b09cd5c9-d586-4c32-9d42-4a08e268c53b">/m/ &#8594; [mʷ] / ɪ_ </span> <span class="processname" id="child-b09cd5c9-d586-4c32-9d42-4a08e268c53b"> <br> labialization </span>
+                        <span class="process" id="mother-a8ebe28a-cdd2-44df-9496-3456857aeb46">/m/ &#8594; [mʷ] / ɪ_ </span> <span class="processname" id="child-a8ebe28a-cdd2-44df-9496-3456857aeb46"> <br> labialization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-481d7397-45a2-43b7-94da-4e4e9f2ea81b">/m/ &#8594; [mʷ] / _ɪ </span> <span class="processname" id="child-481d7397-45a2-43b7-94da-4e4e9f2ea81b"> <br> labialization </span>
+                        <span class="process" id="mother-652ccbd7-c631-4d2a-a86c-2af69936f814">/m/ &#8594; [mʷ] / _ɪ </span> <span class="processname" id="child-652ccbd7-c631-4d2a-a86c-2af69936f814"> <br> labialization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-df359ab5-1652-4dd2-83ff-3a1cae88098f">/m/ &#8594; [bm] / V_ </span> <span class="processname" id="child-df359ab5-1652-4dd2-83ff-3a1cae88098f"> <br> Local Oralization 1 </span>
+                        <span class="process" id="mother-ec9d1e0c-9c63-4f70-a663-bca159f65469">/m/ &#8594; [bm] / V_ </span> <span class="processname" id="child-ec9d1e0c-9c63-4f70-a663-bca159f65469"> <br> Local Oralization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-37f5f744-19e4-4128-9e77-40ea75441d1d">/m/ &#8594; [mb] / TODO: @_TODO: @ </span> <span class="processname" id="child-37f5f744-19e4-4128-9e77-40ea75441d1d"> <br> oralization </span>
+                        <span class="process" id="mother-5babefad-cbf6-4664-9d2c-bb7ef49048e3">/m/ &#8594; [mb] / TODO: @_TODO: @ </span> <span class="processname" id="child-5babefad-cbf6-4664-9d2c-bb7ef49048e3"> <br> oralization </span>
                          <br>
             
             </td></tr>
@@ -243,15 +265,15 @@
             <tr><th> /n/ </th><td>
             
                 
-                        <span class="process" id="mother-f6898b98-21c1-48b9-b6e4-d0ff9c7cccb7">/n/ &#8594; [ɲ] / _i </span> <span class="processname" id="child-f6898b98-21c1-48b9-b6e4-d0ff9c7cccb7"> <br> palatalization </span>
+                        <span class="process" id="mother-dca37dc6-2328-410b-8576-0271d61cd58f">/n/ &#8594; [ɲ] / _i </span> <span class="processname" id="child-dca37dc6-2328-410b-8576-0271d61cd58f"> <br> palatalization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-7e9e54ff-2124-4704-9850-54f0ca17ccf7">/n/ &#8594; [dn] / V_ </span> <span class="processname" id="child-7e9e54ff-2124-4704-9850-54f0ca17ccf7"> <br> Local Oralization 1 </span>
+                        <span class="process" id="mother-3d3686e5-e7ff-43dc-ace3-39a548807bc9">/n/ &#8594; [dn] / V_ </span> <span class="processname" id="child-3d3686e5-e7ff-43dc-ace3-39a548807bc9"> <br> Local Oralization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-9fff801b-7437-4e5b-9f51-d9fbf4cd7c74">/n/ &#8594; [nd] / TODO: @_TODO: @ </span> <span class="processname" id="child-9fff801b-7437-4e5b-9f51-d9fbf4cd7c74"> <br> oralization </span>
+                        <span class="process" id="mother-3109942d-932d-47f3-8de0-1a9ce1d2ccb1">/n/ &#8594; [nd] / TODO: @_TODO: @ </span> <span class="processname" id="child-3109942d-932d-47f3-8de0-1a9ce1d2ccb1"> <br> oralization </span>
                          <br>
             
             </td></tr>
@@ -259,7 +281,7 @@
             <tr><th> /ŋ/ </th><td>
             
                 
-                        <span class="process" id="mother-e19bd2d2-64c9-43d3-9c97-ec63aab5e247">/ŋ/ &#8594; [ɡŋ] / V_ </span> <span class="processname" id="child-e19bd2d2-64c9-43d3-9c97-ec63aab5e247"> <br> Local Oralization 1 </span>
+                        <span class="process" id="mother-53aba692-4dcc-4a7b-9b63-a277a93059d2">/ŋ/ &#8594; [ɡŋ] / V_ </span> <span class="processname" id="child-53aba692-4dcc-4a7b-9b63-a277a93059d2"> <br> Local Oralization 1 </span>
                          <br>
             
             </td></tr>
@@ -267,19 +289,19 @@
             <tr><th> /s/ </th><td>
             
                 
-                        <span class="process" id="mother-809903a9-2c49-4042-b89d-66b475665cba">/s/ &#8594; [tʃ] / _i </span> <span class="processname" id="child-809903a9-2c49-4042-b89d-66b475665cba"> <br> fortitionpalatalization </span>
+                        <span class="process" id="mother-7591bcb9-9e97-4254-9c8d-a8e31d1a355a">/s/ &#8594; [tʃ] / _i </span> <span class="processname" id="child-7591bcb9-9e97-4254-9c8d-a8e31d1a355a"> <br> fortitionpalatalization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-82719d06-9d74-40c9-be10-59d81311ed27">/s/ &#8594; [ʃ] / _i </span> <span class="processname" id="child-82719d06-9d74-40c9-be10-59d81311ed27"> <br> palatalization </span>
+                        <span class="process" id="mother-43e6f9ee-3aae-4788-829c-94fd26881b4a">/s/ &#8594; [ʃ] / _i </span> <span class="processname" id="child-43e6f9ee-3aae-4788-829c-94fd26881b4a"> <br> palatalization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-df94786b-c324-4da5-98f4-e4cbc81e9144">/s/ &#8594; [tʃ] / i_ </span> <span class="processname" id="child-df94786b-c324-4da5-98f4-e4cbc81e9144"> <br> fortitionpalatalization </span>
+                        <span class="process" id="mother-17ede3ab-c683-497c-b189-f30f1311790a">/s/ &#8594; [tʃ] / i_ </span> <span class="processname" id="child-17ede3ab-c683-497c-b189-f30f1311790a"> <br> fortitionpalatalization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-c4c97f64-a612-4891-bdd8-24095ae2b53d">/s/ &#8594; [ʃ] / i_ </span> <span class="processname" id="child-c4c97f64-a612-4891-bdd8-24095ae2b53d"> <br> palatalization </span>
+                        <span class="process" id="mother-3e6575bd-d93f-42e8-91a4-dc13e1c42e42">/s/ &#8594; [ʃ] / i_ </span> <span class="processname" id="child-3e6575bd-d93f-42e8-91a4-dc13e1c42e42"> <br> palatalization </span>
                          <br>
             
             </td></tr>
@@ -287,7 +309,7 @@
             <tr><th> /h/ </th><td>
             
                 
-                        <span class="process" id="mother-b8f71370-52af-44d6-916b-07cb59dceb06">/h/ &#8594; [ɦ] / TODO: @_TODO: @ </span> <span class="processname" id="child-b8f71370-52af-44d6-916b-07cb59dceb06"> <br> voicing </span>
+                        <span class="process" id="mother-f231cb97-8cde-4cdf-ba1b-3b7989fa0ab0">/h/ &#8594; [ɦ] / TODO: @_TODO: @ </span> <span class="processname" id="child-f231cb97-8cde-4cdf-ba1b-3b7989fa0ab0"> <br> voicing </span>
                          <br>
             
             </td></tr>
@@ -295,11 +317,11 @@
             <tr><th> /w/ </th><td>
             
                 
-                        <span class="process" id="mother-cafa7e98-e219-480d-8f1a-cf120db4e7a1">/w/ &#8594; [u] / _# </span> <span class="processname" id="child-cafa7e98-e219-480d-8f1a-cf120db4e7a1"> <br> u-degliding </span>
+                        <span class="process" id="mother-578830bb-0586-48a9-ad41-eabde615ebf7">/w/ &#8594; [u] / _# </span> <span class="processname" id="child-578830bb-0586-48a9-ad41-eabde615ebf7"> <br> u-degliding </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-2148c40e-7a24-47db-90ff-28d6007d3394">/w/ &#8594; [u] / #_ </span> <span class="processname" id="child-2148c40e-7a24-47db-90ff-28d6007d3394"> <br> u-degliding </span>
+                        <span class="process" id="mother-c3f25d98-1a89-44ab-8b20-0f9ef97dc895">/w/ &#8594; [u] / #_ </span> <span class="processname" id="child-c3f25d98-1a89-44ab-8b20-0f9ef97dc895"> <br> u-degliding </span>
                          <br>
             
             </td></tr>
@@ -307,15 +329,15 @@
             <tr><th> /ɾ/ </th><td>
             
                 
-                        <span class="process" id="mother-6c8bd2c1-ac0d-4dfe-8f93-58d624603773">/ɾ/ &#8594; [ɾʰ] / _# </span> <span class="processname" id="child-6c8bd2c1-ac0d-4dfe-8f93-58d624603773"> <br> consonant aspiration </span>
+                        <span class="process" id="mother-d897c85d-fc12-4815-a751-2571ed47ecf5">/ɾ/ &#8594; [ɾʰ] / _# </span> <span class="processname" id="child-d897c85d-fc12-4815-a751-2571ed47ecf5"> <br> consonant aspiration </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-a133a329-cde5-491f-869c-f3d125f35ba4">/ɾ/ &#8594; [r] / _# </span> <span class="processname" id="child-a133a329-cde5-491f-869c-f3d125f35ba4"> <br> trilling </span>
+                        <span class="process" id="mother-f2bf5a9f-743a-4642-9bf5-99c99f5e39b5">/ɾ/ &#8594; [r] / _# </span> <span class="processname" id="child-f2bf5a9f-743a-4642-9bf5-99c99f5e39b5"> <br> trilling </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-301d47fd-cce4-472a-bd4d-de00ba743914">/ɾ/ &#8594; [ɾ͈] / V_V </span> <span class="processname" id="child-301d47fd-cce4-472a-bd4d-de00ba743914"> <br> fortition </span>
+                        <span class="process" id="mother-cc3e64ac-6e40-4bae-8aab-af8de5b4eb47">/ɾ/ &#8594; [ɾ͈] / V_V </span> <span class="processname" id="child-cc3e64ac-6e40-4bae-8aab-af8de5b4eb47"> <br> fortition </span>
                          <br>
             
             </td></tr>
@@ -323,11 +345,11 @@
             <tr><th> /i/ </th><td>
             
                 
-                        <span class="process" id="mother-8a67872c-6f52-4e2b-ba3d-c9c2b2578f88">/i/ &#8594; [ĩ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-8a67872c-6f52-4e2b-ba3d-c9c2b2578f88"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-8db46762-b65a-499b-9b5a-1b06f5e310ac">/i/ &#8594; [ĩ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-8db46762-b65a-499b-9b5a-1b06f5e310ac"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-d5f7f331-3319-46b5-bae0-7a6d272a1a41">/i/ &#8594; [ĩ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-d5f7f331-3319-46b5-bae0-7a6d272a1a41"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-ab48d00c-78be-4330-9e0e-57ed755ef79b">/i/ &#8594; [ĩ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-ab48d00c-78be-4330-9e0e-57ed755ef79b"> <br> Local Nasalization 1 </span>
                          <br>
             
             </td></tr>
@@ -335,35 +357,35 @@
             <tr><th> /u/ </th><td>
             
                 
-                        <span class="process" id="mother-ef1c7340-def5-4bb3-a6ee-4c9116ec7fc2">/u/ &#8594; [ʊ] / TODO: @_TODO: @ </span> <span class="processname" id="child-ef1c7340-def5-4bb3-a6ee-4c9116ec7fc2"> <br> centralization </span>
+                        <span class="process" id="mother-2d201041-b931-4aa8-91ae-8aadab693c5a">/u/ &#8594; [ʊ] / TODO: @_TODO: @ </span> <span class="processname" id="child-2d201041-b931-4aa8-91ae-8aadab693c5a"> <br> centralization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-68df1367-c805-4b10-bb70-edf8cdd83808">/u/ &#8594; [ɯ] / TODO: @_TODO: @ </span> <span class="processname" id="child-68df1367-c805-4b10-bb70-edf8cdd83808"> <br> unrounding </span>
+                        <span class="process" id="mother-b24b440e-c313-433e-bfe2-50679f5abbae">/u/ &#8594; [ɯ] / TODO: @_TODO: @ </span> <span class="processname" id="child-b24b440e-c313-433e-bfe2-50679f5abbae"> <br> unrounding </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-2bc511bd-4456-4190-b2a9-10989e6d5207">/u/ &#8594; [ʊ] / TODO: @_TODO: @ </span> <span class="processname" id="child-2bc511bd-4456-4190-b2a9-10989e6d5207"> <br> centralization </span>
+                        <span class="process" id="mother-b30b6a3d-2b1f-4e2a-b07d-b93883f5e39e">/u/ &#8594; [ʊ] / TODO: @_TODO: @ </span> <span class="processname" id="child-b30b6a3d-2b1f-4e2a-b07d-b93883f5e39e"> <br> centralization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-58c59ef4-4f85-459f-a446-c7f90ab108f8">/u/ &#8594; [ɪ] / TODO: @_TODO: @ </span> <span class="processname" id="child-58c59ef4-4f85-459f-a446-c7f90ab108f8"> <br> fronting </span>
+                        <span class="process" id="mother-2a4443a5-e00a-43ff-8138-9e4540e3e825">/u/ &#8594; [ɪ] / TODO: @_TODO: @ </span> <span class="processname" id="child-2a4443a5-e00a-43ff-8138-9e4540e3e825"> <br> fronting </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-6a04ea43-cc6e-4907-845e-569b0ea9a38a">/u/ &#8594; [ũ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-6a04ea43-cc6e-4907-845e-569b0ea9a38a"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-50b36f71-6ef1-41c2-9a6a-fb2a81b276ae">/u/ &#8594; [ũ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-50b36f71-6ef1-41c2-9a6a-fb2a81b276ae"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-0cc4bfbe-3eaa-4523-99f1-feccaf126d50">/u/ &#8594; [ʊ̃] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-0cc4bfbe-3eaa-4523-99f1-feccaf126d50"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-0958c2bb-a4ba-41d3-9ce5-b09125fc2f67">/u/ &#8594; [ʊ̃] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-0958c2bb-a4ba-41d3-9ce5-b09125fc2f67"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-19b8767e-a3a0-40e3-a367-456cb7138cb2">/u/ &#8594; [ũ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-19b8767e-a3a0-40e3-a367-456cb7138cb2"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-ba0ff9e3-1688-454e-a3ec-ca1860057e33">/u/ &#8594; [ũ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-ba0ff9e3-1688-454e-a3ec-ca1860057e33"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-b048dd3b-632b-4df1-96f1-ac0fc2966a7b">/u/ &#8594; [ʊ̃] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-b048dd3b-632b-4df1-96f1-ac0fc2966a7b"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-e8addc32-e7bd-4a59-93ad-e3170f2dcf3e">/u/ &#8594; [ʊ̃] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-e8addc32-e7bd-4a59-93ad-e3170f2dcf3e"> <br> Local Nasalization 1 </span>
                          <br>
             
             </td></tr>
@@ -371,19 +393,19 @@
             <tr><th> /e/ </th><td>
             
                 
-                        <span class="process" id="mother-233b1f0a-5c9d-4aec-8ea4-c0c4d9dcc542">/e/ &#8594; [ɛ] / TODO: @_TODO: @ </span> <span class="processname" id="child-233b1f0a-5c9d-4aec-8ea4-c0c4d9dcc542"> <br> lowering </span>
+                        <span class="process" id="mother-fa3b3c49-f5f9-44c9-a2af-4ca39ab20e78">/e/ &#8594; [ɛ] / TODO: @_TODO: @ </span> <span class="processname" id="child-fa3b3c49-f5f9-44c9-a2af-4ca39ab20e78"> <br> lowering </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-4d997635-b23a-45a8-911d-efb6fc9db839">/e/ &#8594; [e̝] / TODO: @_TODO: @ </span> <span class="processname" id="child-4d997635-b23a-45a8-911d-efb6fc9db839"> <br> raising </span>
+                        <span class="process" id="mother-39f1bdb2-1818-4b82-85e8-28ce3d7bfce4">/e/ &#8594; [e̝] / TODO: @_TODO: @ </span> <span class="processname" id="child-39f1bdb2-1818-4b82-85e8-28ce3d7bfce4"> <br> raising </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-93f0cd12-fde4-4793-85fd-b80955892474">/e/ &#8594; [ẽ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-93f0cd12-fde4-4793-85fd-b80955892474"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-10929d43-3a70-4318-8fc4-7c79f6cf4a1b">/e/ &#8594; [ẽ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-10929d43-3a70-4318-8fc4-7c79f6cf4a1b"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-f617dcbf-250e-4f93-9627-bc8ce4ffb740">/e/ &#8594; [ẽ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-f617dcbf-250e-4f93-9627-bc8ce4ffb740"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-2a560c70-d9a3-4cd1-bfbe-04347b69d37e">/e/ &#8594; [ẽ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-2a560c70-d9a3-4cd1-bfbe-04347b69d37e"> <br> Local Nasalization 1 </span>
                          <br>
             
             </td></tr>
@@ -391,19 +413,19 @@
             <tr><th> /o/ </th><td>
             
                 
-                        <span class="process" id="mother-321a13f1-66e8-4ee6-b7ce-b85f0b2c27cc">/o/ &#8594; [ɔ] / TODO: @_TODO: @ </span> <span class="processname" id="child-321a13f1-66e8-4ee6-b7ce-b85f0b2c27cc"> <br> lowering </span>
+                        <span class="process" id="mother-c2bdc03f-1496-4d80-b1cc-60b031392bb2">/o/ &#8594; [ɔ] / TODO: @_TODO: @ </span> <span class="processname" id="child-c2bdc03f-1496-4d80-b1cc-60b031392bb2"> <br> lowering </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-e40548a0-6dba-463d-ad70-da70011a7f8a">/o/ &#8594; [ʌ] / TODO: @_TODO: @ </span> <span class="processname" id="child-e40548a0-6dba-463d-ad70-da70011a7f8a"> <br> loweringunrounding </span>
+                        <span class="process" id="mother-3468779a-bcb8-45ce-9a67-91a93f50dd9d">/o/ &#8594; [ʌ] / TODO: @_TODO: @ </span> <span class="processname" id="child-3468779a-bcb8-45ce-9a67-91a93f50dd9d"> <br> loweringunrounding </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-c99bc231-0b0e-4293-b250-a42932603a20">/o/ &#8594; [õ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-c99bc231-0b0e-4293-b250-a42932603a20"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-46b7df25-d761-4935-a7c5-2fc1cad57a90">/o/ &#8594; [õ] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-46b7df25-d761-4935-a7c5-2fc1cad57a90"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-bbca2cea-866c-4a25-9097-b7ea35ac9334">/o/ &#8594; [õ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-bbca2cea-866c-4a25-9097-b7ea35ac9334"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-bca03a1c-e428-4d91-974d-b87a36291856">/o/ &#8594; [õ] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-bca03a1c-e428-4d91-974d-b87a36291856"> <br> Local Nasalization 1 </span>
                          <br>
             
             </td></tr>
@@ -411,35 +433,35 @@
             <tr><th> /ə/ </th><td>
             
                 
-                        <span class="process" id="mother-3d3b920e-9216-4637-8724-9f25a1050c70">/ə/ &#8594; [ə̝] / TODO: @_TODO: @ </span> <span class="processname" id="child-3d3b920e-9216-4637-8724-9f25a1050c70"> <br> raising </span>
+                        <span class="process" id="mother-18b8d40e-4edc-4e4a-9078-69044231cff1">/ə/ &#8594; [ə̝] / TODO: @_TODO: @ </span> <span class="processname" id="child-18b8d40e-4edc-4e4a-9078-69044231cff1"> <br> raising </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-1941b3b3-92d9-4428-949c-8cc4a415a7cd">/ə/ &#8594; [ɐ] / TODO: @_TODO: @ </span> <span class="processname" id="child-1941b3b3-92d9-4428-949c-8cc4a415a7cd"> <br> lowering </span>
+                        <span class="process" id="mother-9ab95678-80d1-47c0-a156-927da3ff26f7">/ə/ &#8594; [ɐ] / TODO: @_TODO: @ </span> <span class="processname" id="child-9ab95678-80d1-47c0-a156-927da3ff26f7"> <br> lowering </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-86334258-8f4a-4ba9-a976-5348cc70a0b3">/ə/ &#8594; [ɵ] / TODO: @_TODO: @ </span> <span class="processname" id="child-86334258-8f4a-4ba9-a976-5348cc70a0b3"> <br> rounding </span>
+                        <span class="process" id="mother-14592828-6b10-4c20-8daa-5f62c0b751f9">/ə/ &#8594; [ɵ] / TODO: @_TODO: @ </span> <span class="processname" id="child-14592828-6b10-4c20-8daa-5f62c0b751f9"> <br> rounding </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-8c8612e3-7f14-4f00-98e9-41cecbf868bd">/ə/ &#8594; [ɤ] / TODO: @_TODO: @ </span> <span class="processname" id="child-8c8612e3-7f14-4f00-98e9-41cecbf868bd"> <br> backing </span>
+                        <span class="process" id="mother-a79084b9-2c1f-4bfa-b290-e9c7a1a95336">/ə/ &#8594; [ɤ] / TODO: @_TODO: @ </span> <span class="processname" id="child-a79084b9-2c1f-4bfa-b290-e9c7a1a95336"> <br> backing </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-9c055c25-61f2-42bc-8ee5-576864093154">/ə/ &#8594; [ə̃] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-9c055c25-61f2-42bc-8ee5-576864093154"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-de08aa78-f4a5-4ac6-9c58-f4fc64f1f424">/ə/ &#8594; [ə̃] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-de08aa78-f4a5-4ac6-9c58-f4fc64f1f424"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-4c96b256-ff0e-44da-a2cf-e2843e0327d8">/ə/ &#8594; [ɤ̃] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-4c96b256-ff0e-44da-a2cf-e2843e0327d8"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-c41ae31f-29d7-44b9-9252-37e7ae48cb46">/ə/ &#8594; [ɤ̃] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-c41ae31f-29d7-44b9-9252-37e7ae48cb46"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-9a45bf6d-d959-4b8c-b107-7ac9011058d8">/ə/ &#8594; [ə̃] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-9a45bf6d-d959-4b8c-b107-7ac9011058d8"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-4d1c986f-448a-4261-8e0d-75554738d29d">/ə/ &#8594; [ə̃] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-4d1c986f-448a-4261-8e0d-75554738d29d"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-258ea691-e32f-470e-8736-1f7bb3a270e6">/ə/ &#8594; [ɤ̃] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-258ea691-e32f-470e-8736-1f7bb3a270e6"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-263fb28d-c566-48bb-9f95-a5c41a88f2ae">/ə/ &#8594; [ɤ̃] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-263fb28d-c566-48bb-9f95-a5c41a88f2ae"> <br> Local Nasalization 1 </span>
                          <br>
             
             </td></tr>
@@ -447,23 +469,23 @@
             <tr><th> /a/ </th><td>
             
                 
-                        <span class="process" id="mother-857ebbc6-3ea7-42be-a758-6ca1762f570f">/a/ &#8594; [ɑ] / TODO: @_TODO: @ </span> <span class="processname" id="child-857ebbc6-3ea7-42be-a758-6ca1762f570f"> <br> backing </span>
+                        <span class="process" id="mother-a8c6184e-da05-4e52-b5c5-69e7f8586fd8">/a/ &#8594; [ɑ] / TODO: @_TODO: @ </span> <span class="processname" id="child-a8c6184e-da05-4e52-b5c5-69e7f8586fd8"> <br> backing </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-08f887d8-e8b9-489f-bfba-879c84dba3ff">/a/ &#8594; [æ] / TODO: @_TODO: @ </span> <span class="processname" id="child-08f887d8-e8b9-489f-bfba-879c84dba3ff"> <br> raising </span>
+                        <span class="process" id="mother-dede65a1-2529-4ece-af9d-c1a9e795e226">/a/ &#8594; [æ] / TODO: @_TODO: @ </span> <span class="processname" id="child-dede65a1-2529-4ece-af9d-c1a9e795e226"> <br> raising </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-ad96e79a-580a-4ced-802f-b4b13f147cb8">/a/ &#8594; [ɐ] / TODO: @_TODO: @ </span> <span class="processname" id="child-ad96e79a-580a-4ced-802f-b4b13f147cb8"> <br> centralization </span>
+                        <span class="process" id="mother-69802235-9bcf-440d-a386-23815876d2d7">/a/ &#8594; [ɐ] / TODO: @_TODO: @ </span> <span class="processname" id="child-69802235-9bcf-440d-a386-23815876d2d7"> <br> centralization </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-a25af15f-99f1-4b21-9fc6-eacac60917f8">/a/ &#8594; [ã] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-a25af15f-99f1-4b21-9fc6-eacac60917f8"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-5a8cca48-8ebf-4a24-9f91-a825fe1bc8bf">/a/ &#8594; [ã] / _{m, n, ŋ, ŋʷ} </span> <span class="processname" id="child-5a8cca48-8ebf-4a24-9f91-a825fe1bc8bf"> <br> Local Nasalization 1 </span>
                          <br>
                 <br>
                 
-                        <span class="process" id="mother-f7dbe2f2-4124-43fb-a44e-a120f36b750f">/a/ &#8594; [ã] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-f7dbe2f2-4124-43fb-a44e-a120f36b750f"> <br> Local Nasalization 1 </span>
+                        <span class="process" id="mother-5ccf21fd-adaa-42d6-84a3-25bc97222c59">/a/ &#8594; [ã] / {m, n, ŋ, ŋʷ}_ </span> <span class="processname" id="child-5ccf21fd-adaa-42d6-84a3-25bc97222c59"> <br> Local Nasalization 1 </span>
                          <br>
             
             </td></tr>
@@ -482,8 +504,8 @@
         <tr><th><span class="process-descriptor">Domain: </span></th><td><span class="process-description"> word-internal </span></td></tr>
         <tr><th><span class="process-descriptor">Undergoers: </span></th><td>
         
-            <button class="dropdown-button" id=mother-98d3b157-9723-4a69-8fc5-7d9764e03de9> &#9660 </button>
-            <span class="pd-subsection" id=child-98d3b157-9723-4a69-8fc5-7d9764e03de9> 
+            <button class="dropdown-button" id=mother-25c18b5d-2bde-4316-b5ef-565e5cbfcf5d> &#9660 </button>
+            <span class="pd-subsection" id=child-25c18b5d-2bde-4316-b5ef-565e5cbfcf5d> 
     <span class="process-descriptor-sub">Segments: </span>
     <br>
             <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> V </span><br>
@@ -496,8 +518,8 @@
             
         <tr><th><span class="process-descriptor">Triggers: </span></th><td>
         
-            <button class="dropdown-button" id=mother-28d4d5a8-4fbc-423e-aa72-e393871560dc> &#9660 </button>
-            <span class="pd-subsection" id=child-28d4d5a8-4fbc-423e-aa72-e393871560dc> 
+            <button class="dropdown-button" id=mother-6f95810d-1a2f-4a42-ab22-1e99710c1e51> &#9660 </button>
+            <span class="pd-subsection" id=child-6f95810d-1a2f-4a42-ab22-1e99710c1e51> 
     <span class="process-descriptor-sub">Segments: </span>
     <br>
             <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> N </span><br>
@@ -530,8 +552,8 @@
         <tr><th><span class="process-descriptor">Domain: </span></th><td><span class="process-description"> word-internal </span></td></tr>
         <tr><th><span class="process-descriptor">Undergoers: </span></th><td>
         
-            <button class="dropdown-button" id=mother-fbf68f6a-9cf9-491b-b5f1-2bfc29fe5854> &#9660 </button>
-            <span class="pd-subsection" id=child-fbf68f6a-9cf9-491b-b5f1-2bfc29fe5854> 
+            <button class="dropdown-button" id=mother-f0534939-a9d7-4b4b-b720-2fa9622ded67> &#9660 </button>
+            <span class="pd-subsection" id=child-f0534939-a9d7-4b4b-b720-2fa9622ded67> 
     <span class="process-descriptor-sub">Segments: </span>
     <br>
             <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> N </span><br>
@@ -544,8 +566,8 @@
             
         <tr><th><span class="process-descriptor">Triggers: </span></th><td>
         
-            <button class="dropdown-button" id=mother-cc4bbd9d-2c69-4887-9a6c-1b93b407b8c6> &#9660 </button>
-            <span class="pd-subsection" id=child-cc4bbd9d-2c69-4887-9a6c-1b93b407b8c6> 
+            <button class="dropdown-button" id=mother-dcae9146-766c-40f7-b8f3-7402caf39aba> &#9660 </button>
+            <span class="pd-subsection" id=child-dcae9146-766c-40f7-b8f3-7402caf39aba> 
     <span class="process-descriptor-sub">Segments: </span>
     <br>
             <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> V </span><br>
@@ -578,8 +600,8 @@
         <tr><th><span class="process-descriptor">Domain: </span></th><td><span class="process-description"> word-internal </span></td></tr>
         <tr><th><span class="process-descriptor">Undergoers: </span></th><td>
         
-            <button class="dropdown-button" id=mother-c7d1258c-dd4c-41f2-907d-2f5b6221a065> &#9660 </button>
-            <span class="pd-subsection" id=child-c7d1258c-dd4c-41f2-907d-2f5b6221a065> 
+            <button class="dropdown-button" id=mother-62694b90-1e77-44f7-8187-4b4ae66093b7> &#9660 </button>
+            <span class="pd-subsection" id=child-62694b90-1e77-44f7-8187-4b4ae66093b7> 
     <span class="process-descriptor-sub">Segments: </span>
     <br>
             <span class="process-descriptor-sub">&nbsp;&nbsp;&nbsp;&nbsp;-Units: </span><span class="process-description"> d </span><br>
@@ -611,7 +633,7 @@
         <div class=field><h2><a href="/en/ref_inv/Tembe.html">References</h2></div>
         
     </div>
-    <div class="hidden" id="globalDropdownIndices" data-set='["233b1f0a-5c9d-4aec-8ea4-c0c4d9dcc542", "b048dd3b-632b-4df1-96f1-ac0fc2966a7b", "b8f71370-52af-44d6-916b-07cb59dceb06", "98d3b157-9723-4a69-8fc5-7d9764e03de9", "f6898b98-21c1-48b9-b6e4-d0ff9c7cccb7", "fbf68f6a-9cf9-491b-b5f1-2bfc29fe5854", "8c8612e3-7f14-4f00-98e9-41cecbf868bd", "f617dcbf-250e-4f93-9627-bc8ce4ffb740", "68df1367-c805-4b10-bb70-edf8cdd83808", "37f5f744-19e4-4128-9e77-40ea75441d1d", "c99bc231-0b0e-4293-b250-a42932603a20", "2148c40e-7a24-47db-90ff-28d6007d3394", "282e00c0-c99a-4155-b496-08997a5f76a2", "93f0cd12-fde4-4793-85fd-b80955892474", "1941b3b3-92d9-4428-949c-8cc4a415a7cd", "5b372a92-e1a6-4f0b-9ae8-58e1b62408eb", "cc4bbd9d-2c69-4887-9a6c-1b93b407b8c6", "8a67872c-6f52-4e2b-ba3d-c9c2b2578f88", "ef1c7340-def5-4bb3-a6ee-4c9116ec7fc2", "58c59ef4-4f85-459f-a446-c7f90ab108f8", "6a04ea43-cc6e-4907-845e-569b0ea9a38a", "b09cd5c9-d586-4c32-9d42-4a08e268c53b", "857ebbc6-3ea7-42be-a758-6ca1762f570f", "321a13f1-66e8-4ee6-b7ce-b85f0b2c27cc", "cafa7e98-e219-480d-8f1a-cf120db4e7a1", "4c96b256-ff0e-44da-a2cf-e2843e0327d8", "c4c97f64-a612-4891-bdd8-24095ae2b53d", "0eec2c99-2cc3-446f-ab29-28f70a7efd9f", "9fff801b-7437-4e5b-9f51-d9fbf4cd7c74", "08f887d8-e8b9-489f-bfba-879c84dba3ff", "9a45bf6d-d959-4b8c-b107-7ac9011058d8", "0e2defb1-f2dc-4b24-9777-c0854bc203b5", "481d7397-45a2-43b7-94da-4e4e9f2ea81b", "02b994f5-19b4-47cd-82cf-0cf7262266fe", "bbca2cea-866c-4a25-9097-b7ea35ac9334", "df359ab5-1652-4dd2-83ff-3a1cae88098f", "640a4abe-2c25-41f2-b8fc-4ffcf3741795", "258ea691-e32f-470e-8736-1f7bb3a270e6", "86334258-8f4a-4ba9-a976-5348cc70a0b3", "7e9e54ff-2124-4704-9850-54f0ca17ccf7", "8290d928-4064-4756-94f9-b7ad5e657043", "6c8bd2c1-ac0d-4dfe-8f93-58d624603773", "f7dbe2f2-4124-43fb-a44e-a120f36b750f", "82719d06-9d74-40c9-be10-59d81311ed27", "0cc4bfbe-3eaa-4523-99f1-feccaf126d50", "ad96e79a-580a-4ced-802f-b4b13f147cb8", "2bc511bd-4456-4190-b2a9-10989e6d5207", "3d3b920e-9216-4637-8724-9f25a1050c70", "9c055c25-61f2-42bc-8ee5-576864093154", "d5f7f331-3319-46b5-bae0-7a6d272a1a41", "a0ec709b-d050-420e-abcd-2747269c283a", "c7d1258c-dd4c-41f2-907d-2f5b6221a065", "809903a9-2c49-4042-b89d-66b475665cba", "df94786b-c324-4da5-98f4-e4cbc81e9144", "28d4d5a8-4fbc-423e-aa72-e393871560dc", "e19bd2d2-64c9-43d3-9c97-ec63aab5e247", "a25af15f-99f1-4b21-9fc6-eacac60917f8", "4d997635-b23a-45a8-911d-efb6fc9db839", "e40548a0-6dba-463d-ad70-da70011a7f8a", "a133a329-cde5-491f-869c-f3d125f35ba4", "19b8767e-a3a0-40e3-a367-456cb7138cb2", "301d47fd-cce4-472a-bd4d-de00ba743914"]'></div> 
+    <div class="hidden" id="globalDropdownIndices" data-set='["f2bf5a9f-743a-4642-9bf5-99c99f5e39b5", "8db46762-b65a-499b-9b5a-1b06f5e310ac", "263fb28d-c566-48bb-9f95-a5c41a88f2ae", "3d3686e5-e7ff-43dc-ace3-39a548807bc9", "81db7fcb-ee45-4c74-9fc8-51a09e290710", "25c18b5d-2bde-4316-b5ef-565e5cbfcf5d", "b4f5a93a-a653-4cec-bacd-31ba3693508a", "43e6f9ee-3aae-4788-829c-94fd26881b4a", "5ccf21fd-adaa-42d6-84a3-25bc97222c59", "1568bd77-7ce9-40be-8cf7-364065b84ee0", "18b8d40e-4edc-4e4a-9078-69044231cff1", "9ab95678-80d1-47c0-a156-927da3ff26f7", "c3f25d98-1a89-44ab-8b20-0f9ef97dc895", "446606d8-fbc0-49df-a054-2a0ee1230dcd", "de08aa78-f4a5-4ac6-9c58-f4fc64f1f424", "a8ebe28a-cdd2-44df-9496-3456857aeb46", "4d1c986f-448a-4261-8e0d-75554738d29d", "b24b440e-c313-433e-bfe2-50679f5abbae", "53aba692-4dcc-4a7b-9b63-a277a93059d2", "0958c2bb-a4ba-41d3-9ce5-b09125fc2f67", "e8addc32-e7bd-4a59-93ad-e3170f2dcf3e", "39f1bdb2-1818-4b82-85e8-28ce3d7bfce4", "9297d4e1-0de2-4eef-82b2-a16e0a4c7b40", "3e6575bd-d93f-42e8-91a4-dc13e1c42e42", "cc3e64ac-6e40-4bae-8aab-af8de5b4eb47", "14592828-6b10-4c20-8daa-5f62c0b751f9", "dcae9146-766c-40f7-b8f3-7402caf39aba", "1b41d5ed-701d-4505-9d13-d9f73f745610", "bca03a1c-e428-4d91-974d-b87a36291856", "a79084b9-2c1f-4bfa-b290-e9c7a1a95336", "d4ffa7d2-12ba-415e-809d-3108d16cfcfb", "69802235-9bcf-440d-a386-23815876d2d7", "62694b90-1e77-44f7-8187-4b4ae66093b7", "2a560c70-d9a3-4cd1-bfbe-04347b69d37e", "f0534939-a9d7-4b4b-b720-2fa9622ded67", "ab48d00c-78be-4330-9e0e-57ed755ef79b", "a8c6184e-da05-4e52-b5c5-69e7f8586fd8", "ec9d1e0c-9c63-4f70-a663-bca159f65469", "c41ae31f-29d7-44b9-9252-37e7ae48cb46", "44c3758c-78d0-420a-b898-849e91b42a21", "dede65a1-2529-4ece-af9d-c1a9e795e226", "7591bcb9-9e97-4254-9c8d-a8e31d1a355a", "6f95810d-1a2f-4a42-ab22-1e99710c1e51", "b30b6a3d-2b1f-4e2a-b07d-b93883f5e39e", "2d201041-b931-4aa8-91ae-8aadab693c5a", "46b7df25-d761-4935-a7c5-2fc1cad57a90", "10929d43-3a70-4318-8fc4-7c79f6cf4a1b", "fa3b3c49-f5f9-44c9-a2af-4ca39ab20e78", "17ede3ab-c683-497c-b189-f30f1311790a", "ba0ff9e3-1688-454e-a3ec-ca1860057e33", "c2bdc03f-1496-4d80-b1cc-60b031392bb2", "578830bb-0586-48a9-ad41-eabde615ebf7", "3468779a-bcb8-45ce-9a67-91a93f50dd9d", "5a8cca48-8ebf-4a24-9f91-a825fe1bc8bf", "50b36f71-6ef1-41c2-9a6a-fb2a81b276ae", "652ccbd7-c631-4d2a-a86c-2af69936f814", "2a4443a5-e00a-43ff-8138-9e4540e3e825", "5babefad-cbf6-4664-9d2c-bb7ef49048e3", "3109942d-932d-47f3-8de0-1a9ce1d2ccb1", "dca37dc6-2328-410b-8576-0271d61cd58f", "d897c85d-fc12-4815-a751-2571ed47ecf5", "f231cb97-8cde-4cdf-ba1b-3b7989fa0ab0"]'></div> 
     </body>
     </html>
     
