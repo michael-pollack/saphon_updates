@@ -5,14 +5,17 @@
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=quarterly&language=en&key=AIzaSyCBTjzFyFyz9h92Y9QQHzryzV565Edat5g"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-<script type="text/javascript" src="scripts/textarea-caret-position.js"></script>
-<script type="text/javascript" src="./scripts/mousetrap-1.5.3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-<script type="text/javascript" src="../StyledMarker.js"></script>
 <script type="text/javascript" src="../chooser.js"></script>
+<script type="text/javascript">
+     const translation = {
+       "code": "Code",
+       "family": "Family",
+       "language": "Language",
+     };
+   </script>
 </head>
 
-<body onload="initialize()">
+<body onload="initialize(translation)">
 
 <?php include("title.php"); ?>
 <?php include("nav-languages.php"); ?>
@@ -53,90 +56,14 @@
 &nbsp;&nbsp;&nbsp;<span f=-1><b>RESET</b></span></div>
 </div><br/>
 
-<div id="chooser2">
-    <!-- When you want to add more fields to this search:
-    1. Find the corresponding structure of the search values here: https://github.com/levmichael/saphon/tree/spreadsheet
-    For example, positional restrictions underneath undergoers is processdetails > undergoers > segments > positional restrictions.
-    Therefore, id & name of the select field is "processdetails_undergoers_segments_positional_restrictions"
-    2. Create HTML code below for it.
-    3a. If you want to use the IPA keyboard: i) add the div id of the containing div and ii) target id of the text area (from step 1) to `var textAreasData` of app.js
-    3b. If you want to search on language features: generate it from JSON in `def processDetailsExtraction(file)` of jsonCreation.py
-    To verify, go to selectionOptions.json and make sure theres a 1-to-1 mapping between keys in that JSON file and ID's of elements in this HTML file-->
-    <!-- Search should work now! -->
-    <span>Advanced Search:</span>
-    <form id = "processesFilterForm" action="#">
-        <ul>
-            <li><label for="processtype">Processes: </label>
-                <select name="processtype" id="processtype">
-                    <option value="">Select a process</option>
-                </select>
-            </li>
-            <li>        <label for="directionality">Direction: </label>
-                <select name="directionality" id="directionality">
-                    <option value="">Select a direction</option>
-                    <option value="leftward">Leftward</option>
-                    <option value="bidirectional">Bidirectional</option>
-                    <option value="rightward">Rightward</option>
-                    <option value="circumdirectional">Circumdirectional</option>
-                </select></li>
-            <li>        Undergoers:
-                <ul>
-                    <li>          Segments: <div id="undergoers"></div>
-                        <label for="processdetails_undergoers_segments_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_undergoers_segments_positional_restrictions" id="processdetails_undergoers_segments_positional_restrictions">
-                            <option value="">Select a positional restriction</option>
-                        </select>
-                    </li>
-                    <li>          Morphemes: <label for="processdetails_undergoers_morphemes_units">Units:</label>
-                        <select name="processdetails_undergoers_morphemes_units" id="processdetails_undergoers_morphemes_units">
-                            <option value="">Select a unit/natural class</option>
-                        </select>
-                        <label for="processdetails_undergoers_morphemes_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_undergoers_morphemes_positional_restrictions" id="processdetails_undergoers_morphemes_positional_restrictions">
-                            <option value="">Select a positional restriction</option>
-                        </select>
-                    </li>
-                </ul>
-
-            </li>
-            <li>        Triggers:
-                <ul>
-                    <li>          Segments: <div id="triggers"></div>
-                        <label for="processdetails_triggers_segments_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_triggers_segments_positional_restrictions" id="processdetails_triggers_segments_positional_restrictions">
-                            <option value="">Select a positional restriction</option>
-                        </select>
-                    </li>
-                    <li>          Morphemes: <label for="processdetails_triggers_morphemes_units">Units:</label>
-                        <select name="processdetails_triggers_morphemes_units" id="processdetails_triggers_morphemes_units">
-                            <option value="">Select a unit/natural class</option>
-                        </select>
-                        <label for="processdetails_triggers_morphemes_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_triggers_morphemes_positional_restrictions" id="processdetails_triggers_morphemes_positional_restrictions">
-                            <option value="">Select a positional restriction</option>
-                        </select>
-                    </li>
-                </ul>
-
-            </li>
-            <button type="submit" id="addProcess">Search</button>
-            <button id="clearSearch" onclick="this.form.reset();resetSearch();">Reset</button>
-            <div id="containerX"></div>
-        </ul>
-
-    </form>
-</div>
-<br>
-
 <div class=matches id=matches>
-<span>Matches:</span> <span class=key>999</span>
+    <span>Matches:</span> <span class=key>999</span>
 </div>
 
 <!-- Tab links -->
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'Language Map')" id="defaultOpen">Language Map</button>
   <button class="tablinks" onclick="openCity(event, 'Language List')">Language List</button>
-  <button class="tablinks" onclick="openCity(event, 'langtable')">Language List (Revised)</button>
 </div>
 
 <!-- Tab content -->
@@ -146,20 +73,15 @@
   <div id="tooltip"></div>
 </div>
 
-<div id=langtable class="tabcontent">
-<table>
-  <thead>
-  </thead>
-  <tbody id=tableBody>
-    <!-- Rows will be inserted here -->
-  </tbody>
-</table>
-</div>
+<script>
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
  
 <div id="Language List" class="tabcontent">
   <div id=languages>
   <table>
-  <tr f0=1 f16=1 f33=1 f137=1 f148=1 f178=1 f182=1 f183=1 f3210=1 f220=1 f232=1 f243=1 f253=1 f263=1 f279=1 f294=1 f312=1 f329=1 f340=1 f349=1><td><a href="inv/Umotina.html">Umotína</a></td></tr>
+  <tr f0=1 f16=1 f33=1 f137=1 f148=1 f178=1 f182=1 f183=1 f210=1 f220=1 f232=1 f243=1 f253=1 f263=1 f279=1 f294=1 f312=1 f329=1 f340=1 f349=1><td><a href="inv/Umotina.html">Umotína</a></td></tr>
   <tr f0=1 f16=1 f33=1 f45=1 f56=1 f137=1 f148=1 f158=1 f210=1 f220=1 f232=1 f243=1 f253=1 f263=1 f279=1 f294=1 f312=1 f349=1><td><a href="inv/Ikpeng.html">Ikpeng</a></td></tr>
   <tr f0=1 f16=1 f33=1 f39=1 f56=1 f137=1 f148=1 f158=1 f164=1 f173=1 f187=1 f243=1 f253=1 f254=1 f263=1 f264=1 f279=1 f280=1 f294=1 f295=1 f312=1 f315=1 f349=1 f350=1><td><a href="inv/ChiriguanoC.html">Chiriguano (Chané dialect)</a></td></tr>
   <tr f0=1 f16=1 f33=1 f51=1 f137=1 f148=1 f173=1 f210=1 f220=1 f243=1 f253=1 f257=1 f279=1 f283=1 f294=1 f298=1 f312=1 f316=1 f323=1 f349=1 f353=1><td><a href="inv/PemonT.html">Pemon (Tarepang dialect)</a></td></tr>
@@ -528,11 +450,6 @@
   <tr f0=1 f16=1 f33=1 f56=1 f75=1 f137=1 f148=1 f173=1 f182=1 f197=1 f210=1 f220=1 f243=1 f253=1 f254=1 f257=1 f258=1 f263=1 f279=1 f280=1 f283=1 f284=1 f294=1 f295=1 f298=1 f299=1 f312=1 f315=1 f316=1 f317=1 f323=1 f324=1 f327=1 f328=1 f349=1 f350=1 f353=1 f354=1 f369=1><td><a href="inv/NinamN.html">Ninam of Ericó</a></td></tr>
   </table></div>
 
-<script>
-  document.getElementById("defaultOpen").click();
-</script>
-
 </div>
 
 </body>
-<script type="text/javascript" src="scripts/app.js"></script>
