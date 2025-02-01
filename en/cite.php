@@ -1,4 +1,4 @@
-<?php include("../saphon.php")?>
+<?php include("saphon.php")?>
 <?php include("header-title.php"); ?>
 <?php include("nav-about.php"); ?>
 

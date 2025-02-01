@@ -1,7 +1,17 @@
 // ------------------------------------------------
 // ------------------------------------------------
 // Utils
-
+function downloadUrl(url, callback) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok " + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => callback(data))
+        .catch(error => console.error("Error fetching JSON:", error));
+}
 function handle_click(formData) {
 	downloadUrl("../langs.json", function(langs) {
 		if(formData != null) {

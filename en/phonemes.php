@@ -5,6 +5,9 @@
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=quarterly&language=en&key=AIzaSyCBTjzFyFyz9h92Y9QQHzryzV565Edat5g"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script type="text/javascript" src="scripts/textarea-caret-position.js"></script>
+<script type="text/javascript" src="./scripts/mousetrap-1.5.3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
 <script type="text/javascript" src="../chooser.js"></script>
 <script type="text/javascript">
      const translation = {
@@ -55,7 +58,77 @@
 <span f=-3>SHOW FEWER PHONEMES</span>
 &nbsp;&nbsp;&nbsp;<span f=-1><b>RESET</b></span></div>
 </div><br/>
-
+<div id="chooser2">
+    <!-- When you want to add more fields to this search:
+    1. Find the corresponding structure of the search values here: https://github.com/levmichael/saphon/tree/spreadsheet
+    For example, positional restrictions underneath undergoers is processdetails > undergoers > segments > positional restrictions.
+    Therefore, id & name of the select field is "processdetails_undergoers_segments_positional_restrictions"
+    2. Create HTML code below for it.
+    3a. If you want to use the IPA keyboard: i) add the div id of the containing div and ii) target id of the text area (from step 1) to `var textAreasData` of app.js
+    3b. If you want to search on language features: generate it from JSON in `def processDetailsExtraction(file)` of jsonCreation.py
+    To verify, go to selectionOptions.json and make sure theres a 1-to-1 mapping between keys in that JSON file and ID's of elements in this HTML file-->
+    <!-- Search should work now! -->
+    <span>Advanced Search:</span>
+    <form id = "processesFilterForm" action="#">
+        <ul>
+            <li><label for="processtype">Processes: </label>
+                <select name="processtype" id="processtype">
+                    <option value="">Select a process</option>
+                </select>
+            </li>
+            <li>        <label for="directionality">Direction: </label>
+                <select name="directionality" id="directionality">
+                    <option value="">Select a direction</option>
+                    <option value="leftward">Leftward</option>
+                    <option value="bidirectional">Bidirectional</option>
+                    <option value="rightward">Rightward</option>
+                    <option value="circumdirectional">Circumdirectional</option>
+                </select></li>
+            <li>        Undergoers:
+                <ul>
+                    <li>          Segments: <div id="undergoers"></div>
+                        <label for="processdetails_undergoers_segments_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_undergoers_segments_positional_restrictions" id="processdetails_undergoers_segments_positional_restrictions">
+                            <option value="">Select a positional restriction</option>
+                        </select>
+                    </li>
+                    <li>          Morphemes: <label for="processdetails_undergoers_morphemes_units">Units:</label>
+                        <select name="processdetails_undergoers_morphemes_units" id="processdetails_undergoers_morphemes_units">
+                            <option value="">Select a unit/natural class</option>
+                        </select>
+                        <label for="processdetails_undergoers_morphemes_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_undergoers_morphemes_positional_restrictions" id="processdetails_undergoers_morphemes_positional_restrictions">
+                            <option value="">Select a positional restriction</option>
+                        </select>
+                    </li>
+                </ul>
+            </li>
+            <li>        Triggers:
+                <ul>
+                    <li>          Segments: <div id="triggers"></div>
+                        <label for="processdetails_triggers_segments_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_triggers_segments_positional_restrictions" id="processdetails_triggers_segments_positional_restrictions">
+                            <option value="">Select a positional restriction</option>
+                        </select>
+                    </li>
+                    <li>          Morphemes: <label for="processdetails_triggers_morphemes_units">Units:</label>
+                        <select name="processdetails_triggers_morphemes_units" id="processdetails_triggers_morphemes_units">
+                            <option value="">Select a unit/natural class</option>
+                        </select>
+                        <label for="processdetails_triggers_morphemes_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_triggers_morphemes_positional_restrictions" id="processdetails_triggers_morphemes_positional_restrictions">
+                            <option value="">Select a positional restriction</option>
+                        </select>
+                    </li>
+                </ul>
+            </li>
+            <button type="submit" id="addProcess">Search</button>
+            <button id="clearSearch" onclick="this.form.reset();resetSearch();">Reset</button>
+            <div id="containerX"></div>
+        </ul>
+    </form>
+</div>
+<br>
 <div class=matches id=matches>
     <span>Matches:</span> <span class=key>999</span>
 </div>
@@ -453,3 +526,4 @@ document.getElementById("defaultOpen").click();
 </div>
 
 </body>
+<script type="text/javascript" src="scripts/app.js"></script>
