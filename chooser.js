@@ -191,7 +191,9 @@ for (var lx=0, ly=0;
 return {x: lx,y: ly};
 }
 
-async function initialize(pglang) { 
+async function initialize(pglang) {
+  console.log("Reached initialize(pgLang)");
+  console.log(langset);
   const { Map } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
   var myLatlng = new google.maps.LatLng(-4.669119, -60.829511);

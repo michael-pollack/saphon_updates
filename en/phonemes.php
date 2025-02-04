@@ -145,13 +145,21 @@
   <div id="pmap"></div> 
   <div id="tooltip"></div>
 </div>
-
+<div id="Language List" class="tabcontent">
+<table>
+  <thead>
+  </thead>
+  <tbody id=tableBody>
+    <!-- Rows will be inserted here -->
+  </tbody>
+</table>
+</div>
 <script>
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 </script>
  
-<div id="Language List" class="tabcontent">
+<!--<div id="Language List" class="tabcontent">
   <div id=languages>
   <table>
   <tr f0=1 f16=1 f33=1 f137=1 f148=1 f178=1 f182=1 f183=1 f210=1 f220=1 f232=1 f243=1 f253=1 f263=1 f279=1 f294=1 f312=1 f329=1 f340=1 f349=1><td><a href="inv/Umotina.html">Umotína</a></td></tr>
@@ -521,7 +529,7 @@ document.getElementById("defaultOpen").click();
   <tr f0=1 f2=1 f16=1 f20=1 f33=1 f34=1 f43=1 f51=1 f52=1 f53=1 f56=1 f71=1 f72=1 f75=1 f76=1 f80=1 f81=1 f83=1 f85=1 f137=1 f140=1 f148=1 f154=1 f164=1 f165=1 f197=1 f199=1 f210=1 f243=1 f253=1 f257=1 f263=1 f266=1 f273=1 f276=1 f312=1 f316=1 f329=1 f331=1 f349=1 f353=1 f368=1><td><a href="inv/Bora.html">Bora</a></td></tr>
   <tr f0=1 f6=1 f16=1 f24=1 f33=1 f45=1 f53=1 f56=1 f137=1 f148=1 f154=1 f173=1 f182=1 f188=1 f210=1 f220=1 f232=1 f240=1 f243=1 f253=1 f279=1 f349=1><td><a href="inv/IngaHQ.html">Inga (Highland dialect)</a></td></tr>
   <tr f0=1 f16=1 f33=1 f56=1 f75=1 f137=1 f148=1 f173=1 f182=1 f197=1 f210=1 f220=1 f243=1 f253=1 f254=1 f257=1 f258=1 f263=1 f279=1 f280=1 f283=1 f284=1 f294=1 f295=1 f298=1 f299=1 f312=1 f315=1 f316=1 f317=1 f323=1 f324=1 f327=1 f328=1 f349=1 f350=1 f353=1 f354=1 f369=1><td><a href="inv/NinamN.html">Ninam of Ericó</a></td></tr>
-  </table></div>
+  </table></div>-->
 
 </div>
 

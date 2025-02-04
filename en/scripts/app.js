@@ -73,7 +73,6 @@ function handle_click(formData) {
 				// Display the link in the second cell
 			}
 		});
-
 		$('#languages tr').each( function() {
 			if( this.faults == 0) {
 				$(this).css('display', 'block')
@@ -164,7 +163,10 @@ document.getElementById("processesFilterForm").addEventListener("submit", functi
 });
 
 function resetSearch(){
+	langset.clear()
 	handle_click(null);
+	initialize()
+
 }
 
 // ------------------------------------------------

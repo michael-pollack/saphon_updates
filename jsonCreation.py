@@ -376,22 +376,24 @@ divIdsToGetOptionsFor = defaultdict(list)
 
 def processDetailsExtraction(file):
     mainString = 'processdetails'
-    procDetails = file.get(mainString, 'Unknown')
+    procDetails = file.get('synthesis').get(mainString, 'Unknown')
     thisLanguageFeatures = dict()
 
     if procDetails != 'Unknown':
         for processDictionary in procDetails:
+            print(processDictionary)
             divIdsToGetOptionsFor["processtype"].append(processDictionary["processtype"])
             thisLanguageFeatures["f" + "processtype-"+processDictionary["processtype"]] = 1
-            for subsection in ["undergoers", "triggers"]:
+            for subsection in ["undergoers", "triggers", "transparent", "opaque"]:
                 for subsubsection in ["segments", "morphemes"]:
                     firstDictValue = processDictionary[subsection][subsubsection]
                     if type(firstDictValue) is dict:
                         firstDictValue = [firstDictValue]
                     for dictionary in firstDictValue:
                         for subsubsubsection in ["units", "positional_restrictions"]:
+                            print(file.get('info').get('alternate_names'), subsection, subsubsection, subsubsubsection)
                             formattedStr = f"{mainString}_{subsection}_{subsubsection}_{subsubsubsection}"
-                            extractedValue = dictionary[subsubsubsection]
+                            extractedValue = dictionary.get(subsubsubsection)
 
                             # -------------------------------
                             def helper(formattedStr, extractedValue):
@@ -423,12 +425,12 @@ def scan_folder(folder_path):
                 data = json.load(file)
                 lang_link = "inv/" + file_name[: file_name.index(".")] + ".html"
                 f_codes = codeExtraction(data)
-                info = {"title": data.get('name', 'Unknown'),
-                        "iso_code": data.get('iso_codes', 'Unknown'),
-                        "language": data.get('name', 'Unknown'),
-                        "family": data.get('family', 'Unknown'),
+                info = {"title": data.get('info').get('name', 'Unknown'),
+                        "iso_code": data.get('info').get('iso_codes', 'Unknown'),
+                        "language": data.get('info').get('name', 'Unknown'),
+                        "family": data.get('info').get('family', 'Unknown'),
                         "link": lang_link,
-                        "coordinates": data.get('coordinates', 'Unknown'),
+                        "coordinates":  data.get('info').get('coordinates', 'Unknown'),
                         "faults": 0,
                         "codes": f_codes,
                         "processdetails": processDetailsExtraction(data)
@@ -438,9 +440,10 @@ def scan_folder(folder_path):
 
 
 def codeExtraction(file):
-    phonemes = file.get('phonemes', 'Unknown')
+    syn = file.get('synthesis', 'Unknown')
     f_list = {}
-    if phonemes != 'Unknown':
+    if syn != 'Unknown':
+        phonemes = syn.get('phonemes')
         for phon in phonemes:
             f_code = phon['phoneme']
             if f_code in phoneme_f_mapping:
