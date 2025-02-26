@@ -12,6 +12,16 @@ function downloadUrl(url, callback) {
         .then(data => callback(data))
         .catch(error => console.error("Error fetching JSON:", error));
 }
+
+function containsLanguageInLangsJSONAndFaultsEqualsZero(urlHREF, langs) {
+	var exists = false;
+	for(var item of langs) {
+		if (item["link"] === urlHREF && item["faults"] === 0){
+			exists = true;
+		}
+	}
+	return exists;
+}
 function handle_click(formData) {
 	downloadUrl("../langs.json", function(langs) {
 		if(formData != null) {
@@ -34,53 +44,72 @@ function handle_click(formData) {
 
 		var matches = 0;
 		langset.clear()
-		tableBody.innerHTML = '';
-		const rowMax = 20;
-		var maxHit = false;
-		var rowIndex = 0;
-		var cellIndex = 0;
-		console.log(langs);
-		langs.forEach(function (item) {
-			if (item.faults == 0) {
-				matches += 1;
-				if (!maxHit && rowIndex < rowMax) {
-					var row = tableBody.insertRow();
-					rowIndex += 1;
-				} else if (rowIndex == rowMax) {
-					var row = tableBody.rows[0]
-					rowIndex = 1;
-					cellIndex += 1;
-					maxHit = true;
-				} else {
-					var row = tableBody.rows[rowIndex]
-					rowIndex += 1;
-				}
-
-				console.log(cellIndex)
-				var cell1 = row.insertCell(cellIndex);
+		$('#languages tr').each( function() {
+		let href = $(this).find('a').attr('href'); // Get the href of the <a> inside <tr>
+		if(containsLanguageInLangsJSONAndFaultsEqualsZero(href, langs)) {
+			$(this).css('display', 'block')
+			langset.add(this.innerText)
+			matches += 1;
+		} else {
+			$(this).css('display', 'none')
+		}
+		});
+		// tableBody.innerHTML = '';
+		// const rowMax = 20;
+		// var maxHit = false;
+		// var rowIndex = 0;
+		// var cellIndex = 0;
+		// console.log(langs);
+		// langs.forEach(function (item) {
+		// 	let td = document.querySelector(`td a[href="${item.link}"]`);
+		// 	console.log(td);
+		// 	console.log(item);
+		// 	if (item.faults == 0) {
+				// if (!maxHit && rowIndex < rowMax) {
+				// 	var row = tableBody.insertRow();
+				// 	rowIndex += 1;
+				// } else if (rowIndex == rowMax) {
+				// 	var row = tableBody.rows[0]
+				// 	rowIndex = 1;
+				// 	cellIndex += 1;
+				// 	maxHit = true;
+				// } else {
+				// 	var row = tableBody.rows[rowIndex]
+				// 	rowIndex += 1;
+				// }
+				//
+				// console.log(cellIndex)
+				// var cell1 = row.insertCell(cellIndex);
+				// Object.entries(item["codes"]).forEach(([key, value]) => {
+    			// 	cell1.setAttribute(key, value); // Assign attribute f0=1
+				// });
 
 				// Check if the link is not equal to 0 before creating the hyperlink
 
 				// Create a hyperlink with the name and link
-				var link = document.createElement("a");
-				link.href = item.link;
-				link.textContent = item.title;
-				langset.add(item.title);
+				// var link = document.createElement("a");
+				// link.href = item.link;
+				// link.textContent = item.title;
+				// langset.add(item.title);
+				//
+				// // Append the hyperlink to the cell
+				// cell1.appendChild(link);
 
-				// Append the hyperlink to the cell
-				cell1.appendChild(link);
-
-				// Display the link in the second cell
-			}
-		});
-		$('#languages tr').each( function() {
-			if( this.faults == 0) {
-				$(this).css('display', 'block')
-				langset.add(this.innerText)
-			} else {
-				$(this).css('display', 'none')
-			}
-		});
+		// 		if(td){ //there is a table row element with the link of the item from langs.json. i.e. "inv/AvaCanoeiroT.html"
+		// 			matches += 1;
+		// 			let tr = td.closest("tr");
+		// 			tr.style.display = "table-row";
+		// 			langset.add(tr.innerText);
+		// 		}
+		//
+		// 	} else{
+		// 		if(td){
+		// 			let tr = td.closest("tr");
+		// 			tr.style.setProperty("display", "none", "important");
+		// 			console.log(tr);
+		// 		}
+		// 	}
+		// });
 		initialize();
 		$('#matches span.key').html( '' + matches)
 	});
@@ -138,19 +167,23 @@ function readInIpaJSON(ipaCharToKeyStrokeMapping){
 }
 
 function configureSelectedOptions(){
-	downloadUrl("../selectionOptions.json", function(selectOpts){
-		for (var key in selectOpts) {
-			var optionsArray = selectOpts[key];
-			console.log("Here is the key:" + key);
-			var selectElement = document.getElementById(key);
-			optionsArray.forEach(function(optionValue) {
-				var option = document.createElement("option");
-				option.value = optionValue;
-				option.textContent = optionValue;
-				selectElement.appendChild(option);
-			});
-		}
+	downloadUrl("../manual_mapping_of_selectionOptions_to_displayName.json", function(mappings){
+		downloadUrl("../selectionOptions.json", function(selectOpts){
+			for (var key in selectOpts) {
+				var optionsArray = selectOpts[key];
+				console.log("Here is the key:" + key);
+				var selectElement = document.getElementById(key);
+				optionsArray.forEach(function(optionValue) {
+					var option = document.createElement("option");
+					//if mapping is found from value:displayValue, use the displayValue in the textContent
+					option.textContent = (mappings[key]?.[optionValue] ?? false) ? `${mappings[key][optionValue]} (${optionValue})` : optionValue;
+					option.value = optionValue;
+					selectElement.appendChild(option);
+				});
+			}
+		});
 	});
+
 }
 configureSelectedOptions();
 

@@ -102,6 +102,7 @@ $(document).ready( function() {
 
     var matches = 0;
     langset.clear()
+    console.log("105 here")
     $('#languages tr').each( function() {
       if( this.faults == 0) {
         $(this).css('display', 'block')
@@ -191,9 +192,11 @@ for (var lx=0, ly=0;
 return {x: lx,y: ly};
 }
 
-async function initialize(pglang) {
-  console.log("Reached initialize(pgLang)");
-  console.log(langset);
+async function initialize(pglang = {
+       "code": "Code",
+       "family": "Family",
+       "language": "Language",
+     }) {
   const { Map } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
   var myLatlng = new google.maps.LatLng(-4.669119, -60.829511);

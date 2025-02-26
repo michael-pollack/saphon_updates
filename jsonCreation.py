@@ -1,7 +1,8 @@
 import os
 import json
 from collections import defaultdict
-
+import re
+#TODO: take phonemes.php and create this phoneme_f_mapping (because it'll be different every time)
 phoneme_f_mapping = {
     "p\u02b0": "f71",
     "p\u02b2\u02b0": "f72",
@@ -375,10 +376,39 @@ divIdsToGetOptionsFor = defaultdict(list)
 
 
 def processDetailsExtraction(file):
+
     mainString = 'processdetails'
     procDetails = file.get('synthesis').get(mainString, 'Unknown')
+    natural_classes = file.get('synthesis').get("natural_classes")
+    morphemeDetails = file.get('synthesis').get("morphemes", 'Unknown')
     thisLanguageFeatures = dict()
 
+    # -------------------------------
+    def helper(formattedStr, extractedValue, subsubsection="", subsubsubsection=""): #Add
+        # if value is not informative, don't add to list of language features
+        if extractedValue is None or extractedValue == '' or extractedValue == 'Unknown' \
+                or extractedValue == "Uncertain" or extractedValue == "NA":
+            return
+        if not (
+                subsubsection == "segments" and subsubsubsection == "units"):  # we use IPA keyboard here
+            divIdsToGetOptionsFor[formattedStr].append(f"{extractedValue}")
+        # language feature that HTML form searches on
+        thisLanguageFeatures["f" + formattedStr + f"-{extractedValue}"] = 1
+
+    # -------------------------------
+
+    #search languages by morpheme_type and gloss
+    if morphemeDetails != 'Unknown':
+        for morphemeDictionary in morphemeDetails:
+            print(morphemeDictionary)
+            for morphemeSection in ["morpheme_type", "gloss"]:
+                formattedStr = f"morphemes_{morphemeSection}"
+                extractedValue = morphemeDictionary.get(morphemeSection)
+                #we are only accounting for glosses that match the regex completely
+                if morphemeSection == "gloss" and not bool(re.fullmatch(r'^[\d\.A-Z]+$', extractedValue)):
+                    continue
+                helper(formattedStr, extractedValue)
+    #take all the phonological process details and turn them into website selection options & keys for selecting languages
     if procDetails != 'Unknown':
         for processDictionary in procDetails:
             print(processDictionary)
@@ -395,26 +425,25 @@ def processDetailsExtraction(file):
                             formattedStr = f"{mainString}_{subsection}_{subsubsection}_{subsubsubsection}"
                             extractedValue = dictionary.get(subsubsubsection)
 
-                            # -------------------------------
-                            def helper(formattedStr, extractedValue):
-                                # if value is not informative, don't add to list of language features
-                                if extractedValue is None or extractedValue == '' or extractedValue == 'Unknown' \
-                                        or extractedValue == "Uncertain" or extractedValue == "NA":
-                                    return
-                                if not (
-                                        subsubsection == "segments" and subsubsubsection == "units"):  # we use IPA keyboard here
-                                    divIdsToGetOptionsFor[formattedStr].append(f"{extractedValue}")
-                                # language feature that HTML form searches on
-                                thisLanguageFeatures["f" + formattedStr + f"-{extractedValue}"] = 1
 
-                            # -------------------------------
                             if type(extractedValue) is list:
                                 for elem in extractedValue:
-                                    helper(formattedStr, elem)
+                                    helper(formattedStr, elem, subsubsection, subsubsubsection)
+                                if subsubsubsection == "units": #check if the units list fully contains all the elements in natural class
+                                    allFullyContainedNatClasses = check_natural_classes(natural_classes, extractedValue)
+                                    for natClass in allFullyContainedNatClasses:
+                                        helper(formattedStr, natClass, subsubsection, subsubsubsection)
                             else:
-                                helper(formattedStr, extractedValue)
+                                helper(formattedStr, extractedValue, subsubsection, subsubsubsection)
     return thisLanguageFeatures
 
+def contains_all_elements(superset, subset):
+    superset = set(superset)  # Convert to set for fast lookups
+    return all(element in superset for element in subset)
+
+def check_natural_classes(natural_classes, units):
+    units_set = set(units)  # Convert once for efficiency
+    return [n_class["symbol"] for n_class in natural_classes if all(member in units_set for member in n_class["members"])]
 
 def scan_folder(folder_path):
     json_array = []
