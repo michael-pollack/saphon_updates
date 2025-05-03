@@ -372,48 +372,57 @@ phoneme_f_mapping = {
     "\u0252\u02d0": "f366",
     "\u0252\u0303\u02d0": "f367"
 }
-divIdsToGetOptionsFor = defaultdict(list)
+divIdsToGetOptionsFor = defaultdict(set)
 
 
 def processDetailsExtraction(file):
-
+    # Creating the dictionaries
+    morpheme_type_dict = {}
+    gloss_dict = {}
     mainString = 'processdetails'
     procDetails = file.get('synthesis').get(mainString, 'Unknown')
     natural_classes = file.get('synthesis').get("natural_classes")
     morphemeDetails = file.get('synthesis').get("morphemes", 'Unknown')
-    thisLanguageFeatures = dict()
 
+
+    for morpheme in morphemeDetails:
+        morpheme_type_dict[morpheme["morpheme_id"]] = morpheme["morpheme_type"]
+        gloss_dict[morpheme["morpheme_id"]] = morpheme["gloss"]
     # -------------------------------
     def helper(formattedStr, extractedValue, subsubsection="", subsubsubsection=""): #Add
         # if value is not informative, don't add to list of language features
         if extractedValue is None or extractedValue == '' or extractedValue == 'Unknown' \
                 or extractedValue == "Uncertain" or extractedValue == "NA":
             return
+        extractedValue = extractedValue.strip()
         if not (
                 subsubsection == "segments" and subsubsubsection == "units"):  # we use IPA keyboard here
-            divIdsToGetOptionsFor[formattedStr].append(f"{extractedValue}")
+            divIdsToGetOptionsFor[formattedStr].add(f"{extractedValue}")
         # language feature that HTML form searches on
-        thisLanguageFeatures["f" + formattedStr + f"-{extractedValue}"] = 1
+        thisLanguageFeatures[formattedStr + f"-{extractedValue}"] = 1
 
     # -------------------------------
 
-    #search languages by morpheme_type and gloss
-    if morphemeDetails != 'Unknown':
-        for morphemeDictionary in morphemeDetails:
-            print(morphemeDictionary)
-            for morphemeSection in ["morpheme_type", "gloss"]:
-                formattedStr = f"morphemes_{morphemeSection}"
-                extractedValue = morphemeDictionary.get(morphemeSection)
-                #we are only accounting for glosses that match the regex completely
-                if morphemeSection == "gloss" and not bool(re.fullmatch(r'^[\d\.A-Z]+$', extractedValue)):
-                    continue
-                helper(formattedStr, extractedValue)
+    # if morphemeDetails != 'Unknown':
+    #     for morphemeDictionary in morphemeDetails:
+    #         print(morphemeDictionary)
+    #         for morphemeSection in ["morpheme_type", "gloss"]:
+    #             formattedStr = f"morphemes_{morphemeSection}_input"
+    #             extractedValue = morphemeDictionary.get(morphemeSection)
+    #             #we are only accounting for glosses that match the regex completely
+    #             if morphemeSection == "gloss" and not bool(re.fullmatch(r'^[\d\.A-Z]+$', extractedValue)):
+    #                 continue
+    #             helper(formattedStr, extractedValue)
     #take all the phonological process details and turn them into website selection options & keys for selecting languages
+    allProcesses = list()
     if procDetails != 'Unknown':
         for processDictionary in procDetails:
             print(processDictionary)
-            divIdsToGetOptionsFor["processtype"].append(processDictionary["processtype"])
-            thisLanguageFeatures["f" + "processtype-"+processDictionary["processtype"]] = 1
+            thisLanguageFeatures = dict()
+            divIdsToGetOptionsFor["processtype"].add(processDictionary["processtype"])
+            thisLanguageFeatures["processtype-"+processDictionary["processtype"]] = 1
+            divIdsToGetOptionsFor["directionality_input"].add(processDictionary["directionality"])
+            thisLanguageFeatures["directionality_input-" + processDictionary["directionality"]] = 1
             for subsection in ["undergoers", "triggers", "transparent", "opaque"]:
                 for subsubsection in ["segments", "morphemes"]:
                     firstDictValue = processDictionary[subsection][subsubsection]
@@ -424,26 +433,43 @@ def processDetailsExtraction(file):
                             print(file.get('info').get('alternate_names'), subsection, subsubsection, subsubsubsection)
                             formattedStr = f"{mainString}_{subsection}_{subsubsection}_{subsubsubsection}"
                             extractedValue = dictionary.get(subsubsubsection)
-
+                            if extractedValue is None: continue
 
                             if type(extractedValue) is list:
-                                for elem in extractedValue:
-                                    helper(formattedStr, elem, subsubsection, subsubsubsection)
                                 if subsubsubsection == "units": #check if the units list fully contains all the elements in natural class
-                                    allFullyContainedNatClasses = check_natural_classes(natural_classes, extractedValue)
+                                    allFullyContainedNatClasses, extractedValue = check_natural_classes(natural_classes, extractedValue)
                                     for natClass in allFullyContainedNatClasses:
-                                        helper(formattedStr, natClass, subsubsection, subsubsubsection)
+                                        helper(formattedStr + "_naturalClasses", natClass, subsubsection, "naturalClasses")
+                                for elem in extractedValue: #if "units" contains a natural class symbol: extractedValue should've been modified via the check_natural_classes method to append all the members of the natural class
+                                    helper(formattedStr, elem, subsubsection, subsubsubsection)
+                                    #we execute the below script so we can create a search function under undergoers/segments --> to search on morpheme_type and morpheme_gloss rather than the morpheme directly
+                                    if subsubsection == "morphemes" and subsubsubsection== "units":
+                                        helper(f"{mainString}_{subsection}_{subsubsection}_morpheme_type_input", morpheme_type_dict.get(elem), subsubsection, subsubsubsection)
+                                        # we are only accounting for glosses that match the regex completely
+                                        if gloss_dict.get(elem) and bool(re.fullmatch(r'^[\d\.A-Z]+$', gloss_dict.get(elem))): helper(f"{mainString}_{subsection}_{subsubsection}_morpheme_gloss", gloss_dict.get(elem), subsubsection, subsubsubsection)
                             else:
                                 helper(formattedStr, extractedValue, subsubsection, subsubsubsection)
-    return thisLanguageFeatures
+
+            allProcesses.append(thisLanguageFeatures)
+    return allProcesses
 
 def contains_all_elements(superset, subset):
     superset = set(superset)  # Convert to set for fast lookups
     return all(element in superset for element in subset)
 
 def check_natural_classes(natural_classes, units):
-    units_set = set(units)  # Convert once for efficiency
-    return [n_class["symbol"] for n_class in natural_classes if all(member in units_set for member in n_class["members"])]
+    existing_units_set = set(units)  # Convert once for efficiency
+    new_unit_members = set()
+    phonemes_to_classes_if_overlap = [] #all the classes possibly involved in this set
+    for n_class in natural_classes:
+        if n_class["symbol"] in existing_units_set:
+            existing_units_set.remove(n_class["symbol"]) #only keep the symbols for units that are NOT natural classes
+            new_unit_members.update(n_class["members"]) #expand out class symbol to its phonemes so we can search on phonemes
+            phonemes_to_classes_if_overlap.append(n_class["symbol"]) #map phonemes --> class if there is a complete overlap of this n_class' members with existing_units
+        elif all(member in existing_units_set for member in n_class["members"]):
+            phonemes_to_classes_if_overlap.append(n_class["symbol"]) #map phonemes --> class if there is a complete overlap of this n_class' members with existing_units
+    combined_new_units_set = existing_units_set.union(new_unit_members) #remains just all the phonemes that its involved with this process
+    return phonemes_to_classes_if_overlap, combined_new_units_set
 
 def scan_folder(folder_path):
     json_array = []

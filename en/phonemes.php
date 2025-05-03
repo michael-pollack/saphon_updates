@@ -69,64 +69,63 @@
     To verify, go to selectionOptions.json and make sure theres a 1-to-1 mapping between keys in that JSON file and ID's of elements in this HTML file-->
     <!-- Search should work now! -->
     <span>Advanced Search:</span>
+
     <form id = "processesFilterForm" action="#">
         <ul>
-            <li><label for="morphemes_morpheme_type">Morpheme Type: </label>
-                <select name="morphemes_morpheme_type" id="morphemes_morpheme_type">
-                    <option value="">Select a morpheme type</option>
-                </select>
-            </li>
-            <li><label for="morphemes_gloss">Morpheme Gloss: </label>
-                <select name="morphemes_gloss" id="morphemes_gloss">
-                    <option value="">Select a morpheme gloss</option>
-                </select>
-            </li>
-            <li><label for="processtype">Processes: </label>
-                <select name="processtype" id="processtype">
+
+
+            <li><label for="processtype"><b>Processes:</b> </label>
+                <select name="processtype" id="processtype" multiple>
                     <option value="">Select a process</option>
                 </select>
             </li>
-            <li>        <label for="directionality">Direction: </label>
-                <select name="directionality" id="directionality">
-                    <option value="">Select a direction</option>
-                    <option value="leftward">Leftward</option>
-                    <option value="bidirectional">Bidirectional</option>
-                    <option value="rightward">Rightward</option>
-                    <option value="circumdirectional">Circumdirectional</option>
-                </select></li>
-            <li>        Undergoers:
+            <li>     <b>Direction:</b>
+                <div id="directionality_input" name="directionality_input"></div>
+</li>
+            <li>        <b>Undergoers:</b>
                 <ul>
-                    <li>          Segments: <div id="undergoers"></div>
+                    <li>         <b> Segments:</b> <div id="undergoers"></div>Natural Class <select name="processdetails_triggers_segments_units_naturalClasses" id="processdetails_triggers_segments_units_naturalClasses" multiple> <option value="">Select a natural class</option></select><br>
                         <label for="processdetails_undergoers_segments_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_undergoers_segments_positional_restrictions" id="processdetails_undergoers_segments_positional_restrictions">
+                        <select name="processdetails_undergoers_segments_positional_restrictions" id="processdetails_undergoers_segments_positional_restrictions" multiple>
                             <option value="">Select a positional restriction</option>
                         </select>
                     </li>
-                    <li>          Morphemes: <label for="processdetails_undergoers_morphemes_units">Units:</label>
-                        <select name="processdetails_undergoers_morphemes_units" id="processdetails_undergoers_morphemes_units">
+                    <li>          <b>Morphemes:</b> <!--<label for="processdetails_undergoers_morphemes_units">Units:</label>-->
+                        <!--<select name="processdetails_undergoers_morphemes_units" id="processdetails_undergoers_morphemes_units">
                             <option value="">Select a unit/natural class</option>
-                        </select>
-                        <label for="processdetails_undergoers_morphemes_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_undergoers_morphemes_positional_restrictions" id="processdetails_undergoers_morphemes_positional_restrictions">
+                        </select>-->
+                    <p>Morpheme Type: </p><div name="processdetails_undergoers_morphemes_morpheme_type_input" id="processdetails_undergoers_morphemes_morpheme_type_input"></div>
+                    Morpheme Gloss:
+                    <select name = "processdetails_triggers_morphemes_morpheme_gloss" id="processdetails_triggers_morphemes_morpheme_gloss" multiple>
+                            <option value="">Select morpheme gloss</option>
+                    </select>
+                        <br><label for="processdetails_undergoers_morphemes_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_undergoers_morphemes_positional_restrictions" id="processdetails_undergoers_morphemes_positional_restrictions" multiple>
                             <option value="">Select a positional restriction</option>
                         </select>
                     </li>
                 </ul>
             </li>
-            <li>        Triggers:
+            <li>        <b>Triggers:</b>
                 <ul>
-                    <li>          Segments: <div id="triggers"></div>
+                    <li>          <b>Segments:</b> <div id="triggers"></div> Natural Class <select name="processdetails_undergoers_segments_units_naturalClasses" id="processdetails_undergoers_segments_units_naturalClasses" multiple> <option value="">Select a natural class</option></select><br>
                         <label for="processdetails_triggers_segments_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_triggers_segments_positional_restrictions" id="processdetails_triggers_segments_positional_restrictions">
+                        <select name="processdetails_triggers_segments_positional_restrictions" id="processdetails_triggers_segments_positional_restrictions" multiple>
                             <option value="">Select a positional restriction</option>
                         </select>
                     </li>
-                    <li>          Morphemes: <label for="processdetails_triggers_morphemes_units">Units:</label>
-                        <select name="processdetails_triggers_morphemes_units" id="processdetails_triggers_morphemes_units">
+                    <li>        <b>  Morphemes: </b><!--<label for="processdetails_triggers_morphemes_units">Units:</label>-->
+                        <!--<select name="processdetails_triggers_morphemes_units" id="processdetails_triggers_morphemes_units">
                             <option value="">Select a unit/natural class</option>
-                        </select>
-                        <label for="processdetails_triggers_morphemes_positional_restrictions"> Positional Restriction:</label>
-                        <select name="processdetails_triggers_morphemes_positional_restrictions" id="processdetails_triggers_morphemes_positional_restrictions">
+                        </select>-->
+                    <p>Morpheme Type: </p><div name="processdetails_triggers_morphemes_morpheme_type_input" id="processdetails_triggers_morphemes_morpheme_type_input"></div>
+
+                    Morpheme Gloss:
+                    <select name = "processdetails_triggers_morphemes_morpheme_gloss" id="processdetails_triggers_morphemes_morpheme_gloss" multiple>
+                            <option value="">Select morpheme gloss</option>
+                    </select>
+                        <br><label for="processdetails_triggers_morphemes_positional_restrictions"> Positional Restriction:</label>
+                        <select name="processdetails_triggers_morphemes_positional_restrictions" id="processdetails_triggers_morphemes_positional_restrictions" multiple>
                             <option value="">Select a positional restriction</option>
                         </select>
                     </li>

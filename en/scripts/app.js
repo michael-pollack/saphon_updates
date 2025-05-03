@@ -25,19 +25,36 @@ function containsLanguageInLangsJSONAndFaultsEqualsZero(urlHREF, langs) {
 function handle_click(formData) {
 	downloadUrl("../langs.json", function(langs) {
 		if(formData != null) {
-			for (var pair of formData.entries()) {
-				var field = pair[0];
-				var value = pair[1];
-				if(value.length !== 0) {
-					//anything that's 0 in faults, is shown up
-					//"fprocessdetails_undergoers_segments_units-m": 1,
-					var searchForCode = "f" + field+"-" + value;
-					console.log(searchForCode);
-					for (let i = 0; i < langs.length; i++) {
-						if (!(searchForCode in langs[i].processdetails)) {
-							langs[i].faults += 1;
+			for (let i = 0; i < langs.length; i++) {
+				var langSatisfies = false;
+				for(var process of langs[i].processdetails) {
+					var processSatisfies = true;
+					for (var pair of formData.entries()) {
+						//if the key ends in naturalClass or units - implement "OR" search
+						var field = pair[0];
+						var value = pair[1];
+						if(value.length === 0) { continue}
+						console.log(langs[i].title);
+						var searchForCode = field+"-" + value;
+						console.log(searchForCode)
+						console.log(process);
+						if(!process[searchForCode]){
+							console.log(searchForCode, "not found in", process);
+							processSatisfies = false;
+						} else {
+							console.log("Reached finally")
+							console.log(processSatisfies);
 						}
 					}
+					if(processSatisfies) {
+						console.log("process satisfy is true");
+					}
+					langSatisfies =  processSatisfies || langSatisfies
+				}
+				if(langSatisfies){
+					langs[i].faults = 0;
+				} else {
+					langs[i].faults = 1;
 				}
 			}
 		}
@@ -167,22 +184,53 @@ function readInIpaJSON(ipaCharToKeyStrokeMapping){
 }
 
 function configureSelectedOptions(){
-	downloadUrl("../manual_mapping_of_selectionOptions_to_displayName.json", function(mappings){
-		downloadUrl("../selectionOptions.json", function(selectOpts){
-			for (var key in selectOpts) {
-				var optionsArray = selectOpts[key];
-				console.log("Here is the key:" + key);
-				var selectElement = document.getElementById(key);
-				optionsArray.forEach(function(optionValue) {
-					var option = document.createElement("option");
-					//if mapping is found from value:displayValue, use the displayValue in the textContent
-					option.textContent = (mappings[key]?.[optionValue] ?? false) ? `${mappings[key][optionValue]} (${optionValue})` : optionValue;
-					option.value = optionValue;
-					selectElement.appendChild(option);
-				});
-			}
-		});
-	});
+downloadUrl("../manual_mapping_of_selectionOptions_to_displayName.json", function(mappings) {
+    downloadUrl("../selectionOptions.json", function(selectOpts) {
+        for (var key in selectOpts) {
+            var optionsArray = selectOpts[key];
+            console.log("Here is the key:" + key);
+            var container = document.getElementById(key);
+
+            // Check if the container exists
+            if (!container) continue;
+
+            // Check if key ends with "_input"
+            if (key.endsWith("_input")) {
+                container.classList.add("checkbox-group");
+                container.innerHTML = ""; // Clear existing content
+
+                optionsArray.forEach(function(optionValue) {
+                    var label = document.createElement("label");
+                    //label.style.marginRight = "10px"; // Add spacing
+
+                    var checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.name = key;
+                    checkbox.value = optionValue;
+
+                    // If mapping exists, use displayValue; otherwise, use optionValue
+                    var displayText = (mappings[key]?.[optionValue] ?? false)
+                        ? `${mappings[key][optionValue]} (${optionValue})`
+                        : optionValue;
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(" " + displayText));
+                    container.appendChild(label);
+                });
+            } else {
+                optionsArray.forEach(function(optionValue) {
+                    var option = document.createElement("option");
+                    option.textContent = (mappings[key]?.[optionValue] ?? false)
+                        ? `${mappings[key][optionValue]} (${optionValue})`
+                        : optionValue;
+                    option.value = optionValue;
+                    container.appendChild(option);
+                });
+            }
+        }
+    });
+});
+
 
 }
 configureSelectedOptions();
